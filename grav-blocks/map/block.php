@@ -18,7 +18,7 @@ if( $markers ){
 
 		$infowindow_data[] = array (
 			'marker_name' => "<h3>" . $marker['marker_name'] . "</h3>",
-			'marker_text' => trim($marker['marker_name'], " \t\n\r\0\x0B"),
+			'marker_text' => trim($marker['info_window'], " \t\n\r\0\x0B"),
 		);
 
 	}

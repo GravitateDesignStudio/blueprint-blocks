@@ -27,181 +27,16 @@ jQuery(document).ready(function($){
 
         styles: [
             {
-                "featureType": "all",
-                "elementType": "labels.icon",
-                "stylers": [
-                    {
-                        "visibility": "on"
-                    },
-                    {
-                        "color": "#dab139"
-                    }
-                ]
-            },
-            {
                 "featureType": "administrative",
                 "elementType": "all",
                 "stylers": [
                     {
-                        "visibility": "on"
-                    },
-                    {
-                        "color": "#75b6be"
-                    }
-                ]
-            },
-            {
-                "featureType": "administrative",
-                "elementType": "labels",
-                "stylers": [
-                    {
-                        "visibility": "on"
-                    },
-                    {
-                        "color": "#75b6be"
-                    }
-                ]
-            },
-            {
-                "featureType": "administrative",
-                "elementType": "labels.text",
-                "stylers": [
-                    {
-                        "visibility": "on"
-                    },
-                    {
-                        "color": "#75b6be"
-                    }
-                ]
-            },
-            {
-                "featureType": "administrative",
-                "elementType": "labels.text.fill",
-                "stylers": [
-                    {
-                        "color": "#75b6be"
-                    },
-                    {
-                        "visibility": "on"
-                    }
-                ]
-            },
-            {
-                "featureType": "administrative",
-                "elementType": "labels.text.stroke",
-                "stylers": [
-                    {
-                        "visibility": "on"
-                    },
-                    {
-                        "color": "#ffffff"
-                    }
-                ]
-            },
-            {
-                "featureType": "administrative",
-                "elementType": "labels.icon",
-                "stylers": [
-                    {
-                        "visibility": "on"
-                    },
-                    {
-                        "color": "#dab139"
-                    }
-                ]
-            },
-            {
-                "featureType": "administrative.country",
-                "elementType": "labels.text.fill",
-                "stylers": [
-                    {
-                        "visibility": "on"
-                    },
-                    {
-                        "color": "#18273f"
-                    }
-                ]
-            },
-            {
-                "featureType": "administrative.country",
-                "elementType": "labels.icon",
-                "stylers": [
-                    {
-                        "visibility": "on"
-                    },
-                    {
-                        "color": "#dab139"
+                        "saturation": "-100"
                     }
                 ]
             },
             {
                 "featureType": "administrative.province",
-                "elementType": "labels.text.fill",
-                "stylers": [
-                    {
-                        "visibility": "on"
-                    },
-                    {
-                        "color": "#509ba5"
-                    }
-                ]
-            },
-            {
-                "featureType": "administrative.province",
-                "elementType": "labels.text.stroke",
-                "stylers": [
-                    {
-                        "visibility": "on"
-                    },
-                    {
-                        "weight": "1.00"
-                    }
-                ]
-            },
-            {
-                "featureType": "administrative.locality",
-                "elementType": "geometry.fill",
-                "stylers": [
-                    {
-                        "visibility": "on"
-                    },
-                    {
-                        "color": "#75b6be"
-                    }
-                ]
-            },
-            {
-                "featureType": "administrative.locality",
-                "elementType": "labels.text.fill",
-                "stylers": [
-                    {
-                        "visibility": "on"
-                    },
-                    {
-                        "color": "#18273f"
-                    },
-                    {
-                        "weight": "1.50"
-                    }
-                ]
-            },
-            {
-                "featureType": "administrative.locality",
-                "elementType": "labels.text.stroke",
-                "stylers": [
-                    {
-                        "visibility": "on"
-                    },
-                    {
-                        "color": "#ffffff"
-                    },
-                    {
-                        "weight": "0.75"
-                    }
-                ]
-            },
-            {
-                "featureType": "administrative.land_parcel",
                 "elementType": "all",
                 "stylers": [
                     {
@@ -210,57 +45,15 @@ jQuery(document).ready(function($){
                 ]
             },
             {
-                "featureType": "administrative.land_parcel",
-                "elementType": "labels.text.fill",
-                "stylers": [
-                    {
-                        "visibility": "on"
-                    },
-                    {
-                        "color": "#18273f"
-                    }
-                ]
-            },
-            {
                 "featureType": "landscape",
                 "elementType": "all",
                 "stylers": [
                     {
-                        "color": "#f2f2f2"
+                        "saturation": -100
                     },
                     {
-                        "visibility": "off"
-                    }
-                ]
-            },
-            {
-                "featureType": "landscape",
-                "elementType": "geometry.fill",
-                "stylers": [
-                    {
-                        "visibility": "on"
+                        "lightness": 65
                     },
-                    {
-                        "color": "#dbdbdb"
-                    }
-                ]
-            },
-            {
-                "featureType": "landscape",
-                "elementType": "labels.text.fill",
-                "stylers": [
-                    {
-                        "visibility": "on"
-                    },
-                    {
-                        "color": "#0d1d37"
-                    }
-                ]
-            },
-            {
-                "featureType": "landscape.natural",
-                "elementType": "all",
-                "stylers": [
                     {
                         "visibility": "on"
                     }
@@ -271,22 +64,13 @@ jQuery(document).ready(function($){
                 "elementType": "all",
                 "stylers": [
                     {
-                        "visibility": "off"
-                    }
-                ]
-            },
-            {
-                "featureType": "poi",
-                "elementType": "labels.icon",
-                "stylers": [
-                    {
-                        "color": "#dab139"
+                        "saturation": -100
                     },
                     {
-                        "visibility": "off"
+                        "lightness": "50"
                     },
                     {
-                        "weight": "3.59"
+                        "visibility": "simplified"
                     }
                 ]
             },
@@ -295,16 +79,7 @@ jQuery(document).ready(function($){
                 "elementType": "all",
                 "stylers": [
                     {
-                        "saturation": -100
-                    },
-                    {
-                        "lightness": 45
-                    },
-                    {
-                        "visibility": "on"
-                    },
-                    {
-                        "color": "#ffffff"
+                        "saturation": "-100"
                     }
                 ]
             },
@@ -313,16 +88,25 @@ jQuery(document).ready(function($){
                 "elementType": "all",
                 "stylers": [
                     {
-                        "visibility": "off"
+                        "visibility": "simplified"
                     }
                 ]
             },
             {
                 "featureType": "road.arterial",
-                "elementType": "labels.icon",
+                "elementType": "all",
                 "stylers": [
                     {
-                        "visibility": "off"
+                        "lightness": "30"
+                    }
+                ]
+            },
+            {
+                "featureType": "road.local",
+                "elementType": "all",
+                "stylers": [
+                    {
+                        "lightness": "40"
                     }
                 ]
             },
@@ -331,59 +115,42 @@ jQuery(document).ready(function($){
                 "elementType": "all",
                 "stylers": [
                     {
-                        "visibility": "off"
-                    }
-                ]
-            },
-            {
-                "featureType": "transit",
-                "elementType": "geometry.fill",
-                "stylers": [
-                    {
-                        "visibility": "on"
+                        "saturation": -100
                     },
                     {
-                        "color": "#aecaca"
+                        "visibility": "simplified"
                     }
                 ]
             },
             {
                 "featureType": "water",
-                "elementType": "all",
+                "elementType": "geometry",
                 "stylers": [
                     {
-                        "color": "#76a1b2"
+                        "hue": "#ffff00"
                     },
                     {
-                        "visibility": "on"
+                        "lightness": -25
+                    },
+                    {
+                        "saturation": -97
                     }
                 ]
             },
             {
                 "featureType": "water",
-                "elementType": "geometry.fill",
+                "elementType": "labels",
                 "stylers": [
                     {
-                        "visibility": "on"
+                        "lightness": -25
                     },
                     {
-                        "color": "#36455c"
-                    }
-                ]
-            },
-            {
-                "featureType": "water",
-                "elementType": "labels.text.fill",
-                "stylers": [
-                    {
-                        "color": "#aecaca"
-                    },
-                    {
-                        "visibility": "on"
+                        "saturation": -100
                     }
                 ]
             }
         ]
+
 
 
         };
