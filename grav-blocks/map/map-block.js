@@ -1,17 +1,17 @@
 jQuery(document).ready(function($){
 
     // Setup map_blocks array
-    var map_blocks = [];
+    var block_index = $('.block-map.block-container').attr('data-block-index');
 
-    $('.block-map.block-container').each(function() {
-            var block_index = $(this).attr('data-block-index');
-            map_blocks.push(block_index);
-    })
+    $('#' + block_index + '_map').css('padding-bottom', '75%');
+
+    initMap(block_index);
 
     function initMap(block_index) {
         var bounds = new google.maps.LatLngBounds();
         var mapOptions = {
             zoomControl: true,
+            zoom: 8,
             zoomControlOptions: {
                 position: google.maps.ControlPosition.RIGHT_CENTER
             },
@@ -405,18 +405,19 @@ jQuery(document).ready(function($){
         // console.log(locations);
         locations = locations.replace(/'/g, '"');
 
-        gravMarkerLocations = JSON.parse("[" + locations + "]");
+        gravMarkerLocations = JSON.parse(locations);
 
         //Array for infoWindow
         // var infoWindows = $('#' + block_index + '_map').data('infowindows');
         infoWindows = infoWindows.replace(/'/g, '"').replace('<br />', '');
 
-        var InfoWindowContent = JSON.parse("[" + infoWindows + "]");
+        var InfoWindowContent = JSON.parse(infoWindows);
         // Display multiple markers on a map
         var infoWindow = new google.maps.InfoWindow(), marker, i;
 
          // Loop through our array of markers & place each one on the map
          for( i = 0; i < gravMarkerLocations.length; i++ ) {
+             console.log(gravMarkerLocations[i]);
              var position = new google.maps.LatLng(
                  gravMarkerLocations[i][1],
                  gravMarkerLocations[i][2]
@@ -432,7 +433,7 @@ jQuery(document).ready(function($){
              // Allow each marker to have an info window
              google.maps.event.addListener(marker, 'click', (function(marker, i) {
                  return function() {
-                     infoWindow.setContent('<div class="info_content">' + InfoWindowContent[i][0] + '<p><a href="https://www.google.com/maps/dir/Current+Location/' + gravMarkerLocations[i][1] +',' +gravMarkerLocations[i][2] +'" target="_blank">Get Directions</a></p></div>');
+                     infoWindow.setContent('<div class="info_content">' + InfoWindowContent[i]['marker_name'] +  InfoWindowContent[i]['marker_text'] + '<p><a href="https://www.google.com/maps/dir/Current+Location/' + gravMarkerLocations[i][1] +',' +gravMarkerLocations[i][2] +'" target="_blank">Get Directions</a></p></div>');
                      infoWindow.open(map, marker);
                  }
              })(marker, i));
@@ -449,7 +450,7 @@ jQuery(document).ready(function($){
             var theZoom = this.getZoom();
 
             this.setZoom(theZoom - zoomOffest);
-    
+
             google.maps.event.removeListener(boundsListener);
 
         });
@@ -461,11 +462,6 @@ jQuery(document).ready(function($){
              map.setZoom(theZoom - zoomOffest);
 
          });
-      }
-
-      for (var i = 0; i < map_blocks.length; i++) {
-          $('#' + map_blocks[i] + '_map').css('padding-bottom', '75%');
-          initMap(map_blocks[i]);
       }
 
 });

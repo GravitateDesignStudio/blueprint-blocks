@@ -127,7 +127,7 @@ $block_fields = array(
 	    'collapsed' => '',
 	    'min' => '',
 	    'max' => '',
-	    'layout' => 'table',         // table | block | row
+	    'layout' => 'block',         // table | block | row
 	    'button_label' => 'Add Marker',
 	    'sub_fields' => array (
 			array (
@@ -153,10 +153,10 @@ $block_fields = array(
 			    'disabled' => 0,
 			),
 			array (
-				'key' => 'field_'.$block.'_info_window',
-				'label' => 'Info Window Text',
-				'name' => 'info_window',
-			    'type' => 'text',
+			    'key' => 'field_'.$block.'_info_window',
+			    'label' => 'Info Window Text',
+			    'name' => 'info_window',
+			    'type' => 'textarea',
 			    'instructions' => '',
 			    'required' => 0,
 			    'conditional_logic' => 0,
@@ -167,10 +167,9 @@ $block_fields = array(
 			    ),
 			    'default_value' => '',
 			    'placeholder' => '',
-			    'formatting' => 'none',       // none | html
-			    'prepend' => '',
-			    'append' => '',
 			    'maxlength' => '',
+			    'rows' => '',
+			    'new_lines' => 'wpautop',        // wpautop | br | ''
 			    'readonly' => 0,
 			    'disabled' => 0,
 			),
@@ -255,7 +254,7 @@ return array (
 	'name' => $block,
 	'display' => 'block',
 	'min' => '',
-	'max' => 1,
+	'max' => '',
 	'sub_fields' => $block_fields,
 	'grav_blocks_settings' => array(
 		'icon' => 'gravicon-map',

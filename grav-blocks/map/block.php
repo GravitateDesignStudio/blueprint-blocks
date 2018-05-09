@@ -1,7 +1,30 @@
 <?php
 
+$format = isset($format) ? $format : get_sub_field('format');
+$map_position = isset($map_position) ? $map_position : get_sub_field('map_position');
+
+$markers = isset($markers) ? $markers : get_sub_field('markers');
+
+$location_data = array();
+$infowindow_data = array();
+
+if( $markers ){
+	foreach ($markers as $marker) {
+
+		$location_data[] = array(
+			$marker['marker_name'],
+			$marker['lattitude'],
+			$marker['longitude']);
+
+		$infowindow_data[] = array (
+			'marker_name' => "<h3>" . $marker['marker_name'] . "</h3>",
+			'marker_text' => trim($marker['marker_name'], " \t\n\r\0\x0B"),
+		);
+
+	}
+}
+
 if ($mapBlockApiKey = GRAV_BLOCKS_PLUGIN_SETTINGS::get_setting_value('google_maps_api_key')) {
-	$format = get_sub_field('format');
 
 	$map_order = ' medium-order-1';
 
@@ -11,10 +34,8 @@ if ($mapBlockApiKey = GRAV_BLOCKS_PLUGIN_SETTINGS::get_setting_value('google_map
 
 	if ($format != 'map') {
 
-		$position = get_sub_field('map_position');
-
-		$map_order = ($position == 'right') ? ' medium-order-2' : ' medium-order-1';
-		$content_order = ($position == 'right') ? ' medium-order-1' : ' medium-order-2';
+		$map_order = ($map_position == 'right') ? ' medium-order-2' : ' medium-order-1';
+		$content_order = ($map_position == 'right') ? ' medium-order-1' : ' medium-order-2';
 
 		$map_col = ($format == 'small-map') ? 4 : 8;
 		$content_col = 4;
@@ -27,35 +48,6 @@ if ($mapBlockApiKey = GRAV_BLOCKS_PLUGIN_SETTINGS::get_setting_value('google_map
 			<div class="<?php echo GRAV_BLOCKS::css()->row()->get();?> align-center">
 				<!-- Map -->
 				<div class="<?php echo GRAV_BLOCKS::css()->col(12, $map_col)->get() . $map_order;?> map">
-					<?php
-					 	$location_data = '';
-						$infowindow_data = '';
-						$markers = get_sub_field('markers');
-
-						if( have_rows('markers') ){
-						    ?>
-
-						    <?php
-
-							$count = 0;
-						    while ( have_rows('markers') ){ the_row();
-								$count++;
-						   		$location_data .="[";
-						        $location_data .= "'" . get_sub_field('marker_name') . "',";
-						        $location_data .= get_sub_field('lattitude') . ",";
-						        $location_data .= get_sub_field('longitude');
-								$location_data .= ($count < count($markers)) ? "]," : "]";
-
-								$infowindow_data .= "['";
-								$infowindow_data .= "<h3>" . get_sub_field('marker_name') . "</h3>";
-								if($text = get_sub_field('info_window')) {
-									$infowindow_data .= "<p>" . trim($text, " \t\n\r\0\x0B") . "</p>";
-								}
-								$infowindow_data .= ($count < count($markers)) ? "'], " : "']";
-
-						    }
-						}
-					?>
 					<div
 					data-zoom="<?php the_sub_field('zoom_offset'); ?>"
 					id="<?php echo GRAV_BLOCKS::$block_index;?>_map" class="google-map">
@@ -74,9 +66,9 @@ if ($mapBlockApiKey = GRAV_BLOCKS_PLUGIN_SETTINGS::get_setting_value('google_map
 		<?php
 	}
 
-	wp_localize_script( 'map_block_js', 'locations', $location_data );
-	wp_localize_script( 'map_block_js', 'infoWindows', $infowindow_data );
-	wp_localize_script( 'map_block_js', 'marker_url', plugin_dir_url(__FILE__) . '/assets/map-marker.svg' );
+	wp_localize_script( 'map_block_js', 'locations', json_encode($location_data));
+	wp_localize_script( 'map_block_js', 'infoWindows', json_encode($infowindow_data));
+	wp_localize_script( 'map_block_js', 'marker_url', plugin_dir_url(__FILE__) . '/assets/map-marker.png' );
 
 } else { ?>
 	<div class="block-inner">
