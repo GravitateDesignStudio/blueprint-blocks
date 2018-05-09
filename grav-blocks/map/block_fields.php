@@ -261,8 +261,8 @@ return array (
 		'icon' => 'gravicon-map',
 		'description' => '<div class="row">
 				<div class="columns medium-6">
-					<img src="'.plugins_url().'/gravitate-blocks/grav-blocks/map/map.svg">
-					<img src="'.plugins_url().'/gravitate-blocks/grav-blocks/map/map-alt.svg">
+					<img src="'.plugins_url().'/blueprint-blocks/grav-blocks/map/map.svg">
+					<img src="'.plugins_url().'/blueprint-blocks/grav-blocks/map/map-alt.svg">
 				</div>
 				<div class="columns medium-6">
 					<p>This block requires a Google Maps API Key. You can get an API Key <a href="https://developers.google.com/maps/documentation/javascript/get-api-key" target="_blank">here</a></a>.</p>

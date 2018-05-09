@@ -1,8 +1,8 @@
 <?php
 /*
-Plugin Name: Gravitate Blocks
+Plugin Name: Gravitate Blueprint Blocks
 Description: Create Content Blocks.
-Version: 3.0.0
+Version: 1.0.0
 Plugin URI: http://www.gravitatedesign.com
 Author: Gravitate
 */

@@ -1,4 +1,4 @@
-=== Gravitate Blocks ===
+=== Gravitate Blueprint Blocks ===
 Contributors: Gravitate, bferdinand
 Tags: Gravitate, Content Blocks, ACF, Advanced Custom Fields
 Requires at least: 3.5

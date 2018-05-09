@@ -13,7 +13,7 @@
     <h4>There are a few options to modify an existing block.</h4>
         <ul>
             <li>You can copy the block from:
-                <br><span class="grav-code-block">wp-content/plugins/gravitate-blocks/grav-blocks</span>
+                <br><span class="grav-code-block">wp-content/plugins/blueprint-blocks/grav-blocks</span>
                 <br>and paste it in:
                 <br><span class="grav-code-block">wp-content/themes/your-theme-folder/grav-blocks</span>
                 <br><em>* This is not ideal as updates will not be applied to those blocks</em>

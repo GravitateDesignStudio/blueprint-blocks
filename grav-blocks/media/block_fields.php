@@ -47,8 +47,8 @@ return array (
 		'icon' => 'gravicon-media',
 		'description' => '<div class="row">
 				<div class="columns medium-6">
-					<img src="'.plugins_url().'/gravitate-blocks/grav-blocks/media/media.svg">
-					<img src="'.plugins_url().'/gravitate-blocks/grav-blocks/media/media-alt.svg">
+					<img src="'.plugins_url().'/blueprint-blocks/grav-blocks/media/media.svg">
+					<img src="'.plugins_url().'/blueprint-blocks/grav-blocks/media/media-alt.svg">
 				</div>
 				<div class="columns medium-6">
 					<p>This block that allows for a full width image, or an image that is contained within the content width. This image also has the ability to link to a page, URL, file download or even play a video in a modal.</p>

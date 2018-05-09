@@ -117,7 +117,7 @@ return array (
 		'deprecated' => 1,
 		'description' => '<div class="row">
 				<div class="columns medium-6">
-					<img src="'.plugins_url().'/gravitate-blocks/grav-blocks/calltoaction/cta.svg">
+					<img src="'.plugins_url().'/blueprint-blocks/grav-blocks/calltoaction/cta.svg">
 				</div>
 				<div class="columns medium-6">
 					<p>With this block, you can create buttons&nbsp;for any needed conversion. Whether it’s to direct the user to the contact page or download a white-paper, this block will allow multiple buttons, each with the ability to link to a current page on the site, a specified URL, a file to download, or video to play in a modal.</p>

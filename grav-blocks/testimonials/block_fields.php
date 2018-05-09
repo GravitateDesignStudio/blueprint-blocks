@@ -90,7 +90,7 @@ return array (
 		'icon' => 'gravicon-testimonials',
 		'description' => '<div class="row">
 				<div class="columns medium-6">
-					<img src="'.plugins_url().'/gravitate-blocks/grav-blocks/testimonials/testimonials.svg">
+					<img src="'.plugins_url().'/blueprint-blocks/grav-blocks/testimonials/testimonials.svg">
 				</div>
 				<div class="columns medium-6">
 					<p>If you have the need to display multiple quotes with the ability to add an image to each one, such as a business logo. This block is the best choice for that.</p>

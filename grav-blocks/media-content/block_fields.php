@@ -273,8 +273,8 @@ return array (
 		'icon' => 'gravicon-content-media',
 		'description' => '<div class="row">
 				<div class="columns medium-6">
-					<img src="'.plugins_url().'/gravitate-blocks/grav-blocks/media-content/media-content.svg">
-					<img src="'.plugins_url().'/gravitate-blocks/grav-blocks/media-content/media-content-alt.svg">
+					<img src="'.plugins_url().'/blueprint-blocks/grav-blocks/media-content/media-content.svg">
+					<img src="'.plugins_url().'/blueprint-blocks/grav-blocks/media-content/media-content-alt.svg">
 				</div>
 				<div class="columns medium-6">
 					<p>When you want to have an image and then more of a description to that image, this is the block you want. The image has the ability to link to a page, URL, file or video. While the WYSIWYG allows for heading and paragraph text.</p>
