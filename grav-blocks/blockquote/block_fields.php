@@ -51,7 +51,7 @@ $block_fields = array(
 );
 
 return array (
-	'label' => 'Quote',
+	'label' => 'Blockquote',
 	'name' => $block,
 	'display' => 'row',
 	'min' => '',
