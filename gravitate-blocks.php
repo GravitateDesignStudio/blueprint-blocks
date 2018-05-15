@@ -616,6 +616,26 @@ class GRAV_BLOCKS {
 				'block_options' => 1
 			),
 			array (
+			   'key' => 'field_'.$block.'_block_animate',
+			   'label' => 'Animate',
+			   'name' => 'block_animate',
+			   'type' => 'true_false',
+			   'instructions' => '',
+			   'required' => 0,
+			   'conditional_logic' => 0,
+			   'wrapper' => array (
+			       'width' => '',
+			       'class' => '',
+			       'id' => '',
+			   ),
+			   'message' => '',
+			   'ui' => 1,
+			   'ui_on_text' => 'Yes',
+			   'ui_off_text' => 'No',
+			   'default_value' => 0,
+			   'block_options' => 1,
+			),
+			array (
 			    'key' => 'field_block_option_'.$block.'_padding',
 			    'label' => 'Padding',
 			    'name' => 'block_option_padding',
@@ -1058,6 +1078,11 @@ class GRAV_BLOCKS {
 			$block_background_overlay = get_sub_field('block_background_overlay');
 		}
 
+		if(!isset($block_animate))
+		{
+			$block_animate = get_sub_field('block_animate');
+		}
+
 		$block_index = self::$block_index;
 		$block_attributes['data-block-index'] = $block_index;
 
@@ -1110,6 +1135,10 @@ class GRAV_BLOCKS {
 			$large = in_array('large', $block_hide);
 			$xlarge = in_array('xlarge', $block_hide);
 			$block_attributes['class'] = array_merge($block_attributes['class'], self::css()->hide($small, $medium, $large, $xlarge)->class);
+		}
+
+		if ($block_animate) {
+			$block_attributes['class'][] = 'block-animate';
 		}
 
 		// Background
@@ -2377,10 +2406,11 @@ class GRAV_BLOCKS {
 	public static function column_width_options()
 	{
 		$column_width_options = array(
-			2 => 'Small',
-			5 => 'Medium',
-			6 => 'Half',
+			2 => 'X-Small',
+			4 => 'Small',
+			6 => 'Medium',
 			8 => 'Large',
+			10 => 'X-Large',
 		);
 
 		// allow filtering of column sizes for the media with content block

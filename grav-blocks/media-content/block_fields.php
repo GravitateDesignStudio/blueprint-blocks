@@ -263,8 +263,28 @@ $block_fields = array(
 				),
 				array (
 				   'field' => 'field_'.$block.'_2',
-					'operator' => '>=',
-					'value' => 6,
+					'operator' => '!=',
+					'value' => 5,
+				),
+				array (
+				   'field' => 'field_'.$block.'_2',
+					'operator' => '!=',
+					'value' => 4,
+				),
+				array (
+				   'field' => 'field_'.$block.'_2',
+					'operator' => '!=',
+					'value' => 3,
+				),
+				array (
+				   'field' => 'field_'.$block.'_2',
+					'operator' => '!=',
+					'value' => 2,
+				),
+				array (
+				   'field' => 'field_'.$block.'_2',
+					'operator' => '!=',
+					'value' => 1,
 				),
 			),
 			'allorany' => 'all',
