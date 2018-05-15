@@ -421,6 +421,7 @@ class GRAV_BLOCKS {
 				'default_value' => '',
 				'allow_null' => 0,
 				'multiple' => 0,
+				'block_options' => 1
 			),
 			array (
 			    'key' => 'field_block_default_'.$block.'_'.$key.'_video_type',
@@ -451,6 +452,7 @@ class GRAV_BLOCKS {
 			    'save_other_choice' => 0,
 			    'default_value' => 'url',
 			    'layout' => 'horizontal',
+				'block_options' => 1
 			),
 			array (
 				'key' => 'field_block_default_'.$block.'_'.$key.'_video_url',
@@ -476,6 +478,7 @@ class GRAV_BLOCKS {
 				'save_format' => 'object',
 				'preview_size' => 'medium',
 				'library' => 'all',
+				'block_options' => 1
 			),
 			array (
 			    'key' => 'field_block_default_'.$block.'_'.$key.'_video_file',
@@ -508,6 +511,7 @@ class GRAV_BLOCKS {
 			    'min_size' => '',
 			    'max_size' => '',
 			    'mime_types' => '',
+				'block_options' => 1
 			),
 			array (
 				'key' => 'field_block_default_'.$block.'_'.$key.'_image',
@@ -534,6 +538,7 @@ class GRAV_BLOCKS {
 				'save_format' => 'object',
 				'preview_size' => 'medium',
 				'library' => 'all',
+				'block_options' => 1
 			),
 			array (
 			   'key' => 'field_block_default_'.$block.'_'.$key.'_overlay',
@@ -568,6 +573,7 @@ class GRAV_BLOCKS {
 			   'ui_on_text' => 'Yes',
 			   'ui_off_text' => 'No',
 			   'default_value' => 0,
+			   'block_options' => 1
 			)
 		);
 
@@ -753,11 +759,7 @@ class GRAV_BLOCKS {
 			}
 		}
 
-		if(GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('advanced_options', 'enqueue_scripts') ||
-		   GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('advanced_options', 'add_responsive_img'))
-		{
-			self::add_hook('action', 'wp_footer', 'add_footer_js', 100);
-		}
+		self::add_hook('action', 'wp_footer', 'add_footer_js', 100);
 
 		if(!function_exists('acf_add_local_field_group') && (!isset($_GET['page']) || $_GET['page'] != 'gravitate_blocks'))
 		{
@@ -865,7 +867,7 @@ class GRAV_BLOCKS {
 	 */
 	public static function admin_menu()
 	{
-		$icon = file_get_contents(plugin_dir_path( __FILE__ ) . 'grav-blocks/content/content_2.svg');
+		$icon = file_get_contents(plugin_dir_path( __FILE__ ) . 'grav-blocks/columns/columns_1.svg');
 		add_menu_page( 'Gravitate Blocks', 'Blocks', 'manage_options', 'gravitate-blocks', array( __CLASS__, 'admin' ), 'dashicons-gravitate', 9999);
 	}
 
@@ -1142,17 +1144,6 @@ class GRAV_BLOCKS {
 				$image_src = self::get_prefered_image_size_src($block_background_image);
 				$block_attributes['style'] = ($image_src ? " background-image: url('".$image_src."'); " : '');
 
-				if(GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('advanced_options', 'add_responsive_img'))
-				{
-					if($block_background === 'block-bg-image')
-					{
-						if($responsive_image_sizes = GRAV_BLOCKS::image_sources($block_background_image, true))
-						{
-							$block_attributes = array_merge($block_attributes, $responsive_image_sizes);
-							$block_attributes['style'] = '';
-						}
-					}
-				}
 			}
 		}
 
@@ -1704,8 +1695,6 @@ class GRAV_BLOCKS {
 					'enqueue_scripts' => 'Add necessary jQuery plugins. <span class="extra-info">( adds Cycle2 and Colorbox scripts for sliders and lightbox )</span>',
 					'after_title' => 'Place Gravitate Blocks directly after the title in the WordPress admin. <span class="extra-info">( changes position using acf_after_title )</span>',
 					'hide_content' => 'Remove the WordPress content box from Gravitate Blocks enabled pages. <span class="extra-info">( if content has already been entered it may still show on the front end of the website. )</span>',
-					//'add_unique_id' => 'Add a field for a unique id for each block. <span class="extra-info">( This allows you to use the #unique-id in a url to anchor to a specific spot on a page. )</span>',
-					// 'add_responsive_img' => 'Add "Responsive-Images" JS. This will also include data attributes for all image sizes.',
 				);
 				$css_options = array(
 					// 'add_custom_color_class' => 'Allow customization of CSS class names for the background color options.',
@@ -2016,10 +2005,6 @@ class GRAV_BLOCKS {
 		{
 			wp_enqueue_script( 'grav_blocks_scripts_js', plugin_dir_url( __FILE__ ) . 'library/js/blocks.min.js', array('jquery'), self::$version, true );
 		}
-		if (GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('advanced_options', 'add_responsive_img'))
-		{
-			wp_enqueue_script( 'grav_blocks_responsive-images_js', plugin_dir_url( __FILE__ ) . 'library/js/responsive-images.min.js', array('jquery'), self::$version, true );
-		}
 		if (GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('css_options', 'use_foundation') && self::is_viewable())
 		{
 			$foundation_file = self::get_foundation_file_name();
@@ -2053,55 +2038,6 @@ class GRAV_BLOCKS {
 						$('.grav-inline').colorbox({inline: true, height:'80%', width:'80%', transition:'fade'});
 
 					<?php } ?>
-
-
-
-					<?php if(GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('advanced_options', 'add_responsive_img')){
-
-						$image_sizes = array();
-						foreach (self::get_image_sizes() as $name => $image)
-						{
-							// Only include sizes that are not cropped.
-							if(empty($image['crop']) && $image['width'])
-							{
-								$image_sizes[$name] = $image['width'];
-							}
-						}
-
-						// Sort Sizes from smallest to largest by width
-						asort($image_sizes);
-
-						// Create json format for jquery
-						$image_sizes_array = array();
-						foreach ($image_sizes as $name => $width)
-						{
-							$image_sizes_array[] = array('name' => $name, 'size' => $width);
-						}
-
-						$image_sizes_array[] = array('name' => 'full', 'size' => 99999);
-
-						$responsive_image_settings = array(
-							'watch' => 'tag',
-							'throttle' => 100,
-							'downscale' => false,
-							'downsize' => false,
-							'onload' => true,
-							'lazyload' => true,
-							'lazyload_threshold' => 400,
-							'forcetagwidth' => true,
-							'retna' => false,
-							'sizes' => $image_sizes_array
-						);
-
-						$filtered_responsive_image_settings = apply_filters( 'grav_blocks_responsive_image_settings', $responsive_image_settings );
-
-						?>
-
-						$(this).responsiveImages(<?php echo json_encode($filtered_responsive_image_settings);?>);
-
-					<?php } ?>
-
-
 
 					});
 				});
@@ -2859,10 +2795,6 @@ class GRAV_BLOCKS {
 
 	public static function image_background($image='featured', $fallback_size='large')
 	{
-		if(GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('advanced_options', 'add_responsive_img'))
-		{
-			return self::image_sources($image);
-		}
 
 		if($image === 'featured' || is_numeric($image) )
 		{
@@ -2985,28 +2917,19 @@ class GRAV_BLOCKS {
 
 		$image_sources = array();
 
-		if(GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('advanced_options', 'add_responsive_img'))
-		{
-			$additional_attributes['src'] = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
+		$prefered_image_src = self::get_prefered_image_size_src($image, $fallback_size);
 
-			$image_sources = self::image_sources($image, true);
+		if($tag_type === 'img' && !isset($additional_attributes['src']))
+		{
+			if($prefered_image_src)
+			{
+				$additional_attributes['src'] = $prefered_image_src;
+			}
 		}
-		else
+
+		if($tag_type !== 'img' && $prefered_image_src)
 		{
-			$prefered_image_src = self::get_prefered_image_size_src($image, $fallback_size);
-
-			if($tag_type === 'img' && !isset($additional_attributes['src']))
-			{
-				if($prefered_image_src)
-				{
-					$additional_attributes['src'] = $prefered_image_src;
-				}
-			}
-
-			if($tag_type !== 'img' && $prefered_image_src)
-			{
-				$additional_attributes['style'] = " background-image: url('".$prefered_image_src."'); ";
-			}
+			$additional_attributes['style'] = " background-image: url('".$prefered_image_src."'); ";
 		}
 
 		$additional_attributes = array_filter($additional_attributes);

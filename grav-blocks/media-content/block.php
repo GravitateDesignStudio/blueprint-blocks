@@ -30,9 +30,14 @@
 		$bottom_classes = ($f6flex) ? GRAV_BLOCKS::css()->col(0, $col_content_width)->add('medium-order-1, '.$col_class)->get() : GRAV_BLOCKS::css()->col(0, $col_content_width)->col_pull(0, $col_width)->add($col_class)->get();
 	}
 
+	$image_format = '';
+	if ($media_type == 'image' && $col_width >= 6) {
+		$image_format = ' ' . get_sub_field('image_format');
+	}
+
 ?>
 
-<div class="block-inner <?php echo $placement.'-'.sanitize_title($col_array[$col_width]); ?>">
+<div class="block-inner <?php echo $placement.'-'.sanitize_title($col_array[$col_width]); echo $image_format; ?>">
 	<div class="<?php echo GRAV_BLOCKS::css()->row()->add('media-type-'.$media_type.'-container')->get();?>">
 		<div class="<?php echo $top_classes; ?> col-media">
 			<?php if($link = GRAV_BLOCKS::get_link_url('link')){ ?>

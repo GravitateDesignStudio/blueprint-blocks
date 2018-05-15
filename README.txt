@@ -41,10 +41,14 @@ Easily add content to your site with Gravitate Blocks.
 == Available Blocks ==
 
 * Media w/ Content
+* Blockquote
 * Columns / Content
 * Media Gallery
 * Testimonials
+* Title
+* Posts
 * CTA
 * Accordion
 * Grid
 * Tabs
+* Map

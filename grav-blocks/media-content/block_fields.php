@@ -36,6 +36,7 @@ $block_fields = array(
 	    'save_other_choice' => 0,
 	    'default_value' => '',
 	    'layout' => 'horizontal',
+		'block_options' => 1
 	),
 	array (
 		'key' => 'field_'.$block.'_video_type',
@@ -226,6 +227,7 @@ $block_fields = array(
 		'save_other_choice' => 0,
 		'default_value' => 'left',
 		'layout' => 'horizontal',
+		'block_options' => 1
 	),
 	array (
 		'key' => 'field_'.$block.'_2',
@@ -244,7 +246,45 @@ $block_fields = array(
 		'layout' => 'horizontal',
 		'block_options' => 1
 	),
-	GRAV_BLOCKS::get_link_fields( 'link', '', false ),
+	array (
+		'key' => 'field_'.$acf_group.'_image_format',
+		'label' => 'Image Format',
+		'name' => 'image_format',
+		'type' => 'radio',
+		'instructions' => '',
+		'required' => 0,
+		'conditional_logic' => array (
+			'status' => 1,
+			'rules' => array (
+				array (
+				   'field' => 'field_'.$block.'_media_type',
+					'operator' => '==',
+					'value' => '',
+				),
+				array (
+				   'field' => 'field_'.$block.'_2',
+					'operator' => '>=',
+					'value' => 6,
+				),
+			),
+			'allorany' => 'all',
+		),
+		'wrapper' => array (
+			'width' => '',
+			'class' => '',
+			'id' => '',
+		),
+		'choices' => array (
+			'' => 'Default',
+			'fullbleed' => 'Full Bleed'
+		),
+		'other_choice' => 0,
+		'save_other_choice' => 0,
+		'default_value' => '',
+		'layout' => 'horizontal',
+		'block_options' => 1
+	),
+	GRAV_BLOCKS::get_link_fields(array('name' => 'link', 'show_text' => false, 'conditional_logic' => array('field' => 'field_'.$block.'_media_type','operator' => '==','value' => ''))),
 	array (
 		'key' => 'field_'.$block.'_3',
 		'label' => 'Content',

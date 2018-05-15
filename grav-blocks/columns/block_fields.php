@@ -40,6 +40,7 @@ $block_fields[] = array (
     'save_other_choice' => 0,
     'default_value' => 1,
     'layout' => 'horizontal',
+	'block_options' => 1
 );
 $block_fields[] = array (
     'key' => 'field_'.$block.'_format',
@@ -71,6 +72,7 @@ $block_fields[] = array (
     'save_other_choice' => 0,
     'default_value' => '',
     'layout' => 'horizontal',
+	'block_options' => 1
 );
 for( $i = 1; $i <= $num_columns; $i++ ) {
 	$block_fields[] = array (
@@ -94,7 +96,7 @@ for( $i = 1; $i <= $num_columns; $i++ ) {
 }
 
 return array (
-	'label' => 'Content',
+	'label' => 'Columns',
 	'name' => $block,
 	'display' => 'block',
 	'min' => '',
@@ -103,7 +105,7 @@ return array (
 	'grav_blocks_settings' => array(
 		'version' => '2.0',
 		'icon' => 'gravicon-content-2col',
-		'description' => '<div class="row"><div class="columns medium-6"><img src="'.plugins_url().'/blueprint-blocks/grav-blocks/content/content_1.svg"><img src="'.plugins_url().'/blueprint-blocks/grav-blocks/content/content_2.svg"><img src="'.plugins_url().'/blueprint-blocks/grav-blocks/content/content_3.svg"></div><div class="columns medium-6"><p>Our most basic block. This block allows for the use of one, two or three columns of WordPress WYSIWYGs ( What You See Is What You Get ). The WYSIWYG allows you to add most of the basic types of content from images, to paragraph text as well as H1 – H6 headings. You can also create ordered and unordered lists as well as do type treatments like <strong>bold</strong> and <em>italic</em>.</p>
+		'description' => '<div class="row"><div class="columns medium-6"><img src="'.plugins_url().'/blueprint-blocks/grav-blocks/columns/content_1.svg"><img src="'.plugins_url().'/blueprint-blocks/grav-blocks/columns/content_2.svg"><img src="'.plugins_url().'/blueprint-blocks/grav-blocks/columns/content_3.svg"></div><div class="columns medium-6"><p>Our most basic block. This block allows for the use of one, two or three columns of WordPress WYSIWYGs ( What You See Is What You Get ). The WYSIWYG allows you to add most of the basic types of content from images, to paragraph text as well as H1 – H6 headings. You can also create ordered and unordered lists as well as do type treatments like <strong>bold</strong> and <em>italic</em>.</p>
 <p>While this block is very capable and can allow for a range of content types and layouts the control of the layout is not as precise. The tendency would be to try and use this block for much of your layouts, however with the research and strategy that has gone into each one of our blocks we highly suggest looking into them for their abilities to display your content in atheistically pleasing and user friendly way.</p></div></div>'
 	),
 );
