@@ -5,20 +5,15 @@ if(get_sub_field('testimonials'))
 	<div class="block-inner">
 		<div class="<?php echo GRAV_BLOCKS::css()->row()->get();?>">
 			<div class="<?php echo GRAV_BLOCKS::css()->col()->get();?>">
-				<div class="cycle-slideshow"
-					data-cycle-fx="fade"
-					data-cycle-timeout="8000"
-					data-cycle-speed="1200"
-					data-cycle-slides=".slide"
-					data-cycle-auto-height="calc"
-					data-cycle-log="false">
+				<div class="swiper-container">
+					<div class="swiper-wrapper">
 
 					<?php
 					while(has_sub_field('testimonials'))
 					{
 						$image = get_sub_field('image');
 						?>
-						<div class="slide">
+						<div class="swiper-slide">
 							<div class="<?php echo GRAV_BLOCKS::css()->add(($image ? 'has-image' : 'no-image'))->row()->get();?>">
 								<?php if($image){?>
 								<div class="<?php echo GRAV_BLOCKS::css()->add('col-image')->col(12, 2)->get();?>">
@@ -44,14 +39,15 @@ if(get_sub_field('testimonials'))
 					if(count(get_sub_field('testimonials')) > 1)
 					{
 						?>
-						<div class="cycle-pager"></div>
-						<div class="cycle-prev"></div>
-    					<div class="cycle-next"></div>
+						<div class="swiper-pagination"></div>
+						<div class="swiper-prev"></div>
+    					<div class="swiper-next"></div>
 						<?php
 					}
 					?>
 
-				</div>
+					</div>
+				 </div>
 			 </div>
 		</div>
 	</div>

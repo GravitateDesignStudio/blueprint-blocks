@@ -2883,9 +2883,18 @@ class GRAV_BLOCKS {
 
 	public static function image($image='featured', $additional_attributes=array(), $tag_type='img', $fallback_size='')
 	{
+		if ($tag_type == 'url') {
+			if ($fallback_size) {
+				return $image['sizes'][$fallback_size];
+			}
+
+			return $image['url'];
+		}
+
 		if(empty($image)){
 			return '';
 		}
+
 		if($image === 'featured' || is_numeric($image))
 		{
 			if(is_numeric($image) && get_post_type($image) !== 'attachment')

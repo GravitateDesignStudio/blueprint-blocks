@@ -29,7 +29,7 @@ $block_fields = array(
 	    ),
 	    'choices' => array (
 	        'slider' => 'Slider',
-	        'slider-full' => 'Slider (Full Width)',
+	        'slider-full' => 'Slider (Full Width & Height)',
 			'gallery' => 'Gallery'
 	    ),
 	    'other_choice' => 0,
@@ -81,18 +81,70 @@ $block_fields = array(
 			    'max_size' => '',
 			    'mime_types' => '',
 			),
-			GRAV_BLOCKS::get_link_fields(array ('name' => 'link', 'show_text' => false)),
+			array (
+			    'key' => 'field_'.$block.'_caption',
+			    'label' => 'Caption',
+			    'name' => 'caption',
+			    'type' => 'text',
+			    'instructions' => '',
+			    'required' => 0,
+				'conditional_logic' => array (
+					'status' => 1,
+					'rules' => array (
+						array (
+						   'field' => 'field_'.$block.'_format',
+							'operator' => '==',
+						   	'value' => 'gallery',
+					  	),
+					),
+					'allorany' => 'all',
+				),
+			    'wrapper' => array (
+			        'width' => '',
+			        'class' => '',
+			        'id' => '',
+			    ),
+			    'default_value' => '',
+			    'placeholder' => '',
+			    'formatting' => 'none',       // none | html
+			    'prepend' => '',
+			    'append' => '',
+			    'maxlength' => '',
+			    'readonly' => 0,
+			    'disabled' => 0,
+			),
+			array (
+			   'key' => 'field_'.$block.'_open_modal',
+			   'label' => 'Open Image in Modal',
+			   'name' => 'open_modal',
+			   'type' => 'true_false',
+			   'instructions' => '',
+			   'required' => 0,
+			   'conditional_logic' => array (
+			       'status' => 1,
+			       'rules' => array (
+			           array (
+			              'field' => 'field_'.$block.'_format',
+			               'operator' => '==',
+			              'value' => 'gallery',
+			         ),
+			       ),
+			       'allorany' => 'all',
+			   ),
+			   'wrapper' => array (
+			       'width' => '',
+			       'class' => '',
+			       'id' => '',
+			   ),
+			   'message' => '',
+			   'ui' => 1,
+			   'ui_on_text' => 'Yes',
+			   'ui_off_text' => 'No',
+			   'default_value' => 0,
+			),
+			// GRAV_BLOCKS::get_link_fields(array ('name' => 'link', 'show_text' => false)),
 	    ),
 	),
-	// array (
-	// 	'key' => 'field_'.$block.'_2',
-	// 	'label' => 'Add Padding',
-	// 	'name' => 'padding',
-	// 	'type' => 'true_false',
-	// 	'column_width' => '',
-	// 	'message' => '',
-	// 	'default_value' => 0,
-	// ),
 );
 
 return array (

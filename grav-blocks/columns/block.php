@@ -1,16 +1,16 @@
 <?php
 
 if($column_num = get_sub_field('num_columns')){
-	$cols_span = (12/$column_num);
+	$cols_span = $column_num > 2 ? (12/$column_num) : (8/$column_num);
 	$cols_span = apply_filters('grav_block_content_columns', $cols_span);
 	$medium_col = $column_num < 3 ? $cols_span : 12;
-	$large_col = $column_num >= 2 ? $cols_span : 12;
+	$large_col = $column_num >= 2 ? $cols_span : 8;
 
 	$sidebar = ($column_num == 2) ? get_sub_field('format') : '';
 
 ?>
 	<div class="block-inner num-col-<?php echo $column_num; ?> <?php echo $sidebar; ?>">
-		<div class="<?php echo GRAV_BLOCKS::css()->row()->get();?>">
+		<div class="<?php echo GRAV_BLOCKS::css()->row()->add('align-center')->get();?>">
 		<?php
 			for( $i = 1; $i <= $column_num; $i++ ) {
 				if($sidebar != '' && $column_num == 2){

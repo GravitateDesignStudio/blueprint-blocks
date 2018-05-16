@@ -52,3 +52,7 @@ Easily add content to your site with Gravitate Blocks.
 * Grid
 * Tabs
 * Map
+
+### Browser Sync Command
+
+browser-sync start --proxy "gravtheme.local.com" --files "**/*.php, **/*.js"

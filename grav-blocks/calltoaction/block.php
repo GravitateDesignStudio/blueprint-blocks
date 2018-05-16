@@ -3,7 +3,7 @@
 if($column_num = get_sub_field('num_columns')){ ?>
 
 	<div class="block-inner">
-		<div class="<?php echo GRAV_BLOCKS::css()->row()->get();?> align-center">
+		<div class="<?php echo GRAV_BLOCKS::css()->row()->get();?> align-<?php echo ($column_num > 1) ? 'center' : get_sub_field('alignment_1'); ?>">
 	<?php
 		for ($i=1; $i <= $column_num; $i++) {
 			$buttons = get_sub_field('buttons_' . $i);
@@ -15,7 +15,6 @@ if($column_num = get_sub_field('num_columns')){ ?>
 			$background_image = get_sub_field('block_background_image_' . $i);
 
 			if($title || $description || $buttons || $form){ ?>
-
 
 					<div class="<?php
 							echo GRAV_BLOCKS::css()->add('block-calltoaction-content,' . $background)->col(12, ($column_num > 1 ? (12/$column_num) : 8))->col_center(false, true)->text_align($align_content)->get();

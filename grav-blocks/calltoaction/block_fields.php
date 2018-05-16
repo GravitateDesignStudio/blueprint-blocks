@@ -46,6 +46,7 @@ $block_fields[] = array (
     'save_other_choice' => 0,
     'default_value' => 1,
     'layout' => 'horizontal',
+	'block_options' => 1
 );
 
 for( $i = 1; $i <= $num_columns; $i++ ) {
@@ -168,6 +169,7 @@ for( $i = 1; $i <= $num_columns; $i++ ) {
 	    'save_other_choice' => 0,
 	    'default_value' => 'left',
 	    'layout' => 'horizontal',
+		'block_options' => 1
 	);
 }
 
