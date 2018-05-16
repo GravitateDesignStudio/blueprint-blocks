@@ -1,12 +1,26 @@
 <?php
 
 if($column_num = get_sub_field('num_columns')){
-	$cols_span = $column_num > 2 ? (12/$column_num) : (8/$column_num);
-	$cols_span = apply_filters('grav_block_content_columns', $cols_span);
-	$medium_col = $column_num < 3 ? $cols_span : 12;
-	$large_col = $column_num >= 2 ? $cols_span : 8;
 
 	$sidebar = ($column_num == 2) ? get_sub_field('format') : '';
+
+	$cols_span = (12/$column_num);
+	if (!$sidebar) {
+		switch ($cols_span) {
+			case 12:
+			    $cols_span = 8;
+			    break;
+			case 6:
+			    $cols_span = 4;
+			    break;
+		}
+	}
+	// $cols_span = ($cols_span == 12) ? 8 : $cols_span;
+	// $cols_span = ($cols_span == 6) ? 4 : $cols_span;
+	$cols_span = apply_filters('grav_block_content_columns', $cols_span);
+	$medium_col = $column_num < 3 ? (12/$column_num) : 12;
+	$large_col = $column_num >= 2 ? $cols_span : 12;
+	$large_col = $column_num < 2 ? $cols_span : $large_col;
 
 ?>
 	<div class="block-inner num-col-<?php echo $column_num; ?> <?php echo $sidebar; ?>">
