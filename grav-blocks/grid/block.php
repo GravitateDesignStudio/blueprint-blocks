@@ -18,7 +18,7 @@ if($block_format !== 'slider')
 }
 
 if($gallery_items = get_sub_field('gallery_items')){ ?>
-	<div class="block-inner block-media-gallery-format-<?php echo $block_format;?>">
+	<div class="block-inner block-media-gallery__format--<?php echo $block_format;?>">
 		<?php if($block_title = get_sub_field('gallery_title')){ ?>
 			<div class="<?php echo GRAV_BLOCKS::css()->row()->add('block-title-container')->get();?>">
 				<div class="<?php echo GRAV_BLOCKS::css()->col()->get();?>">
@@ -27,7 +27,7 @@ if($gallery_items = get_sub_field('gallery_items')){ ?>
 			</div>
 		<?php } ?>
 
-		<div class="<?php echo GRAV_BLOCKS::css()->add('block-media-items-container')->get();?>"
+		<div class="<?php echo GRAV_BLOCKS::css()->add('block-media-gallery__items-container')->get();?>"
 			data-columns-small="<?php echo $num_columns_small;?>"
 			data-columns-medium="<?php echo $num_columns_medium;?>"
 			data-columns-large="<?php echo $num_columns_large;?>"
@@ -36,7 +36,7 @@ if($gallery_items = get_sub_field('gallery_items')){ ?>
 			<div class="<?php echo GRAV_BLOCKS::css()->row()->get();?> <?php if($f6){ echo GRAV_BLOCKS::css()->add('media-items')->get().$grid_class; } ?>">
 				<?php if(!$f6){ ?>
 				<div class="<?php echo GRAV_BLOCKS::css()->col()->get();?>">
-					<ul class="<?php echo GRAV_BLOCKS::css()->add('media-items')->get().$grid_class;?>">
+					<ul class="<?php echo GRAV_BLOCKS::css()->add('block-media-gallery__media-items')->get().$grid_class;?>">
 					<?php } ?>
 						<?php
 						if($gallery_items)
@@ -58,11 +58,11 @@ if($gallery_items = get_sub_field('gallery_items')){ ?>
 								}
 
 								?>
-								<?php if($f6){ ?><div class="columns media-item"><?php } else { ?><li><?php } ?>
+								<?php if($f6){ ?><div class="columns block-media-gallery__media-item"><?php } else { ?><li><?php } ?>
 									<?php if($link){ ?>
-										<a class="block-link-<?php echo esc_attr($link_type);?> item-link gallery-<?php echo GRAV_BLOCKS::$block_index;?>" href="<?php echo esc_url($link); ?>" title="<?php echo esc_attr($image['alt']); ?>">
+										<a class="block-link-<?php echo esc_attr($link_type);?> block-media-gallery__media-item--link gallery-<?php echo GRAV_BLOCKS::$block_index;?>" href="<?php echo esc_url($link); ?>" title="<?php echo esc_attr($image['alt']); ?>">
 									<?php } ?>
-									<div class="media-item-container">
+									<div class="block-media-gallery__media-item--container">
 
 										<?php if($image){ ?>
 											<div class="item-image-container">
@@ -73,10 +73,10 @@ if($gallery_items = get_sub_field('gallery_items')){ ?>
 										<?php } ?>
 
 										<?php if($title){ ?>
-											<h3 class="item-title"><span><?php echo $title; ?></span></h3>
+											<h3 class="block-media-gallery__media-item--title"><span><?php echo $title; ?></span></h3>
 										<?php } ?>
 										<?php if($content = get_sub_field('item_content')){ ?>
-											<p class="item-content"><span><?php echo $content; ?></span></p>
+											<p class="block-media-gallery__media-item--content"><span><?php echo $content; ?></span></p>
 										<?php } ?>
 									</div>
 									<?php if($link){ ?>

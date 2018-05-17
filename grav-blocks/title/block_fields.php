@@ -41,6 +41,27 @@ $block_fields = array(
 		'maxlength' => '',
 	),
 	array (
+	    'key' => 'field_'.$block.'_intro',
+	    'label' => 'Intro',
+	    'name' => 'intro',
+	    'type' => 'textarea',
+	    'instructions' => '',
+	    'required' => 0,
+	    'conditional_logic' => 0,
+	    'wrapper' => array (
+	        'width' => '',
+	        'class' => '',
+	        'id' => '',
+	    ),
+	    'default_value' => '',
+	    'placeholder' => '',
+	    'maxlength' => '',
+	    'rows' => '',
+	    'new_lines' => '',        // wpautop | br | ''
+	    'readonly' => 0,
+	    'disabled' => 0,
+	),
+	array (
 		'key' => 'field_'.$block.'_3',
 		'label' => 'Center Text',
 		'name' => 'center',

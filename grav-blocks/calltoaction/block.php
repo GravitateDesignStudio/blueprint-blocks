@@ -17,23 +17,23 @@ if($column_num = get_sub_field('num_columns')){ ?>
 			if($title || $description || $buttons || $form){ ?>
 
 					<div class="<?php
-							echo GRAV_BLOCKS::css()->add('block-calltoaction-content,' . $background)->col(12, ($column_num > 1 ? (12/$column_num) : 8))->col_center(false, true)->text_align($align_content)->get();
+							echo GRAV_BLOCKS::css()->add('block-calltoaction__content,' . $background)->col(12, ($column_num > 1 ? (12/$column_num) : 8))->col_center(false, true)->text_align($align_content)->get();
 						?>"
 						<?php if($background == 'block-bg-image') {
 							echo GRAV_BLOCKS::image_background($background_image);
 						} ?>>
 						<?php if($title){ ?>
-							<h2 class="block-title"><?php echo esc_html($title); ?></h2>
+							<h2 class="block-calltoaction__title"><?php echo esc_html($title); ?></h2>
 						<?php } ?>
 						<?php if($description){ ?>
-							<h4 class="block-description"><?php echo esc_html($description); ?></h4>
+							<h4 class="block-calltoaction__description"><?php echo esc_html($description); ?></h4>
 						<?php } ?>
 						<?php
 
 						if($buttons)
 						{
 							?>
-							<div class="block-buttons">
+							<div class="block-calltoaction__buttons">
 								<?php
 
 								foreach($buttons as $button)
@@ -69,7 +69,7 @@ if($column_num = get_sub_field('num_columns')){ ?>
 						if($form)
 						{
 							?>
-							<div class="block-form">
+							<div class="block-calltoaction__form">
 								<?php if(function_exists('gravity_form')){ gravity_form($form, false, false, false, null, true); } ?>
 							</div>
 							<?php

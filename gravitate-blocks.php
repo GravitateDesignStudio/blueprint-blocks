@@ -2003,13 +2003,8 @@ class GRAV_BLOCKS {
 	public static function enqueue_admin_files($hook){
 
 		wp_enqueue_style( 'grav_blocks_admin_css', plugin_dir_url( __FILE__ ) . 'library/css/master.min.css', true, '1.0.0' );
-		wp_enqueue_script( 'grav_blocks_controls_js', plugin_dir_url( __FILE__ ) . 'library/js/block-admin.js', array('jquery'), self::$version, true );
+		wp_enqueue_script( 'grav_blocks_controls_js', plugin_dir_url( __FILE__ ) . 'library/js/block-admin.js', array('jquery'), true, true );
 
-		$block_data = array(
-			'grid' => array(
-				'choices' => apply_filters('grav_blocks_grid_format_choices', array_reverse(GRAV_BLOCKS::get_grid_format_choices()))
-			)
-		);
 		wp_localize_script( 'grav_blocks_controls_js', 'gravBlockData', $block_data );
 
 		wp_enqueue_style( 'grav_blocks_icons_css', 'https://i.icomoon.io/public/790bec4572/GravitateBlocks/style.css', true, '1.1.0' );
@@ -3056,16 +3051,6 @@ class GRAV_BLOCKS {
 		}
 
 		return $conditional_array;
-	}
-
-
-	public static function get_grid_format_choices() {
-		return array (
-			'' => 'Grid',
-			'gallery' => 'Image Gallery',
-			'logos' => 'Logos',
-			'slider' => 'Slider'
-		);
 	}
 
 	public static function get_blocks_usage( $data ) {
