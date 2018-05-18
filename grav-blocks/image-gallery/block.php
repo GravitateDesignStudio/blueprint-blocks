@@ -2,18 +2,30 @@
 
 	$format = isset($format) ? $format : get_sub_field('format');
 
+	if ($format == 'gallery') {
+		$num_columns_small =  isset($num_columns_small)  ? $num_columns_small  : (get_sub_field('num_columns_small')  ? get_sub_field('num_columns_small')  : 1); // Set Defaults for older Plugin Versions
+		$num_columns_medium = isset($num_columns_medium) ? $num_columns_medium : (get_sub_field('num_columns_medium') ? get_sub_field('num_columns_medium') : 2); // Set Defaults for older Plugin Versions
+		$num_columns_large =  isset($num_columns_large)  ? $num_columns_large  : (get_sub_field('num_columns_large')  ? get_sub_field('num_columns_large')  : 4); // Set Defaults for older Plugin Versions
+		$num_columns_xlarge = isset($num_columns_xlarge) ? $num_columns_xlarge : (get_sub_field('num_columns_xlarge') ? get_sub_field('num_columns_xlarge') : 6); // Set Defaults for older Plugin Versions
+
+		$grid_class = ' '.GRAV_BLOCKS::css()->grid($num_columns_small, $num_columns_medium, $num_columns_large, $num_columns_xlarge)->get();
+	}
+
 	if($images = get_sub_field('images')){ ?>
 
 	<div class="block-inner image-gallery__format--<?php echo $format; ?>">
-		<div class="<?php echo GRAV_BLOCKS::css()->row()->get(); ?>">
+		<div class="<?php echo GRAV_BLOCKS::css()->row()->add('align-center')->get(); if($format == 'gallery'){ echo ' '.$grid_class; } ?>">
+
 			<?php if( have_rows('images') ){
+
 				if ($format != 'gallery') { ?>
 				<div class="<?php echo GRAV_BLOCKS::css()->col(12)->get(); ?>">
 					<div class="swiper-container">
 						<div class="swiper-wrapper">
 				<?php }
+
 			    while ( have_rows('images') ){ the_row();
-					$col = ($format == 'gallery') ? GRAV_BLOCKS::css()->col(12, 6, 4)->get() : 'swiper-slide'; ?>
+					$col = ($format == 'gallery') ? 'columns' : 'swiper-slide'; ?>
 					<div class="<?php echo $col; ?>">
 						<?php if($format == 'gallery' && get_sub_field('open_modal') == 1){ ?>
 							<a
@@ -30,6 +42,7 @@
 						<?php } ?>
 					</div>
 			    <?php }
+
 				if ($format != 'gallery') { ?>
 					</div>
 					<?php if (count($images) > 1 && $format != 'gallery'): ?>
@@ -40,6 +53,7 @@
 					</div><!-- Close swiper wrapper -->
 				</div>
 				<?php }
+
 			} ?>
 		</div>
 	</div>

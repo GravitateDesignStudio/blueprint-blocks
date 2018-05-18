@@ -13,6 +13,14 @@
 *
 */
 
+$link_options = array(
+	'none' => 'None',
+	'directions' => 'Directions',
+	'page' => 'Page Link',
+	'url' => 'URL',
+	'file' => 'File Download',
+	'video' => 'Play Video',
+);
 
 $block_fields = array(
 	array (
@@ -46,7 +54,7 @@ $block_fields = array(
 	        'id' => '',
 	    ),
 	    'default_value' => '',
-	    'placeholder' => '',
+	    'placeholder' => '[{"featureType": "water",...',
 	    'maxlength' => '',
 	    'rows' => '',
 	    'new_lines' => '',        // wpautop | br | ''
@@ -194,6 +202,7 @@ $block_fields = array(
 			    'readonly' => 0,
 			    'disabled' => 0,
 			),
+			GRAV_BLOCKS::get_link_fields(array('name' => 'link', 'includes' => $link_options, 'show_text' => true)),
 	        array (
 	            'key' => 'field_'.$block.'_lattitude',
 	            'label' => 'Lattitude',

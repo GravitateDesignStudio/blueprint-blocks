@@ -16,8 +16,8 @@
 $block_fields = array(
 	array (
 		'key' => 'field_'.$block.'_1',
-		'label' => 'Gallery Title',
-		'name' => 'gallery_title',
+		'label' => 'Grid Title',
+		'name' => 'grid_title',
 		'type' => 'text',
 		'column_width' => '',
 		'default_value' => '',
@@ -138,8 +138,8 @@ $block_fields = array(
 	),
 	array (
 		'key' => 'field_'.$block.'_2',
-		'label' => 'Gallery Items',
-		'name' => 'gallery_items',
+		'label' => 'Grid Items',
+		'name' => 'grid_items',
 		'type' => 'repeater',
 		'column_width' => '',
 		'instructions' => '',
@@ -157,20 +157,7 @@ $block_fields = array(
 				'append' => '',
 				'formatting' => 'none',
 				'maxlength' => '',
-				'conditional_logic' => array (
-				    array (
-				        array (
-				            'field' => 'field_'.$block.'_format',
-				            'operator' => '!=',
-				            'value' => 'logos',
-				        ),
-						array (
-				            'field' => 'field_'.$block.'_format',
-				            'operator' => '!=',
-				            'value' => 'gallery',
-				        ),
-				    ),
-				),
+				'conditional_logic' => 0,
 			),
 			array (
 				'key' => 'field_'.$block.'_9',
@@ -183,7 +170,39 @@ $block_fields = array(
 				'library' => 'all',
 				'preview_size' => 'medium',
 			),
-			GRAV_BLOCKS::get_link_fields(array('name' => 'link', 'show_text' => false, 'conditional_logic' => array('field' => 'field_'.$block.'_format','operator' => '!=','value' => 'gallery'))),
+			GRAV_BLOCKS::get_link_fields(array('name' => 'link', 'show_text' => false)),
+			array (
+			    'key' => 'field_'.$block.'_button_text',
+			    'label' => 'Button Text',
+			    'name' => 'button_text',
+			    'type' => 'text',
+			    'instructions' => '(Optional) If a value is added, you will see a button at the bottom of the grid item.',
+			    'required' => 0,
+			    'conditional_logic' => array (
+			        'status' => 1,
+			        'rules' => array (
+			            array (
+			               'field' => 'field_'.$block.'_link_type',
+			                'operator' => '!=',
+			               'value' => 'none',
+			          ),
+			        ),
+			        'allorany' => 'all',
+			    ),
+			    'wrapper' => array (
+			        'width' => '',
+			        'class' => '',
+			        'id' => '',
+			    ),
+			    'default_value' => '',
+			    'placeholder' => '',
+			    'formatting' => 'none',       // none | html
+			    'prepend' => '',
+			    'append' => '',
+			    'maxlength' => '',
+			    'readonly' => 0,
+			    'disabled' => 0,
+			),
 			array (
 				'key' => 'field_'.$block.'_10',
 				'label' => 'Content',
@@ -191,20 +210,7 @@ $block_fields = array(
 				'type' => 'textarea',
 				'column_width' => '',
 				'default_value' => '',
-				'conditional_logic' => array (
-				    array (
-				        array (
-				            'field' => 'field_'.$block.'_format',
-				            'operator' => '!=',
-				            'value' => 'logos',
-				        ),
-						array (
-				            'field' => 'field_'.$block.'_format',
-				            'operator' => '!=',
-				            'value' => 'gallery',
-				        ),
-				    ),
-				),
+				'conditional_logic' => 0,
 			),
 		),
 		'min' => '1',
@@ -225,15 +231,15 @@ return array (
 		'icon' => 'gravicon-gallery',
 		'description' => '<div class="row">
 				<div class="columns medium-6">
-					<img src="'.plugins_url().'/blueprint-blocks/grav-blocks/media-gallery/gallery.svg">
+					<img src="'.plugins_url().'/blueprint-blocks/grav-blocks/grid/gallery.svg">
 				</div>
 				<div class="columns medium-6">
-					<p>When you want to display more than one image, this flexible block is the way to go. It allows for multiple gallery items each with an ability for a title, image, link and description. Each image will also display in a gallery modal if no link is clicked.</p>
+					<p>When you want to display more than one image, this flexible block is the way to go. It allows for multiple grid items each with an ability for a title, image, link and description.</p>
 					<p><strong>Available Fields:</strong></p>
 					<ul>
 						<li>Background</li>
-						<li>Gallery Title</li>
-						<li>Gallery Item
+						<li>Grid Title</li>
+						<li>Grid Item
 							<ul>
 								<li>Item Title</li>
 								<li>Image</li>

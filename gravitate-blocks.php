@@ -2469,21 +2469,7 @@ class GRAV_BLOCKS {
 			'file' => 'File Download',
 			'video' => 'Play Video',
 		);
-		$allowed_fields = (!empty($includes)) ? array() : $allowed_options;
-
-		if(!empty($includes)){
-			foreach($includes as $include_key => $include){
-				// Allow the Dev to change the Label
-				if(!is_numeric($include_key) && isset($allowed_options[$include_key]))
-				{
-					$allowed_fields[$include_key] = $include;
-				}
-				else  // Use Default Label
-				{
-					$allowed_fields[$include] = $allowed_options[$include];
-				}
-			}
-		}
+		$allowed_fields = (!empty($includes)) ? $includes : $allowed_options;
 
 		// Format the Array if it is not formatted correctly
 		if(!empty($conditional_logic) && is_array($conditional_logic))

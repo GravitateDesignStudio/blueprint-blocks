@@ -253,7 +253,9 @@ jQuery(document).ready(function($){
                  // Allow each marker to have an info window
                  google.maps.event.addListener(marker, 'click', (function(marker, i) {
                      return function() {
-                         infoWindow.setContent('<div class="info_content">' + InfoWindowContent[i]['marker_name'] +  InfoWindowContent[i]['marker_text'] + '<p><a href="https://www.google.com/maps/dir/Current+Location/' + gravMarkerLocations[i][1] +',' +gravMarkerLocations[i][2] +'" target="_blank">Get Directions</a></p></div>');
+
+                         var link = (InfoWindowContent[i]['marker_link']) ? '<p><a href="' + InfoWindowContent[i]['marker_link'] + '" target="_blank">' + InfoWindowContent[i]['marker_link_text'] + '</a></p>' : '';
+                         infoWindow.setContent('<div class="info_content">' + InfoWindowContent[i]['marker_name'] +  InfoWindowContent[i]['marker_text'] + link + '</div>');
                          infoWindow.open(map, marker);
                      }
                  })(marker, i));

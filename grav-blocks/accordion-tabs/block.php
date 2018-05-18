@@ -8,11 +8,8 @@ if ($add_side_content) {
 	$side_content_placement = get_sub_field('side_content_placement');
 
 	if ($side_content_placement == 'right') {
-		$content_classes = 'medium-order-2';
-		$accordion_classes = 'medium-order-1';
-	} else {
-		$content_classes = 'medium-order-1';
-		$accordion_classes = 'medium-order-2';
+		$content_classes = 'small-order-2';
+		$accordion_classes = 'small-order-1';
 	}
 } ?>
 

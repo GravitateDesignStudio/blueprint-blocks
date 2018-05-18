@@ -9,17 +9,25 @@ $location_data = array();
 $infowindow_data = array();
 
 if( $markers ){
-	foreach ($markers as $marker) {
+	foreach ($markers as $key => $marker) {
 
-		$location_data[] = array(
+		$location_data[$key] = array(
 			$marker['marker_name'],
 			$marker['lattitude'],
 			$marker['longitude']);
 
-		$infowindow_data[] = array (
+		$infowindow_data[$key] = array (
 			'marker_name' => "<h3>" . $marker['marker_name'] . "</h3>",
 			'marker_text' => trim($marker['info_window'], " \t\n\r\0\x0B"),
+			'marker_link' => '',
+			'marker_link_text' => '',
+
 		);
+
+		if ($marker['link_type'] != 'none') {
+			$infowindow_data[$key]['marker_link'] = ($marker['link_type'] == 'directions') ? 'https://www.google.com/maps/dir/Current+Location/' . $marker['lattitude'] .',' .$marker['longitude'] : $marker['link_' . $marker['link_type']];
+			$infowindow_data[$key]['marker_link_text'] = $marker['link_text'];
+		}
 
 	}
 }
@@ -50,7 +58,7 @@ if ($mapBlockApiKey = GRAV_BLOCKS_PLUGIN_SETTINGS::get_setting_value('google_map
 				<div class="<?php echo GRAV_BLOCKS::css()->col(12, $map_col)->get() . $map_order;?> map">
 					<div
 					data-zoom="<?php the_sub_field('zoom_offset'); ?>"
-					id="<?php echo GRAV_BLOCKS::$block_index;?>_map" class="google-map">
+					id="<?php echo GRAV_BLOCKS::$block_index;?>_map" class="block-map__google-map">
 
 					</div>
 
@@ -75,7 +83,7 @@ if ($mapBlockApiKey = GRAV_BLOCKS_PLUGIN_SETTINGS::get_setting_value('google_map
 	<div class="block-inner">
 		<div class="<?php echo GRAV_BLOCKS::css()->row()->get();?> align-center">
 			<div class="<?php echo GRAV_BLOCKS::css()->col(12, 10)->get(); ?>">
-				<h2>Please add a Google Map API key to Gravitate Blocks General Settings</h2>
+				<h2>Please add a Google Maps API key to Gravitate Blocks General Settings</h2>
 			</div>
 		</div>
 
