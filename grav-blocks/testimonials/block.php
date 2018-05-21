@@ -34,19 +34,17 @@ if(get_sub_field('testimonials'))
 							</div>
 						</div>
 						<?php
-					}
+					} ?>
 
-					if(count(get_sub_field('testimonials')) > 1)
+					</div>
+					<?php if(count(get_sub_field('testimonials')) > 1)
 					{
 						?>
 						<div class="swiper-pagination"></div>
-						<div class="swiper-prev"></div>
-    					<div class="swiper-next"></div>
+						<div class="swiper-button-prev"></div>
+    					<div class="swiper-button-next"></div>
 						<?php
-					}
-					?>
-
-					</div>
+					} ?>
 				 </div>
 			 </div>
 		</div>
