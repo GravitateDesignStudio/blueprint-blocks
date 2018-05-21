@@ -16,16 +16,16 @@
 	$content = get_sub_field('content');
 	$col_array = GRAV_BLOCKS::column_width_options();
 
-	$col_total = 12;
+	$col_total = ($col_width > 4 )? 12 : 10;
 	$col_total = apply_filters('grav_block_mediacontent_columns', $col_total, $col_width, $placement);
 	$col_content_width = $col_total-$col_width;
 	$col_class = 'col-option-'.$placement.'-'.sanitize_title($col_array[$col_width]);
 
-	$bottom_classes = GRAV_BLOCKS::css()->col(0, $col_content_width)->add($col_class)->get();
-	$top_classes = GRAV_BLOCKS::css()->col(0, $col_width)->add($col_class.', block-media-content__col-media')->get();
+	$bottom_classes = GRAV_BLOCKS::css()->col(12, $col_content_width)->add($col_class)->get();
+	$top_classes = GRAV_BLOCKS::css()->col(12, $col_width)->add($col_class.', block-media-content__col-media')->get();
 	if($placement == 'right'){
-		$top_classes = GRAV_BLOCKS::css()->col(0, $col_width)->add('medium-order-2, '.$col_class.', block-media-content__col-media')->get();
-		$bottom_classes = GRAV_BLOCKS::css()->col(0, $col_content_width)->add('medium-order-1, '.$col_class)->get();
+		$top_classes = GRAV_BLOCKS::css()->col(12, $col_width)->add('medium-order-2, '.$col_class.', block-media-content__col-media')->get();
+		$bottom_classes = GRAV_BLOCKS::css()->col(12, $col_content_width)->add('medium-order-1, '.$col_class)->get();
 	}
 
 	$image_format = '';
@@ -36,7 +36,7 @@
 ?>
 
 <div class="block-inner <?php echo $placement.'-'.sanitize_title($col_array[$col_width]); echo $image_format; ?>">
-	<div class="<?php echo GRAV_BLOCKS::css()->row()->add('block-media-content__media-type--'.$media_type.'-container')->get();?>">
+	<div class="<?php echo GRAV_BLOCKS::css()->row()->add(array('block-media-content__media-type--'.$media_type.'-container',($col_width > 5 && $format != 'fullbleed') ? 'align-center' : 'align-' . $placement))->get(); ?>">
 		<div class="<?php echo $top_classes; ?>">
 			<?php if($link = GRAV_BLOCKS::get_link_url('link')){ ?>
 				<a class="block-link-<?php echo esc_attr(get_sub_field('link_type'));?>" href="<?php echo esc_url($link); ?>">

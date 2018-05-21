@@ -239,8 +239,8 @@ jQuery(document).ready(function($){
                     backgroundColor: '#666666',
                     borderColor: '#666666',
                     padding: 0,
-                    color: '#ffffff',
                     borderRadius: 0,
+                    minWidth: 200,
                     maxWidth: 500,
                     closeSrc: markerClose
                 }
@@ -266,7 +266,7 @@ jQuery(document).ready(function($){
                      return function() {
 
                          var link = (InfoWindowContent[i]['marker_link']) ? '<p><a href="' + InfoWindowContent[i]['marker_link'] + '" target="_blank">' + InfoWindowContent[i]['marker_link_text'] + '</a></p>' : '';
-                         infoWindow.setContent('<div class="info_content">' + InfoWindowContent[i]['marker_name'] +  InfoWindowContent[i]['marker_text'] + link + '</div>');
+                         infoWindow.setContent('<div class="info_content bg-gray-dark">' + InfoWindowContent[i]['marker_name'] +  InfoWindowContent[i]['marker_text'] + link + '</div>');
                          infoWindow.open(map, marker);
                      }
                  })(marker, i));

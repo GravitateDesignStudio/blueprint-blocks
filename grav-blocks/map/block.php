@@ -17,7 +17,7 @@ if( $markers ){
 			$marker['longitude']);
 
 		$infowindow_data[$key] = array (
-			'marker_name' => "<h3>" . $marker['marker_name'] . "</h3>",
+			'marker_name' => "<h5>" . $marker['marker_name'] . "</h5>",
 			'marker_text' => trim($marker['info_window'], " \t\n\r\0\x0B"),
 			'marker_link' => '',
 			'marker_link_text' => '',
@@ -53,7 +53,7 @@ if ($mapBlockApiKey = GRAV_BLOCKS_PLUGIN_SETTINGS::get_setting_value('google_map
 	{ ?>
 
 		<div class="block-inner">
-			<div class="<?php echo GRAV_BLOCKS::css()->row()->get();?>">
+			<div class="<?php echo GRAV_BLOCKS::css()->row()->get();?> align-center">
 				<!-- Map -->
 				<div class="<?php echo GRAV_BLOCKS::css()->col(12, $map_col)->get() . $map_order;?> map">
 					<div
