@@ -36,13 +36,13 @@
 ?>
 
 <div class="block-inner <?php echo $placement.'-'.sanitize_title($col_array[$col_width]); echo $image_format; ?>">
-	<div class="<?php echo GRAV_BLOCKS::css()->row()->add(array('block-media-content__media-type--'.$media_type.'-container',($col_width > 5 && $format != 'fullbleed') ? 'align-center' : 'align-' . $placement))->get(); ?>">
+	<div class="<?php echo GRAV_BLOCKS::css()->row()->add('align-' . $placement)->get(); ?>">
 		<div class="<?php echo $top_classes; ?>">
 			<?php if($link = GRAV_BLOCKS::get_link_url('link')){ ?>
 				<a class="block-link-<?php echo esc_attr(get_sub_field('link_type'));?>" href="<?php echo esc_url($link); ?>">
 			<?php } ?>
 
-			<div class="block-media-content__media-type--<?php echo $media_type;?>">
+			<div class="block-media-content__media-type--<?php echo $media_type; ?>-container">
 				<?php if($media_type === 'video' && $video_url){ ?>
 					<video src="<?php echo $video_url;?>" <?php echo implode(' ', $video_attributes);?>></video>
 				<?php } ?>
