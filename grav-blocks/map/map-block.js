@@ -1,5 +1,5 @@
 
-var defaulStyles = [
+var defaultStyles = [
                 {
                     "featureType": "water",
                     "elementType": "geometry",
@@ -181,9 +181,8 @@ jQuery(document).ready(function($){
     if ($('.block-map').length) {
         // Setup map_blocks array
         var block_index = $('.block-map.block-container').attr('data-block-index'),
-            custom = customMapStyles,
-            mapStyles = defaulStyles;
-            // mapStyles = (custom.length > 0) ? JSON.parse(customMapStyles) : defaulStyles;
+            custom = JSON.parse(customMapStyles.replace(/\r?\n|\r/g, '')),
+            mapStyles = (custom.length > 0) ? custom : defaultStyles;
 
         $('#' + block_index + '_map').css('padding-bottom', '75%');
 

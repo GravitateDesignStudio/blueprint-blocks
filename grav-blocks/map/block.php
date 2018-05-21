@@ -76,9 +76,12 @@ if ($mapBlockApiKey = GRAV_BLOCKS_PLUGIN_SETTINGS::get_setting_value('google_map
 
 	wp_localize_script( 'map_block_js', 'locations', json_encode($location_data));
 	wp_localize_script( 'map_block_js', 'infoWindows', json_encode($infowindow_data));
-	wp_localize_script( 'map_block_js', 'customMapStyles', get_sub_field('custom_styles'));
 	wp_localize_script( 'map_block_js', 'markerClose', plugin_dir_url(__FILE__) . '/assets/map-close.png');
 	wp_localize_script( 'map_block_js', 'marker_url', plugin_dir_url(__FILE__) . '/assets/map-marker.png' );
+
+	if ($customStyles = GRAV_BLOCKS_PLUGIN_SETTINGS::get_setting_value('google_maps_styles')) {
+		wp_localize_script( 'map_block_js', 'customMapStyles', stripcslashes($customStyles));		
+	}
 
 } else { ?>
 	<div class="block-inner">
