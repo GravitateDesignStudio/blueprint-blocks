@@ -18,8 +18,6 @@ $link_options = array(
 	'directions' => 'Directions',
 	'page' => 'Page Link',
 	'url' => 'URL',
-	'file' => 'File Download',
-	'video' => 'Play Video',
 );
 
 $block_fields = array(

@@ -6,10 +6,6 @@
     display: inline-block;
 }
 
-.block-accordion-tabs__tab-list li.active {
-    background-color: grey;
-}
-
 .block-accordion-tabs__item .block-accordion-tabs__item--content {
     max-height: 0;
     overflow: hidden;

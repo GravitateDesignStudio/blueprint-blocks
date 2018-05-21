@@ -234,7 +234,18 @@ jQuery(document).ready(function($){
 
             var InfoWindowContent = JSON.parse(infoWindows);
             // Display multiple markers on a map
-            var infoWindow = new google.maps.InfoWindow(), marker, i;
+            var infoWindow = new InfoBubble(
+                {
+                    backgroundColor: '#666666',
+                    borderColor: '#666666',
+                    padding: 0,
+                    color: '#ffffff',
+                    borderRadius: 0,
+                    maxWidth: 500,
+                    closeSrc: markerClose
+                }
+            ), marker, i;
+            // var infoWindow = new google.maps.InfoWindow(), marker, i;
 
              // Loop through our array of markers & place each one on the map
              for( i = 0; i < gravMarkerLocations.length; i++ ) {

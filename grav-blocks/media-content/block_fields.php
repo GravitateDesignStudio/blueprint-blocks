@@ -242,7 +242,7 @@ $block_fields = array(
 		'choices' => GRAV_BLOCKS::column_width_options(),
 		'other_choice' => 0,
 		'save_other_choice' => 0,
-		'default_value' => '5',
+		'default_value' => 2,
 		'layout' => 'horizontal',
 		'block_options' => 1
 	),
