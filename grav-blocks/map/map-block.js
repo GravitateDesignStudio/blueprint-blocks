@@ -180,9 +180,9 @@ jQuery(document).ready(function($){
 
     if ($('.block-map').length) {
         // Setup map_blocks array
+
         var block_index = $('.block-map.block-container').attr('data-block-index'),
-            custom = JSON.parse(customMapStyles.replace(/\r?\n|\r/g, '')),
-            mapStyles = (custom.length > 0) ? custom : defaultStyles;
+            mapStyles = (customMapStyles.length > 1) ? JSON.parse(customMapStyles.replace(/\r?\n|\r/g, '')) : defaultStyles;
 
         $('#' + block_index + '_map').css('padding-bottom', '75%');
 
@@ -194,7 +194,7 @@ jQuery(document).ready(function($){
                 zoomControl: true,
                 zoom: 8,
                 zoomControlOptions: {
-                    position: google.maps.ControlPosition.RIGHT_CENTER
+                    position: google.maps.ControlPosition.LEFT_BOTTOM
                 },
                 mapTypeControl: false,
                 mapTypeId: 'roadmap',
