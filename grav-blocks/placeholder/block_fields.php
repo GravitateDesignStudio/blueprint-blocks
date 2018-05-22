@@ -32,28 +32,6 @@ $block_fields = array(
 	    'esc_html' => 0,             // uses the WordPress esc_html function
 	),
 	array (
-	    'key' => 'field_'.$block.'_block_name',
-	    'label' => 'Block Name',
-	    'name' => 'block_name',
-	    'type' => 'text',
-	    'instructions' => '',
-	    'required' => 0,
-	    'conditional_logic' => 0,
-	    'wrapper' => array (
-	        'width' => '',
-	        'class' => '',
-	        'id' => '',
-	    ),
-	    'default_value' => '',
-	    'placeholder' => '',
-	    'formatting' => 'none',       // none | html
-	    'prepend' => '',
-	    'append' => '',
-	    'maxlength' => '',
-	    'readonly' => 0,
-	    'disabled' => 0,
-	),
-	array (
 	    'key' => 'field_'.$block.'_block_description',
 	    'label' => 'Description',
 	    'name' => 'block_description',
