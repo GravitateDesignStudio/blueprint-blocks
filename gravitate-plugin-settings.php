@@ -435,7 +435,7 @@ class GRAV_BLOCKS_PLUGIN_SETTINGS
 		}
 		else if(!empty($field['type']) && $field['type'] == 'textarea')
 		{
-			?><textarea rows="6" cols="38" name="<?php echo $settings_attribute;?>" id="<?php echo $meta_key;?>"><?php echo esc_attr( (isset($field['value']) ? $field['value'] : '') );?></textarea><br /><?php
+			?><textarea rows="6" cols="38" name="<?php echo $settings_attribute;?>" id="<?php echo $meta_key;?>"><?php echo ($meta_key == 'google_maps_styles') ? stripcslashes(esc_attr( (isset($field['value']) ? $field['value'] : '') )): esc_attr( (isset($field['value']) ? $field['value'] : '') ); ?></textarea><br /><?php
 		}
 		else if(!empty($field['type']) && $field['type'] == 'select')
 		{
