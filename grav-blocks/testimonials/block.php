@@ -40,12 +40,6 @@ if($testimonials)
 
 							<div class="block-testimonials__testimonial swiper-slide">
 								<div class="<?php echo GRAV_BLOCKS::css()->add(($image ? 'has-image' : 'no-image'))->row()->get();?>">
-									<?php if ($image_array):
-
-										var_dump($image_array);
-
-									endif; ?>
-
 									<?php if($image){ ?>
 									<div class="<?php echo GRAV_BLOCKS::css()->add('block-testimonials__testimonial--image')->col(12, 2)->get();?>">
 										<?php if (is_array($image)): ?>
