@@ -167,7 +167,7 @@ for( $i = 1; $i <= $num_columns; $i++ ) {
 	    ),
 	    'other_choice' => 0,
 	    'save_other_choice' => 0,
-	    'default_value' => 'left',
+	    'default_value' => 'center',
 	    'layout' => 'horizontal',
 		'block_options' => 1
 	);
