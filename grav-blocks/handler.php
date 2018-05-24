@@ -16,10 +16,16 @@ $block_container_attributes
 
 */
 
-?>
+if ($block_name == 'global-block'){
 
-<section <?php echo $block_container_attributes; ?>>
+	GRAV_BLOCKS::get_block($block_name, $block_variables);
 
-	<?php GRAV_BLOCKS::get_block($block_name, $block_variables); ?>
+} else { ?>
 
-</section>
+	<section <?php echo $block_container_attributes; ?>>
+
+		<?php GRAV_BLOCKS::get_block($block_name, $block_variables); ?>
+
+	</section>
+
+<?php }

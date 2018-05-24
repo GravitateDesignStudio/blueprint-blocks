@@ -131,6 +131,9 @@ class GRAV_BLOCKS {
 
 		include_once plugin_dir_path( __FILE__ ).'gravitate-blocks-css.php';
 		include plugin_dir_path( __FILE__ ).'gravitate-plugin-settings.php';
+		include plugin_dir_path( __FILE__ ).'gravitate-global-blocks.php';
+
+		GRAV_GLOBAL_BLOCKS::setup_global_blocks_cpt();
 
 		new GRAV_BLOCKS_PLUGIN_SETTINGS(self::$option_key);
 
@@ -170,7 +173,7 @@ class GRAV_BLOCKS {
 			// Add Default Fields
 			foreach ($layouts as $block_key => $block_layout)
 			{
-				if(!empty($block_layout['sub_fields']))
+				if(!empty($block_layout['sub_fields']) && $block_layout['name'] != 'global-block')
 				{
 					$layouts[$block_key]['sub_fields'] = array_merge(self::get_default_fields($block_layout['name']), $block_layout['sub_fields']);
 				}
@@ -1300,7 +1303,10 @@ class GRAV_BLOCKS {
 		}
 		else
 		{
-			self::$block_index++;
+			if ($block_name != 'global-block') {
+				self::$block_index++;
+			}
+
 			self::display_block($block_name, $block_only_variables, $handler_file);
 		}
 	}
