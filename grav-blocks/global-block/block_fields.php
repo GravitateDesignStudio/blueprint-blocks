@@ -13,6 +13,10 @@
 *
 */
 
+$user = wp_get_current_user();
+
+$user_name = $user->user_login;
+
 $block_fields = array(
 	array (
 	    'key' => 'field_'.$block.'_block_group',
