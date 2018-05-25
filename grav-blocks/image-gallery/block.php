@@ -11,12 +11,14 @@
 		$grid_class = ' '.GRAV_BLOCKS::css()->grid($num_columns_small, $num_columns_medium, $num_columns_large, $num_columns_xlarge)->get();
 	}
 
-	if($images = get_sub_field('images')){ ?>
+	$images = isset($images) ? $images : get_sub_field('images');
+
+	if($images){ ?>
 
 	<div class="block-inner image-gallery__format--<?php echo $format; ?>">
 		<div class="<?php echo GRAV_BLOCKS::css()->row()->add('align-center')->get(); if($format == 'gallery'){ echo ' '.$grid_class; } ?>">
 
-			<?php if( have_rows('images') ){
+			<?php if( $images ){
 
 				if ($format != 'gallery') { ?>
 				<div class="<?php echo GRAV_BLOCKS::css()->col(12)->get(); ?>">
@@ -24,20 +26,20 @@
 						<div class="swiper-wrapper">
 				<?php }
 
-			    while ( have_rows('images') ){ the_row();
+			    foreach ($images as $image) {
 					$col = ($format == 'gallery') ? 'columns' : 'swiper-slide'; ?>
 					<div class="<?php echo $col; ?>">
-						<?php if($format == 'gallery' && get_sub_field('open_modal') == 1){ ?>
+						<?php if($format == 'gallery' && $image['open_modal'] == 1){ ?>
 							<a
 								class="image-gallery__link--<?php echo GRAV_BLOCKS::$block_index; ?>"
 								rel="image-gallery__link--<?php echo GRAV_BLOCKS::$block_index; ?>"
-								href="<?php echo GRAV_BLOCKS::image(get_sub_field('image'), '', 'url', 'large'); ?>">
+								href="<?php echo GRAV_BLOCKS::image($image['image'], '', 'url', 'large'); ?>">
 
 						<?php } ?>
 
-							<?php echo GRAV_BLOCKS::image(get_sub_field('image'),'','img',($format == 'gallery') ? 'medium' : ''); ?>
+							<?php echo GRAV_BLOCKS::image($image['image'],'','img',($format == 'gallery') ? 'medium' : ''); ?>
 
-						<?php if($format == 'gallery' && get_sub_field('open_modal') == 1){ ?>
+						<?php if($format == 'gallery' && $image['open_modal'] == 1){ ?>
 							</a>
 						<?php } ?>
 					</div>

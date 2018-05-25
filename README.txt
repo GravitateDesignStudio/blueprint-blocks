@@ -40,18 +40,20 @@ Easily add content to your site with Gravitate Blocks.
 
 == Available Blocks ==
 
-* Media w/ Content
+* Accordion/Tabs
 * Blockquote
-* Columns / Content
-* Media Gallery
+* Columns
+* CTA
+* Form
+* Global Block
+* Google Map
+* Grid
+* Media w/Content
+* Media/Image Gallery
+* Placeholder
+* Posts
 * Testimonials
 * Title
-* Posts
-* CTA
-* Accordion
-* Grid
-* Tabs
-* Map
 
 ### Browser Sync Command
 

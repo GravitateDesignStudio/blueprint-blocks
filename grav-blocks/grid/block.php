@@ -13,9 +13,13 @@ $num_columns_xlarge = isset($num_columns_xlarge) ? $num_columns_xlarge : (get_su
 
 $grid_class = ' '.GRAV_BLOCKS::css()->grid($num_columns_small, $num_columns_medium, $num_columns_large, $num_columns_xlarge)->get();
 
-if($grid_items = get_sub_field('grid_items')){ ?>
+$block_title = isset($block_title) ? $block_title : get_sub_field('grid_title');
+
+$grid_items = isset($grid_items) ? $grid_items : get_sub_field('grid_items');
+
+if($grid_items){ ?>
 	<div class="block-inner">
-		<?php if($block_title = get_sub_field('grid_title')){ ?>
+		<?php if($block_title){ ?>
 			<div class="<?php echo GRAV_BLOCKS::css()->row()->add('block-title-container')->get();?>">
 				<div class="<?php echo GRAV_BLOCKS::css()->col()->get();?>">
 					<h2 class="block-title"><?php echo $block_title; ?></h2>
@@ -34,14 +38,14 @@ if($grid_items = get_sub_field('grid_items')){ ?>
 				<?php
 				if($grid_items)
 				{
-					while(has_sub_field('grid_items'))
-					{
-						$image = get_sub_field('item_image');
-						$title = get_sub_field('item_title');
+					foreach ($grid_items as $grid_item) {
 
-						$link = GRAV_BLOCKS::get_link_url('link');
+						$image = $grid_item['item_image'];
+						$title = $grid_item['item_title'];
 
-						$link_type = get_sub_field('link_type');
+						$link_type = $grid_item['link_type'];
+
+						$link = $grid_item['link_' . $link_type];
 
 						?>
 						<div class="columns block-grid__item">
@@ -61,12 +65,12 @@ if($grid_items = get_sub_field('grid_items')){ ?>
 								<?php if($title){ ?>
 									<h3 class="block-grid__item--title"><span><?php echo $title; ?></span></h3>
 								<?php } ?>
-								<?php if($content = get_sub_field('item_content')){ ?>
+								<?php if($content = $grid_item['item_content']){ ?>
 									<p class="block-grid__item--content"><span><?php echo $content; ?></span></p>
 								<?php } ?>
 							</div>
 							<?php if($link){ ?>
-								<?php if ($button_text = get_sub_field('button_text')) { ?>
+								<?php if ($button_text = $gird_item['button_text']) { ?>
 									<span class="button"><?php echo $button_text; ?></span>
 								<?php } ?>
 								</a>

@@ -1,19 +1,19 @@
 <?php
 
-	$media_type = get_sub_field('media_type');
+	$media_type = isset($media_type) ? $media_type : get_sub_field('media_type');
 	if(!$media_type)
 	{
 		$media_type = 'image';
 	}
 
-	$video_url = get_sub_field('video_'.get_sub_field('video_type'));
+	$video_url = isset($video_url) ? $video_url : get_sub_field('video_'.get_sub_field('video_type'));
 
-	$embed = get_sub_field('embed');
-	$video_attributes = get_sub_field('video_attributes');
+	$embed = isset($embed) ? $embed : get_sub_field('embed');
+	$video_attributes = isset($video_attributes) ? $video_attributes : get_sub_field('video_attributes');
 
-	$placement = ($right = get_sub_field('image_placement')) ? $right : 'left';
-	$col_width = get_sub_field('image_size');
-	$content = get_sub_field('content');
+	$placement = isset($placement) ? $placement : get_sub_field('image_placement');
+	$col_width = isset($col_width) ? $col_width : get_sub_field('image_size');
+	$content = isset($content) ? $content : get_sub_field('content');
 	$col_array = GRAV_BLOCKS::column_width_options();
 
 	$col_total = ($col_width > 4 )? 12 : 10;
@@ -28,14 +28,14 @@
 		$bottom_classes = GRAV_BLOCKS::css()->col(12, $col_content_width)->add('medium-order-1, '.$col_class)->get();
 	}
 
-	$image_format = '';
 	if ($media_type == 'image' && $col_width >= 6) {
-		$image_format = ' ' . get_sub_field('image_format');
+
+		$image_format = isset($image_format) ? $image_format : get_sub_field('image_format');
 	}
 
 ?>
 
-<div class="block-inner <?php echo $placement.'-'.sanitize_title($col_array[$col_width]); echo $image_format; ?>">
+<div class="block-inner <?php echo $placement.'-'.sanitize_title($col_array[$col_width]); if($image_format){ echo ' ' . $image_format; } ?>">
 	<div class="<?php echo GRAV_BLOCKS::css()->row()->add('align-' . $placement)->get(); ?>">
 		<div class="<?php echo $top_classes; ?>">
 			<?php if($link = GRAV_BLOCKS::get_link_url('link')){ ?>
