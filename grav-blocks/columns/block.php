@@ -1,8 +1,13 @@
 <?php
 
-if($column_num = get_sub_field('num_columns')){
+$column_num = isset($column_num) ? $column_num : get_sub_field('num_columns');
+$format = isset($format) ? $format : get_sub_field('format');
 
-	$sidebar = ($column_num == 2) ? get_sub_field('format') : '';
+$columns = isset($columns) ? $columns : array();
+
+if($column_num){
+
+	$sidebar = ($column_num == 2) ? $format : '';
 
 	$cols_span = (12/$column_num);
 	if (!$sidebar) {
@@ -15,8 +20,7 @@ if($column_num = get_sub_field('num_columns')){
 			    break;
 		}
 	}
-	// $cols_span = ($cols_span == 12) ? 8 : $cols_span;
-	// $cols_span = ($cols_span == 6) ? 4 : $cols_span;
+
 	$cols_span = apply_filters('grav_block_content_columns', $cols_span);
 	$medium_col = $column_num < 3 ? (12/$column_num) : 12;
 	$large_col = $column_num >= 2 ? $cols_span : 12;
@@ -38,7 +42,7 @@ if($column_num = get_sub_field('num_columns')){
 				}
 				?>
 				<div class="<?php echo GRAV_BLOCKS::css()->col(12, $medium_col, $large_col)->add('col-content')->get(); ?>">
-					<?php the_sub_field('column_'.$i); ?>
+					<?php echo ($columns['column_'.$i]) ? $columns['column_'.$i] : get_sub_field('column_'.$i); ?>
 				</div>
 		<?php } ?>
 		</div>

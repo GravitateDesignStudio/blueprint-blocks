@@ -1,8 +1,8 @@
 === Gravitate Blueprint Blocks ===
-Contributors: Gravitate, bferdinand
+Contributors: Gravitate, bferdinand, scott-grav
 Tags: Gravitate, Content Blocks, ACF, Advanced Custom Fields
 Requires at least: 3.5
-Tested up to: 4.8
+Tested up to: 4.9
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -11,9 +11,7 @@ Easily add content to your site with Gravitate Blocks.
 
 == Description ==
 
-**Warning:** If you have been using version 1.1.0 or below updating may break the current blocks. We recommend copying the "grav-blocks" folder from the plugin to your theme folder before updating.
-
-**Description:** Welcome to Gravitate Blocks: A content solution using WordPress and Advanced Custom Fields that allows clients to build an extremely flexible and stylish webpage without worrying about the code, layout or design. Clients select the type of content, add the content, and the system does the rest.
+**Description:** Welcome to Gravitate Blueprint Blocks: A content solution using WordPress and Advanced Custom Fields that allows clients to build an extremely flexible and stylish webpage without worrying about the code, layout or design. Clients select the type of content, add the content, and the system does the rest.
 
 ==Requirements==
 
@@ -40,18 +38,20 @@ Easily add content to your site with Gravitate Blocks.
 
 == Available Blocks ==
 
-* Media w/ Content
+* Accordion/Tabs
 * Blockquote
-* Columns / Content
-* Media Gallery
+* Columns
+* CTA
+* Form
+* Global Block
+* Google Map
+* Grid
+* Media w/Content
+* Media/Image Gallery
+* Placeholder
+* Posts
 * Testimonials
 * Title
-* Posts
-* CTA
-* Accordion
-* Grid
-* Tabs
-* Map
 
 ### Browser Sync Command
 

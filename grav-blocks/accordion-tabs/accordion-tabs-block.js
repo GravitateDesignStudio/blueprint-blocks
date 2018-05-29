@@ -9,7 +9,6 @@ jQuery(document).ready(function($){
                     var target = $(this).attr('data-target');
                     $(this).addClass('active');
                     $(this).siblings('li').removeClass('active');
-                    console.log(target);
 
                     $('#' + target).addClass('active');
                     $('#' + target).siblings('.block-accordion-tabs__item').removeClass('active');
@@ -21,7 +20,6 @@ jQuery(document).ready(function($){
                         sectionName = $(target).attr('id');
                     $(target).addClass('active');
                     $(this).parent().siblings('.block-accordion-tabs__item').removeClass('active');
-                    console.log(target);
 
                     $('.block-accordion-tabs__tab-list li[data-target=' + sectionName + ']').addClass('active');
                     $('.block-accordion-tabs__tab-list li[data-target=' + sectionName + ']').siblings('li').removeClass('active');

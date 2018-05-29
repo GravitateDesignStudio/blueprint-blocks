@@ -129,9 +129,9 @@ class GRAV_BLOCKS {
 	{
 		global $block;
 
-		include_once plugin_dir_path( __FILE__ ).'gravitate-blocks-css.php';
-		include plugin_dir_path( __FILE__ ).'gravitate-plugin-settings.php';
-		include plugin_dir_path( __FILE__ ).'gravitate-global-blocks.php';
+		include_once plugin_dir_path( __FILE__ ).'blueprint-blocks-css.php';
+		include plugin_dir_path( __FILE__ ).'blueprint-plugin-settings.php';
+		include plugin_dir_path( __FILE__ ).'blueprint-global-blocks.php';
 
 		GRAV_GLOBAL_BLOCKS::setup_global_blocks_cpt();
 

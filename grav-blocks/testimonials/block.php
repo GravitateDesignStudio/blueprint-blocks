@@ -2,11 +2,6 @@
 
 $testimonials = isset($testimonials) ? $testimonials : get_sub_field('testimonials');
 
-if(apply_filters( 'grav_blocks_testimonials_cpt', $testimonial_cpts)) {
-	// TODO: Figure this out
-	$schema = apply_filters('grav_blocks_testimonials_cpt_schema', $testimonial_cpts_schema);
-}
-
 if($testimonials)
 {
 	?>
@@ -53,12 +48,14 @@ if($testimonials)
 									<div class="<?php echo GRAV_BLOCKS::css()->add('block-testimonials__testimonial--content')->col(12, ($image ? 10 : 12))->get();?>">
 										<blockquote class="testimonial">
 											<p><?php echo $text; ?></p>
-											<footer>
-												<cite class="block-testimonials__testimonial--attribution-title"><?php echo $attribution; ?></cite>
-												<?php if($attribution_sub_title){ ?>
-													<cite class="block-testimonials__testimonial--attribution-sub-title"><?php echo $attribution_sub_title;?></cite>
-												<?php } ?>
-											</footer>
+											<?php if ($attribution): ?>
+												<footer>
+													<cite class="block-testimonials__testimonial--attribution-title"><?php echo $attribution; ?></cite>
+													<?php if($attribution_sub_title){ ?>
+														<cite class="block-testimonials__testimonial--attribution-sub-title"><?php echo $attribution_sub_title;?></cite>
+													<?php } ?>
+												</footer>
+											<?php endif; ?>
 										</blockquote>
 									</div>
 								</div>
