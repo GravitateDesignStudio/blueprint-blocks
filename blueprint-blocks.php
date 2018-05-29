@@ -250,28 +250,28 @@ class GRAV_BLOCKS {
 						'endpoint' => 0,          // end tabs to start a new group
 					);
 
-					$tab_guidlines = array (
-					    'key' => 'field_block_tab_'.$block_layout['name'].'_tab3',
-					    'label' => 'Guidelines',
-					    'name' => 'block_tab_'.$block_layout['name'].'_tab3',
-					    'type' => 'tab',
-					    'instructions' => '',
-					    'required' => 0,
-					    'conditional_logic' => 0,
-					    'wrapper' => array (
-					        'width' => '',
-					        'class' => '',
-					        'id' => '',
-					    ),
-					    'placement' => 'left',
-					    'endpoint' => 0,          // end tabs to start a new group
-					);
-					$tab_guidlines_fields =	array(
+					// $tab_guidlines = array (
+					//     'key' => 'field_block_tab_'.$block_layout['name'].'_tab3',
+					//     'label' => 'Guidelines',
+					//     'name' => 'block_tab_'.$block_layout['name'].'_tab3',
+					//     'type' => 'tab',
+					//     'instructions' => '',
+					//     'required' => 0,
+					//     'conditional_logic' => 0,
+					//     'wrapper' => array (
+					//         'width' => '',
+					//         'class' => '',
+					//         'id' => '',
+					//     ),
+					//     'placement' => 'left',
+					//     'endpoint' => 0,          // end tabs to start a new group
+					// );
+					$guidelines_fields =	array(
 						array (
-						    'key' => 'field_'.$block_layout['name'].'_guidelines',
-						    'label' => 'Guidlines',
+							'key' => 'field_'.$block_layout['name'].'_guidelines',
+						    'label' => 'Guidelines',
 						    'name' => 'guidelines',
-						    'type' => 'textarea',
+						    'type' => 'text',
 						    'instructions' => '',
 						    'required' => 0,
 						    'conditional_logic' => 0,
@@ -282,9 +282,10 @@ class GRAV_BLOCKS {
 						    ),
 						    'default_value' => '',
 						    'placeholder' => '',
+						    'formatting' => 'none',       // none | html
+						    'prepend' => '',
+						    'append' => '',
 						    'maxlength' => '',
-						    'rows' => '',
-						    'new_lines' => 'wpautop',        // wpautop | br | ''
 						    'readonly' => 0,
 						    'disabled' => ($user_name == 'gravitate-admin') ? 0 : 1,
 						)
@@ -325,7 +326,7 @@ class GRAV_BLOCKS {
 
 					}
 
-					$new_sub_fields = array_merge($new_sub_fields, $tab_fields, array($tab_options), $tab_options_fields, array($tab_guidlines), $tab_guidlines_fields);
+					$new_sub_fields = array_merge($new_sub_fields, $tab_fields, $guidelines_fields, array($tab_options), $tab_options_fields);
 
 					$layouts[$block_key]['sub_fields'] = $new_sub_fields;
 
