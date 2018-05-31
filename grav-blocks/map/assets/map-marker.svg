@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="18px" height="24px" viewBox="0 0 18 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.1 (51147) - http://www.bohemiancoding.com/sketch -->
+    <title>Solid/map-marker-alt</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M11.0750625,23.5157755 C4.26421875,13.6420748 3,12.6287313 3,8.9999978 C3,4.02942089 7.02942187,0 12,0 C16.9705781,0 21,4.02942089 21,8.9999978 C21,12.6287313 19.7357812,13.6420748 12.9249375,23.5157755 C12.4779844,24.1614316 11.5219687,24.1613847 11.0750625,23.5157755 Z M12,12.75 C14.0710781,12.75 15.75,11.0710781 15.75,9 C15.75,6.92892188 14.0710781,5.25 12,5.25 C9.92892187,5.25 8.25,6.92892188 8.25,9 C8.25,11.0710781 9.92892187,12.75 12,12.75 Z" id="path-1"></path>
+    </defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="block/map" transform="translate(-546.000000, -311.000000)">
+            <g id="Solid/map-marker-alt" transform="translate(543.000000, 311.000000)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <use id="Mask" fill="#000000" fill-rule="nonzero" xlink:href="#path-1"></use>
+                <g id="color/dark" mask="url(#mask-2)" fill="#333333" fill-rule="evenodd">
+                    <rect id="default" x="0" y="0" width="24" height="24"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
