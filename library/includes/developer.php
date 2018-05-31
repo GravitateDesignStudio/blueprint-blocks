@@ -216,6 +216,16 @@ function your_function($block_background_colors){
 }
         </textarea>
         </blockquote>
+        <blockquote>
+        <label>Example 2: Remove the option for a background of none.</label>
+        <textarea class="grav-code-block">
+add_filter('grav_block_background_colors', 'your_function');
+function your_function($block_background_colors){
+    unset($block_background_colors['block-bg-none']);
+    return $block_background_colors;
+}
+        </textarea>
+        </blockquote>
     </li>
     <li><h3>grav_hide_on_screen</h3>
         This filter gives the ability to hide other parts of the WordPress dashboard on Gravitate Block enabled areas.
@@ -266,16 +276,19 @@ function your_function($col_total, $col_width, $placement){
         </textarea>
         </blockquote>
     </li>
-    <li><h3>grav_block_background_colors</h3>
-        This filters options for the block background colors.
+    <li><h3>grav_blocks_testimonials_cpt</h3>
+        This makes CPTs availble to use in the Testimonials block. You should add a field called <em>attribution_sub_title</em> to each of these CPTs for use in the Testmonials block if you want to display an attribution sub-title.
         <blockquote>
-        <label>Example 1: Remove the option for a background of none.</label>
+        <label>Example 1: Add CPTs of <em>post</em> and <em>testimonial</em> as options for the Testimonials block.</label>
         <textarea class="grav-code-block">
-add_filter('grav_block_background_colors', 'your_function');
-function your_function($block_background_colors){
-    unset($block_background_colors['block-bg-none']);
-    return $block_background_colors;
+add_filter('grav_blocks_testimonials_cpt', 'your_function');
+function your_function($testimonial_cpts) {
+
+	$testimonial_cpts = array('post', 'testimonial');
+
+	return $testimonial_cpts;
 }
+
         </textarea>
         </blockquote>
     </li>
@@ -295,7 +308,7 @@ function your_function($block_background_style){
         </textarea>
         </blockquote>
     </li>
-    <li><h3>grav_blocks_responsive_image_settings</h3>
+    <!-- <li><h3>grav_blocks_responsive_image_settings</h3>
         This filters the settings for the responsive images.
         <blockquote>
         <label>Example 1: Adding a custom size and enabling downscale.</label>
@@ -309,7 +322,7 @@ function custom_responsive_image_settings($settings)
 }
         </textarea>
         </blockquote>
-    </li>
+    </li> -->
     <li><h3>grav_block_link_fields</h3>
         This filters the fields for "GRAV_BLOCKS::get_link_fields" used to build button and links within the blocks.
         <blockquote>
