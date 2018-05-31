@@ -250,22 +250,6 @@ class GRAV_BLOCKS {
 						'endpoint' => 0,          // end tabs to start a new group
 					);
 
-					// $tab_guidlines = array (
-					//     'key' => 'field_block_tab_'.$block_layout['name'].'_tab3',
-					//     'label' => 'Guidelines',
-					//     'name' => 'block_tab_'.$block_layout['name'].'_tab3',
-					//     'type' => 'tab',
-					//     'instructions' => '',
-					//     'required' => 0,
-					//     'conditional_logic' => 0,
-					//     'wrapper' => array (
-					//         'width' => '',
-					//         'class' => '',
-					//         'id' => '',
-					//     ),
-					//     'placement' => 'left',
-					//     'endpoint' => 0,          // end tabs to start a new group
-					// );
 					$guidelines_fields =	array(
 						array (
 							'key' => 'field_'.$block_layout['name'].'_guidelines',
@@ -326,7 +310,7 @@ class GRAV_BLOCKS {
 
 					}
 
-					$new_sub_fields = array_merge($new_sub_fields, $tab_fields, $guidelines_fields, array($tab_options), $tab_options_fields);
+					$new_sub_fields = array_merge($new_sub_fields, $guidelines_fields, $tab_fields, array($tab_options), $tab_options_fields);
 
 					$layouts[$block_key]['sub_fields'] = $new_sub_fields;
 
