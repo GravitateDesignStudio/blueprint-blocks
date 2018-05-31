@@ -3071,7 +3071,7 @@ class GRAV_BLOCKS {
 		return $conditional_array;
 	}
 
-	public static function get_blocks_usage( $data ) {
+	public static function get_blocks_usage( $data=array() ) {
 		// Do something with the $request
 		$response = '';
 		if ( $grav_blocks = self::get_available_blocks() )
