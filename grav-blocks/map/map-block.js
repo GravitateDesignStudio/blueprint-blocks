@@ -214,8 +214,10 @@ jQuery(document).ready(function($){
 
             //google map custom marker icon - .png fallback for IE11
             // TODO: Add in this IE11 check
-            // var is_internetExplorer11= navigator.userAgent.toLowerCase().indexOf('trident') > -1;
-            // var marker_url = ( is_internetExplorer11 ) ? '/library/images/icon.png' : '/library/images/icon.svg';
+            var is_internetExplorer11= navigator.userAgent.toLowerCase().indexOf('trident') > -1;
+
+            var marker_url = ( is_internetExplorer11 ) ? markerUrl : markerUrlSvg;
+            markerClose = ( is_internetExplorer11 ) ? markerClose : markerCloseSvg;
 
             var gravMarker = {
                 url: marker_url,
@@ -235,12 +237,13 @@ jQuery(document).ready(function($){
             // Display multiple markers on a map
             var infoWindow = new InfoBubble(
                 {
-                    backgroundColor: '#666666',
-                    borderColor: '#666666',
+                    backgroundColor: markerColor,
+                    borderColor: markerColor,
                     padding: 0,
                     borderRadius: 0,
-                    minWidth: 200,
-                    maxWidth: 500,
+                    minWidth: 290,
+                    arrowSize: 10,
+                    maxHeight: 200,
                     closeSrc: markerClose
                 }
             ), marker, i;
@@ -265,7 +268,7 @@ jQuery(document).ready(function($){
                      return function() {
 
                          var link = (InfoWindowContent[i]['marker_link']) ? '<p><a href="' + InfoWindowContent[i]['marker_link'] + '" target="_blank">' + InfoWindowContent[i]['marker_link_text'] + '</a></p>' : '';
-                         infoWindow.setContent('<div class="info_content bg-gray-dark">' + InfoWindowContent[i]['marker_name'] +  InfoWindowContent[i]['marker_text'] + link + '</div>');
+                         infoWindow.setContent('<div class="info-bubble-content">' + InfoWindowContent[i]['marker_name'] +  InfoWindowContent[i]['marker_text'] + link + '</div>');
                          infoWindow.open(map, marker);
                      }
                  })(marker, i));

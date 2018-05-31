@@ -77,10 +77,13 @@ if ($mapBlockApiKey = GRAV_BLOCKS_PLUGIN_SETTINGS::get_setting_value('google_map
 	wp_localize_script( 'map_block_js', 'locations', json_encode($location_data));
 	wp_localize_script( 'map_block_js', 'infoWindows', json_encode($infowindow_data));
 	wp_localize_script( 'map_block_js', 'markerClose', plugin_dir_url(__FILE__) . '/assets/map-close.png');
-	wp_localize_script( 'map_block_js', 'marker_url', plugin_dir_url(__FILE__) . '/assets/map-marker.png' );
+	wp_localize_script( 'map_block_js', 'markerUrl', plugin_dir_url(__FILE__) . '/assets/map-marker.png' );
+	wp_localize_script( 'map_block_js', 'markerCloseSvg', plugin_dir_url(__FILE__) . '/assets/map-close.svg');
+	wp_localize_script( 'map_block_js', 'markerUrlSvg', plugin_dir_url(__FILE__) . '/assets/map-marker.svg' );
+	wp_localize_script( 'map_block_js', 'markerColor', '#666666' );
 
 	$customStyles = GRAV_BLOCKS_PLUGIN_SETTINGS::get_setting_value('google_maps_styles');
-	wp_localize_script( 'map_block_js', 'customMapStyles', stripcslashes($customStyles));		
+	wp_localize_script( 'map_block_js', 'customMapStyles', stripcslashes($customStyles));
 
 
 } else { ?>
