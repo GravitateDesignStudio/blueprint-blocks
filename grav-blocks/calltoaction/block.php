@@ -6,7 +6,7 @@ $cta_columns = isset($cta_columns) ? $cta_columns : array();
 
 if($column_num){ ?>
 	<div class="block-inner">
-		<div class="<?php echo GRAV_BLOCKS::css()->row()->get();?> align-<?php echo ($column_num > 1) ? 'center' : get_sub_field('alignment_1'); ?>">
+		<div class="<?php echo GRAV_BLOCKS::css()->row()->get();?> align-center">
 	<?php
 		for ($i=1; $i <= $column_num; $i++) {
 			$buttons = ($cta_columns['buttons_' . $i]) ? $cta_columns['buttons_' . $i] : get_sub_field('buttons_' . $i);
