@@ -60,6 +60,7 @@ $block_fields = array(
         'placeholder' => '',
         'disabled' => 0,
         'readonly' => 0,
+        'block_options' => 1
     ),
     array (
         'key' => 'field_'.$block.'_by_post_type',
@@ -92,6 +93,7 @@ $block_fields = array(
         'placeholder' => '',
         'disabled' => 0,
         'readonly' => 0,
+        'block_options' => 1
     ),
 	array (
         'key' => 'field_'.$block.'_by_taxonomy',
@@ -124,6 +126,7 @@ $block_fields = array(
         'placeholder' => '',
         'disabled' => 0,
         'readonly' => 0,
+        'block_options' => 1
     ),
 	array (
         'key' => 'field_'.$block.'_by_author',
@@ -156,6 +159,7 @@ $block_fields = array(
         'placeholder' => '',
         'disabled' => 0,
         'readonly' => 0,
+        'block_options' => 1
     ),
 	array (
 	    'key' => 'field_'.$block.'_custom',
@@ -222,6 +226,7 @@ $block_fields = array(
 	    'step' => '1',
 	    'readonly' => 0,
 	    'disabled' => 0,
+        'block_options' => 1
 	),
 	GRAV_BLOCKS::get_link_fields(array('name' => 'view_more_link'))
 );

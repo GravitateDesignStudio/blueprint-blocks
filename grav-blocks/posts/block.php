@@ -166,23 +166,23 @@ if($found_postids)
 
 ?>
 
-<div class="block-inner block-posts-filter-<?php echo $block_filter;?> <?php echo $unique_item_class;?>">
+<div class="block-inner block-posts__filter-<?php echo $block_filter;?> <?php echo $unique_item_class;?>">
 
 	<?php if($block_title || $block_view_more_link_url){ ?>
-	<div class="<?php echo GRAV_BLOCKS::css()->row()->get();?> block-posts-title-container">
-		<div class="<?php echo GRAV_BLOCKS::css()->col(12)->get();?> block-posts-title-content">
+	<div class="<?php echo GRAV_BLOCKS::css()->row()->get();?> block-posts__title--container">
+		<div class="<?php echo GRAV_BLOCKS::css()->col(12)->get();?> block-posts__title--content">
 			<?php if($block_title){?>
-				<h2 class="block-posts-title"><?php echo $block_title;?></h2>
+				<h2 class="block-posts__title"><?php echo $block_title;?></h2>
 			<?php } ?>
 
 			<?php if($block_view_more_link_url){?>
-				<a class="block-posts-view-more-link" href="<?php echo $block_view_more_link_url;?>"><?php echo $block_view_more_link_text;?></a>
+				<a class="block-posts__view-more-link" href="<?php echo $block_view_more_link_url;?>"><?php echo $block_view_more_link_text;?></a>
 			<?php } ?>
 		</div>
 	</div>
 	<?php } ?>
 
-	<div class="<?php echo GRAV_BLOCKS::css()->row()->get();?> block-posts">
+	<div class="<?php echo GRAV_BLOCKS::css()->row()->get();?> block-posts__container">
 
 		<?php
 
@@ -199,25 +199,25 @@ if($found_postids)
 
 				?>
 
-				<div class="<?php echo GRAV_BLOCKS::css()->col(12, 6, 4)->get();?> block-post">
+				<div class="<?php echo GRAV_BLOCKS::css()->col(12, 6, 4)->get();?> block-posts__post">
 
-					<div class="block-post-entry<?php if(has_post_thumbnail()){ ?> block-post-has-image<?php } ?>">
-					    <a href="<?php the_permalink(); ?>" class="block-post-entry-link">
+					<div class="block-posts__post--entry<?php if(has_post_thumbnail()){ ?> block-posts__post-has-image<?php } ?>">
+					    <a href="<?php the_permalink(); ?>" class="block-posts__post-entry--link">
 
-							<?php echo GRAV_BLOCKS::image('featured', array('class' => 'block-post-image'), 'div');?>
+							<?php echo GRAV_BLOCKS::image('featured', array('class' => 'block-posts__post--image'), 'div');?>
 
-					        <div class="block-post-content">
-					            <h6 class="block-post-meta">
+					        <div class="block-posts__post--content">
+					            <h6 class="block-posts__post--title"><?php the_title(); ?></h6>
+					            <div class="block-posts__post--meta">
 									<?php if(get_post_type()==='post'){?>
-										<span class="block-post-meta-by">By:</span>
-										<span class="block-post-author"><?php the_author(); ?></span>
+										<span class="block-posts__post--meta-by">By:</span>
+										<span class="block-posts__post--author"><?php the_author(); ?></span>
 									<?php }else{ ?>
-										<span class="block-post-type-label"><?php echo $type_label;?></span>
+										<span class="block-posts__post--type-label"><?php echo $type_label;?></span>
 									<?php } ?>
-									<span class="block-post-meta-separator">|</span>
-									<span class="block-post-date"><?php echo get_the_date(); ?></span>
-								</h6>
-					            <p class="block-post-title"><?php the_title(); ?></p>
+									<span class="block-posts__post--meta-separator">|</span>
+									<span class="block-posts__post--date"><?php echo get_the_date(); ?></span>
+								</div>
 					        </div>
 
 					    </a>
