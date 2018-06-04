@@ -96,27 +96,7 @@ class GRAV_BLOCKS {
 			left: 0;
 		}
 
-
-		<?php
-
-		if(GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('css_options', 'enqueue_css'))
-		{
-			self::get_settings(true);
-
-			$custom_class = GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('css_options', 'add_custom_color_class');
-
-			if(!empty(self::$settings['background_colors']))
-			{
-				foreach (self::$settings['background_colors'] as $color_key => $color_params)
-				{
-					$use_css_variable = (!empty($color_params['class']) && $custom_class);
-
-				?>	<?php echo ($use_css_variable ? '.'.str_replace('.', '', $color_params['class']).', ' : ''); echo '.block-bg-'.$color_params['_repeater_id'];?> { background-color: <?php echo $color_params['value'];?>}
-			<?php
-				}
-			}
-		}
-		?></style>
+		</style>
 	<?php
 	}
 
@@ -862,7 +842,7 @@ class GRAV_BLOCKS {
 				'post_types' => array_keys(self::get_usable_post_types()),
 				'templates' => '',
 				'advanced_options' => array('filter_content', 'enqueue_scripts'),
-				'css_options' => array('enqueue_css', 'use_foundation', 'use_default'),
+				// 'css_options' => array('enqueue_css', 'use_foundation', 'use_default'),
 				'search_options' => array('include_in_search'),
 				'background_colors' => array(
 					array('name' => 'White', 'value' => '#ffffff'),
@@ -1756,13 +1736,13 @@ class GRAV_BLOCKS {
 					'after_title' => 'Place Gravitate Blocks directly after the title in the WordPress admin. <span class="extra-info">( changes position using acf_after_title )</span>',
 					'hide_content' => 'Remove the WordPress content box from Gravitate Blocks enabled pages. <span class="extra-info">( if content has already been entered it may still show on the front end of the website. )</span>',
 				);
-				$css_options = array(
-					// 'add_custom_color_class' => 'Allow customization of CSS class names for the background color options.',
-					// 'disable_colorpicker' => 'Disable color picker ( Use this to force your own css class names ).',
-					// 'enqueue_css' => 'Background color CSS will be added to the website\'s header. <span class="extra-info">( Needed for custom background colors, images, etc. )</span>',
-					'use_default' => 'Use the default Gravitate Blocks CSS. <span class="extra-info">( Affects padding and some basic styling. )</span>',
-					'use_foundation' => 'Use the <a target="_blank" href="http://foundation.zurb.com/sites/docs/">Foundation</a> CSS grid. <span class="extra-info">( This will add the foundation CSS file to your site. )</span>',
-				);
+				// $css_options = array(
+				// 	// 'add_custom_color_class' => 'Allow customization of CSS class names for the background color options.',
+				// 	// 'disable_colorpicker' => 'Disable color picker ( Use this to force your own css class names ).',
+				// 	// 'enqueue_css' => 'Background color CSS will be added to the website\'s header. <span class="extra-info">( Needed for custom background colors, images, etc. )</span>',
+				// 	'use_default' => 'Use the default Gravitate Blocks CSS. <span class="extra-info">( Affects padding and some basic styling. )</span>',
+				// 	'use_foundation' => 'Use the <a target="_blank" href="http://foundation.zurb.com/sites/docs/">Foundation</a> CSS grid. <span class="extra-info">( This will add the foundation CSS file to your site. )</span>',
+				// );
 				$foundation_options = array(
 					'f5' => '<a href="http://foundation.zurb.com/sites/docs/v/5.5.3/" target="_blank">5.5.3</a>',
 					'f6' => '<a href="http://foundation.zurb.com/sites/docs/grid.html" target="_blank">6.2.0</a>',
@@ -1775,7 +1755,7 @@ class GRAV_BLOCKS {
 
 				$fields = array();
 				$fields['advanced_options'] = array('type' => 'checkbox', 'label' => 'Advanced Options', 'options' => $advanced_options, 'description' => '');
-				$fields['css_options'] = array('type' => 'checkbox', 'label' => 'CSS Settings', 'options' => $css_options, 'description' => '');
+				// $fields['css_options'] = array('type' => 'checkbox', 'label' => 'CSS Settings', 'options' => $css_options, 'description' => '');
 				$fields['foundation'] = array('type' => 'radio', 'label' => 'Foundation Version', 'options' => $foundation_options, 'description' => 'If you are using the foundation grid, this will determine which version of the grid to use.');
 				$fields['search_options'] = array('type' => 'checkbox', 'label' => 'Search Settings', 'options' => $search_options, 'description' => '');
 
@@ -1794,15 +1774,15 @@ class GRAV_BLOCKS {
 				$background_colors_repeater = array();
 				$background_colors_repeater['name'] = array('type' => 'text', 'label' => 'Name', 'description' => 'Name of color');
 
-				if(GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('css_options', 'add_custom_color_class'))
-				{
-					$background_colors_repeater['class'] = array('type' => 'text', 'label' => 'CSS Class Name', 'description' => '( Optional )');
-				}
-
-				if(!GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('css_options', 'disable_colorpicker'))
-				{
-					$background_colors_repeater['value'] = array('type' => 'colorpicker', 'label' => 'Value', 'description' => 'Use Hex values (ex. #ff0000)');
-				}
+				// if(GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('css_options', 'add_custom_color_class'))
+				// {
+				// 	$background_colors_repeater['class'] = array('type' => 'text', 'label' => 'CSS Class Name', 'description' => '( Optional )');
+				// }
+				//
+				// if(!GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('css_options', 'disable_colorpicker'))
+				// {
+				// 	$background_colors_repeater['value'] = array('type' => 'colorpicker', 'label' => 'Value', 'description' => 'Use Hex values (ex. #ff0000)');
+				// }
 
 				$fields = array();
 
@@ -2061,15 +2041,15 @@ class GRAV_BLOCKS {
 		{
 			wp_enqueue_script( 'grav_blocks_scripts_js', plugin_dir_url( __FILE__ ) . 'library/js/blocks.min.js', array('jquery'), self::$version, true );
 		}
-		if (GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('css_options', 'use_foundation') && self::is_viewable())
-		{
-			$foundation_file = self::get_foundation_file_name();
-			wp_enqueue_style( 'foundation_css', plugin_dir_url( __FILE__ ) . 'library/css/'.$foundation_file.'.css' , array(), '6.0.0');
-		}
-		if (GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('css_options', 'use_default') && self::is_viewable())
-		{
-			wp_enqueue_style( 'default_css', plugin_dir_url( __FILE__ ) . 'library/css/blocks.min.css' , array(), self::$version);
-		}
+		// if (GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('css_options', 'use_foundation') && self::is_viewable())
+		// {
+		// 	$foundation_file = self::get_foundation_file_name();
+		// 	wp_enqueue_style( 'foundation_css', plugin_dir_url( __FILE__ ) . 'library/css/'.$foundation_file.'.css' , array(), '6.0.0');
+		// }
+		// if (GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('css_options', 'use_default') && self::is_viewable())
+		// {
+		// 	wp_enqueue_style( 'default_css', plugin_dir_url( __FILE__ ) . 'library/css/blocks.min.css' , array(), self::$version);
+		// }
 	}
 
 	/**
