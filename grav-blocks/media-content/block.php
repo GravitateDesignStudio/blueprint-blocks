@@ -21,11 +21,11 @@
 	$col_content_width = $col_total-$col_width;
 	$col_class = 'col-option-'.$placement.'-'.sanitize_title($col_array[$col_width]);
 
-	$bottom_classes = GRAV_BLOCKS::css()->col(12, $col_content_width)->add($col_class)->get();
-	$top_classes = GRAV_BLOCKS::css()->col(12, $col_width)->add($col_class.', block-media-content__col-media')->get();
+	$content_col_classes = GRAV_BLOCKS::css()->col(12, $col_content_width)->add($col_class)->get();
+	$media_col_classes = GRAV_BLOCKS::css()->col(12, $col_width)->add($col_class.', block-media-content__col-media')->get();
 	if($placement == 'right'){
-		$top_classes = GRAV_BLOCKS::css()->col(12, $col_width)->add('medium-order-2, '.$col_class.', block-media-content__col-media')->get();
-		$bottom_classes = GRAV_BLOCKS::css()->col(12, $col_content_width)->add('medium-order-1, '.$col_class)->get();
+		$media_col_classes = GRAV_BLOCKS::css()->col(12, $col_width)->add('medium-order-2, '.$col_class.', block-media-content__col-media')->get();
+		$content_col_classes = GRAV_BLOCKS::css()->col(12, $col_content_width)->add('medium-order-1, '.$col_class)->get();
 	}
 
 	if ($media_type == 'image' && $col_width >= 6) {
@@ -37,7 +37,7 @@
 
 <div class="block-inner <?php echo $placement.'-'.sanitize_title($col_array[$col_width]); if($image_format){ echo ' ' . $image_format; } ?>">
 	<div class="<?php echo GRAV_BLOCKS::css()->row()->add('align-' . $placement)->get(); ?>">
-		<div class="<?php echo $top_classes; ?>">
+		<div class="<?php echo $media_col_classes; ?>">
 			<?php if($link = GRAV_BLOCKS::get_link_url('link')){ ?>
 				<a class="block-link-<?php echo esc_attr(get_sub_field('link_type'));?>" href="<?php echo esc_url($link); ?>">
 			<?php } ?>
@@ -60,7 +60,7 @@
 				</a>
 			<?php } ?>
 		</div>
-		<div class="<?php echo $bottom_classes; ?> block-media-content__col-content">
+		<div class="<?php echo $content_col_classes; ?> block-media-content__col-content">
 			<?php echo $content; ?>
 		</div>
 	</div>
