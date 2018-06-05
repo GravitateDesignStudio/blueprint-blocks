@@ -266,7 +266,7 @@ function your_function($column_width_options){
         <blockquote>
         <label>Example 1: Change the total number of columns to be used to 10 instead of 12 based on if the media column width is less than 6 columns.</label>
         <textarea class="grav-code-block">
-add_filter('grav_block_mediacontent_columns', 'your_function');
+add_filter('grav_block_mediacontent_columns', 'your_function', 10, 3);
 function your_function($col_total, $col_width, $placement){
 	if($col_width < 6){
 		return 10;
