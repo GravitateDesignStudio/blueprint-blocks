@@ -67,7 +67,8 @@ $block_fields = array(
 		'name' => 'center',
 		'type' => 'true_false',
 		'message' => '',
-		'default_value' => 0,
+		'default_value' => 1,
+		'block_options' => 1
 	),
 );
 
