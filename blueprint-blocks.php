@@ -2506,6 +2506,9 @@ class GRAV_BLOCKS {
 		$label_title = ucwords($label);
 		$fields = array();
 
+		reset($allowed_fields);
+		$default = key($allowed_fields);
+
 		$fields[] = array (
 			'key' => 'field_'.$block.'_'.$name.'_type',
 			'label' => $label_title.' Type',
@@ -2514,7 +2517,7 @@ class GRAV_BLOCKS {
 			'layout' => 'horizontal',
 			'column_width' => '',
 			'choices' => $allowed_fields,
-			'default_value' => 'none',
+			'default_value' => $default,
 			'allow_null' => 0,
 			'multiple' => 0,
 			'conditional_logic' => (!empty($conditional_logic) ? $conditional_logic : 0)
