@@ -183,7 +183,7 @@ $block_fields = array(
 	    'placeholder' => '',
 	    'maxlength' => '',
 	    'rows' => '',
-	    'new_lines' => 'wpautop',        // wpautop | br | ''
+	    'new_lines' => '',        // wpautop | br | ''
 	    'readonly' => 0,
 	    'disabled' => 0,
 	),
