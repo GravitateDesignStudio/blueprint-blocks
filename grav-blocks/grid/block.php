@@ -70,7 +70,7 @@ if($grid_items){ ?>
 								<?php } ?>
 							</div>
 							<?php if($link){ ?>
-								<?php if ($button_text = $gird_item['button_text']) { ?>
+								<?php if ($button_text = $grid_item['button_text']) { ?>
 									<span class="button"><?php echo $button_text; ?></span>
 								<?php } ?>
 								</a>
