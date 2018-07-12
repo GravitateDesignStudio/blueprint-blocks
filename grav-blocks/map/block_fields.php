@@ -39,27 +39,6 @@ $block_fields = array(
 	    'esc_html' => 0,             // uses the WordPress esc_html function
 	),
 	array (
-	    'key' => 'field_'.$block.'_custom_styles',
-	    'label' => 'Custom Styles',
-	    'name' => 'custom_styles',
-	    'type' => 'textarea',
-	    'instructions' => 'Add your own custom styles. We reccommend using a site like <a href="https://snazzymaps.com/" target="_blank">Snazzy Maps</a> to create custom map styles.',
-	    'required' => 0,
-	    'conditional_logic' => 0,
-	    'wrapper' => array (
-	        'width' => '',
-	        'class' => '',
-	        'id' => '',
-	    ),
-	    'default_value' => '',
-	    'placeholder' => '[{"featureType": "water",...',
-	    'maxlength' => '',
-	    'rows' => '',
-	    'new_lines' => '',        // wpautop | br | ''
-	    'readonly' => 0,
-	    'disabled' => 0,
-	),
-	array (
 		'key' => 'field_'.$block.'_format',
 		'label' => 'Format',
 		'name' => 'format',
