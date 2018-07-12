@@ -2875,9 +2875,171 @@ class GRAV_BLOCKS {
 
 	}
 
+	protected static function get_acf_image_object($source)
+	{
+		if (!$source)
+		{
+			return false;
+		}
 
+		$attachment_id = 0;
 
-	public static function image($image='featured', $additional_attributes=array(), $tag_type='img', $fallback_size='')
+		if (is_int($source) || intval($source))
+		{
+			// treat as attachment id
+			$attachment_id = intval($source);
+		}
+		else if (is_string($source))
+		{
+			if ($source == 'featured')
+			{
+				$attachment = get_post(get_post_thumbnail_id());
+				$attachment_id = $attachment ? $attachment->ID : 0;
+			}
+		}
+
+		if (!$attachment_id)
+		{
+			return false;
+		}
+
+		return acf_get_attachment($attachment_id);
+	}
+
+	public static function image($image='featured', $add_attr=array(), $tag_type='img', $fallback_size='')
+	{
+		// TODO: remove cropped images
+		if (empty($image)) {
+			return '';
+		}
+
+		$acf_image = (gettype($image) == 'array') ? $image : self::get_acf_image_object($image);
+
+		if (!$acf_image) {
+			return '';
+		}
+
+		$cropped_sizes = array();
+		$attachment = get_post($acf_image['ID']);
+
+		$image = array(
+			'alt' => get_post_meta($attachment->ID, '_wp_attachment_image_alt', true),
+			'caption' => $attachment->post_excerpt,
+			'description' => $attachment->post_content,
+			'href' => get_permalink( $attachment->ID ),
+			'src' => $attachment->guid,
+			'url' => $attachment->guid,
+			'title' => $attachment->post_title
+		);
+
+		$image['sizes'] = array();
+
+		foreach (self::get_image_sizes() as $size => $image_size)
+		{
+			// Only include sizes that are not cropped.
+			if (empty($image_size['crop']) && $image_size['width'])
+			{
+				if ($url = wp_get_attachment_image_src( $attachment->ID, $size ))
+				{
+					$image['sizes'][$size] = $url[0];
+				}
+			}
+			else
+			{
+				$cropped_sizes[] = $size;
+			}
+		}
+
+		if ($tag_type === 'img') {
+			$add_attr['alt'] = isset($add_attr['alt']) ? esc_attr($add_attr['alt']) : esc_attr($image['alt']);
+			$add_attr['title'] = isset($add_attr['title']) ? esc_attr($add_attr['title']) : esc_attr($image['title']);
+
+			// accessibility
+			if (!$add_attr['alt']) {
+				$add_attr['alt'] = $add_attr['title'];
+			}
+		}
+
+		$image_sources = array();
+
+		if(GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('advanced_options', 'add_responsive_img'))
+		{
+			// 1x1 transparent PNG
+			$add_attr['src'] = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
+			$image_sources = self::image_sources($image, true);
+		}
+		else
+		{
+			$prefered_image_src = self::get_prefered_image_size_src($image, $fallback_size);
+
+			if($tag_type === 'img' && !isset($add_attr['src']))
+			{
+				if($prefered_image_src)
+				{
+					$add_attr['src'] = $prefered_image_src;
+				}
+			}
+
+			if($tag_type !== 'img' && $prefered_image_src)
+			{
+				$add_attr['style'] = " background-image: url('".$prefered_image_src."'); ";
+			}
+		}
+
+		foreach ($add_attr as $attribute_key => $attribute_value)
+		{
+			$add_attr[$attribute_key] = '"'.esc_attr($attribute_value).'"';
+		}
+
+		$attributes_array = array_filter(array_merge($image_sources, $add_attr));
+
+		// If not alt then add an empty one for validation
+		if($tag_type === 'img' && empty($add_attr['alt']))
+		{
+			$attributes_array['alt'] = '""';
+		}
+
+		$attributes_str = trim(urldecode(http_build_query($attributes_array, '', ' ')));
+
+		if($attributes_str)
+		{
+			$default_markup = ($tag_type === 'div') ? '<div '.$attributes_str.'></div>' : '<img '.$attributes_str.' />';
+
+			$acf_image_sizes = array();
+
+			if (isset($acf_image['sizes']) && is_array($acf_image['sizes'])) {
+				foreach ($acf_image['sizes'] as $size => $url) {
+					// not a url value
+					if (stripos($size, '-width') !== false || stripos($size, '-height') !== false) {
+						continue;
+					}
+	
+					// is a cropped size
+					if (in_array($size, $cropped_sizes)) {
+						continue;
+					}
+	
+					$acf_image_sizes[$size] = array(
+						'url' => $url,
+						'width' => $acf_image['sizes'][$size.'-width'],
+						'height' => $acf_image['sizes'][$size.'-height']
+					);
+				}
+			}
+
+			$acf_image_sizes['full'] = array(
+				'url' => $acf_image['url'],
+				'width' => $acf_image['width'],
+				'height' => $acf_image['height']
+			);
+
+			return apply_filters('grav_blocks_image_tag', $default_markup, $tag_type, $attributes_array, $acf_image_sizes);
+		}
+
+		return '';
+	}
+
+	/* public static function image($image='featured', $additional_attributes=array(), $tag_type='img', $fallback_size='')
 	{
 		if ($tag_type == 'url') {
 			if ($fallback_size) {
@@ -2998,7 +3160,7 @@ class GRAV_BLOCKS {
 		}
 
 		return '';
-	}
+	} */
 
 
 	public static function allow_br($value)
