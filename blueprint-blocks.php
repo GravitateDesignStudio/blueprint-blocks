@@ -2350,7 +2350,8 @@ class GRAV_BLOCKS {
 	{
 		if(!$pos = strpos($url, 'youtu.be/'))
 		{
-			$pos = strpos($url, '/watch?v=');
+			// $pos = strpos($url, '/watch?v=');
+			$pos = strpos($url, 'v=');
 		}
 		if($pos)
 		{
@@ -2444,11 +2445,13 @@ class GRAV_BLOCKS {
 		{
 			if($count = wp_count_posts($post_type)->publish)
 			{
-				if ($count > 0) {
+				if ($count > 0 && $post_type != 'post') {
 					$post_types[$post_type] = $count;
 				}
 			}
 		}
+
+		$post_types['post'] = wp_count_posts('post');
 
 		if(!empty($post_types))
 		{
@@ -3013,12 +3016,12 @@ class GRAV_BLOCKS {
 					if (stripos($size, '-width') !== false || stripos($size, '-height') !== false) {
 						continue;
 					}
-	
+
 					// is a cropped size
 					if (in_array($size, $cropped_sizes)) {
 						continue;
 					}
-	
+
 					$acf_image_sizes[$size] = array(
 						'url' => $url,
 						'width' => $acf_image['sizes'][$size.'-width'],
