@@ -2388,26 +2388,32 @@ class GRAV_BLOCKS {
 	 **/
 	public static function get_video_url($url)
 	{
-		$autoplay = 1;
-		if(strpos($url, 'autoplay=0') || strpos($url, 'autoplay=false'))
-		{
-			$autoplay = 0;
-		}
-		if(strpos($url, 'vimeo'))
+		$autoplay = (strpos($url, 'autoplay=0') || strpos($url, 'autoplay=false')) ? 0 : 1;
+		
+		if (strpos($url, 'vimeo'))
 		{
 			$id = self::get_vimeo_id($url);
-			if(is_numeric($id))
+			
+			if (is_numeric($id))
 			{
 				return 'https://player.vimeo.com/video/'.$id.'?autoplay='.$autoplay;
 			}
+
 			return $url;
 		}
-		$id = self::get_youtube_id($url);
-		if($id)
+
+		if ($id = self::get_youtube_id($url))
 		{
-			$link = 'https://www.youtube.com/embed/'.$id.'?rel=0&amp;iframe=true&amp;wmode=transparent&amp;autoplay='.$autoplay;
-			return $link;
+			return 'https://www.youtube.com/embed/'.$id.'?rel=0&amp;iframe=true&amp;wmode=transparent&amp;autoplay='.$autoplay;
 		}
+
+		$custom_video_url = apply_filters('grav_blocks_video_url', $url);
+
+		if ($custom_video_url)
+		{
+			return $custom_video_url;
+		}
+
 		return '';
 	}
 
