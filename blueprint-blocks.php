@@ -2059,29 +2059,27 @@ class GRAV_BLOCKS {
 	 *
 	 * @return
 	 */
-	public static function add_footer_js(){
+	public static function add_footer_js()
+	{
+		if (!GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('advanced_options', 'enqueue_scripts')) {
+			return;
+		}
+
 		?>
-			<script>
-				jQuery(function($){
-					$(document).ready(function(){
+		<script>
+			// Blueprint Blocks required scripts initialization
+			document.addEventListener('DOMContentLoaded', function () {
+				if (jQuery === 'undefined') {
+					return;
+				}
 
-
-
-					<?php if(GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('advanced_options', 'enqueue_scripts')){ ?>
-
-						$('.block-link-video').colorbox({iframe:true, height:'80%', width:'80%'});
-						$('.block-link-gallery').colorbox({rel:'block-link-gallery', height:'80%', width:'80%', transition:'fade'});
-						$('.grav-inline').colorbox({inline: true, height:'80%', width:'80%', transition:'fade'});
-
-					<?php } ?>
-
-					});
-				});
-			</script>
+				jQuery('.block-link-video').colorbox({ iframe: true, height: '80%', width: '80%' });
+				jQuery('.block-link-gallery').colorbox({ rel: 'block-link-gallery', height: '80%', width: '80%', transition: 'fade' });
+				jQuery('.grav-inline').colorbox({ inline: true, height: '80%', width: '80%', transition: 'fade' });
+			});
+		</script>
 		<?php
 	}
-
-
 
 	/**
 	 * Check for the Post or Queried Object ID
