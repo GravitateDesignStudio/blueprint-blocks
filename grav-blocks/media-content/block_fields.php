@@ -247,7 +247,7 @@ $block_fields = array(
 		'block_options' => 1
 	),
 	array (
-		'key' => 'field_'.$acf_group.'_image_format',
+		'key' => 'field_'.$block.'_image_format',
 		'label' => 'Image Format',
 		'name' => 'image_format',
 		'type' => 'radio',

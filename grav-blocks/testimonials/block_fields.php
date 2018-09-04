@@ -12,7 +12,7 @@
 *
 */
 
-$testimonial_cpts = apply_filters( 'grav_blocks_testimonials_cpt', $testimonial_cpts);
+$testimonial_cpts = apply_filters( 'grav_blocks_testimonials_cpt', array());
 
 $block_sub_fields = array (
 	array (

@@ -20,7 +20,7 @@ foreach(GRAV_BLOCKS::get_gravity_forms() as $gform)
 	$gforms[$gform['id']] = $gform['title'];
 }
 
-$form_background_colors = apply_filters( 'grav_block_background_colors', $block_background_colors, $block );
+$form_background_colors = apply_filters( 'grav_block_background_colors', $block_backgrounds, $block );
 
 
 $block_fields = array(

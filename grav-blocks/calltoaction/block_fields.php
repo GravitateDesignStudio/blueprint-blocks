@@ -62,7 +62,7 @@ for( $i = 1; $i <= $num_columns; $i++ ) {
 	// Add conditional_logic to background color select field
 	foreach ($background_fields as $key => $field) {
 		if ($field['name'] == 'block_background_' . $i) {
-			if ($background_fields[$key]['conditional_logic'] == 0) {
+			if (isset($background_fields[$key]['conditional_logic']) && $background_fields[$key]['conditional_logic'] == 0) {
 				$column_conditionals = GRAV_BLOCKS::get_radio_num_conditionals('field_'.$block.'_num_columns', $i, $num_columns);
 
 				$background_fields[$key]['conditional_logic'] = $column_conditionals;
@@ -148,9 +148,9 @@ for( $i = 1; $i <= $num_columns; $i++ ) {
 	    'readonly' => 0,
 	);
 	$block_fields[] = array (
-	    'key' => 'field_'.$acf_group.'_alignment_' . $i,
+	    'key' => 'field_'.$block.'_alignment_'.$i,
 	    'label' => 'Alignment '.$i,
-	    'name' => 'alignment_' . $i,
+	    'name' => 'alignment_'.$i,
 	    'type' => 'radio',
 	    'instructions' => '',
 	    'required' => 0,

@@ -327,8 +327,10 @@ class GRAV_BLOCKS {
 			$sections = apply_filters('grav_default_section', $sections);
 			acf_add_local_field_group($sections);
 
-			if($option_pages = self::$settings['option_pages'])
+			if (isset(self::$settings['option_pages']))
 			{
+				$option_pages = self::$settings['option_pages'];
+
 				foreach($option_pages as $option_page)
 				{
 					$sections = array (
@@ -2017,7 +2019,8 @@ class GRAV_BLOCKS {
 		wp_enqueue_style( 'grav_blocks_admin_css', plugin_dir_url( __FILE__ ) . 'library/css/master.min.css', true, '1.0.0' );
 		wp_enqueue_script( 'grav_blocks_controls_js', plugin_dir_url( __FILE__ ) . 'library/js/block-admin.js', array('jquery'), true, true );
 
-		wp_localize_script( 'grav_blocks_controls_js', 'gravBlockData', $block_data );
+		// Why is this here? $block_data is not defined anywhere
+		// wp_localize_script( 'grav_blocks_controls_js', 'gravBlockData', $block_data );
 
 		wp_enqueue_style( 'grav_blocks_icons_css', 'https://i.icomoon.io/public/790bec4572/GravitateBlocks/style.css', true, '1.1.0' );
 		if ( 'toplevel_page_gravitate-blocks' != $hook ) {

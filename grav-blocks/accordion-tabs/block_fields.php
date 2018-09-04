@@ -14,7 +14,7 @@
 
 $block_fields = array(
 	array (
-	    'key' => 'field_'.$format.'_format',
+	    'key' => 'field_'.$block.'_format',
 	    'label' => 'Format',
 	    'name' => 'format',
 	    'type' => 'radio',
