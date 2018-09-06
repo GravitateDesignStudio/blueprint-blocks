@@ -1381,10 +1381,10 @@ class GRAV_BLOCKS {
 
 		if($format == 'viewable')
 		{
-			$locations['post_types'] = self::$settings['post_types'];
-			$locations['templates'] = self::$settings['templates'];
-			$locations['taxonomies'] = self::$settings['taxonomies'];
-			$locations['option_pages'] = self::$settings['option_pages'];
+			$locations['post_types'] = isset(self::$settings['post_types']) ? self::$settings['post_types'] : '';
+			$locations['templates'] = isset(self::$settings['templates']) ? self::$settings['templates'] : '';
+			$locations['taxonomies'] = isset(self::$settings['taxonomies']) ? self::$settings['taxonomies'] : '';
+			$locations['option_pages'] = isset(self::$settings['option_pages']) ? self::$settings['option_pages'] : '';
 			return $locations;
 		}
 
