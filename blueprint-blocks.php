@@ -1290,6 +1290,8 @@ class GRAV_BLOCKS {
 			$block_attributes['class'][] = 'block-wrapped-repeater-index-'.self::$block_wrapped_repeater_index;
 			$block_attributes['data-block-wrapped-repeater-index'] = self::$block_wrapped_repeater_index;
 
+			$block_attributes = apply_filters('grav_block_attributes', $block_attributes, $block_name);
+
 			$block_container_attributes = self::format_block_attributes($block_attributes);
 
 			?>
@@ -1331,6 +1333,8 @@ class GRAV_BLOCKS {
 		$block_attributes['class'][] = 'block-container';
 		$block_attributes['class'][] = 'block-'.$block_name;
 		$block_attributes['class'][] = 'block-index-'.self::$block_index;
+
+		$block_attributes = apply_filters('grav_block_attributes', $block_attributes, $block_name);
 
 		$block_container_attributes = self::format_block_attributes($block_attributes);
 
