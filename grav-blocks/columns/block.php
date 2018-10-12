@@ -42,7 +42,7 @@ if($column_num){
 				}
 				?>
 				<div class="<?php echo GRAV_BLOCKS::css()->col(12, $medium_col, $large_col)->add('col-content')->get(); ?>">
-					<?php echo ($columns['column_'.$i]) ? $columns['column_'.$i] : get_sub_field('column_'.$i); ?>
+					<?php echo isset($columns['column_'.$i]) ? $columns['column_'.$i] : get_sub_field('column_'.$i); ?>
 				</div>
 		<?php } ?>
 		</div>

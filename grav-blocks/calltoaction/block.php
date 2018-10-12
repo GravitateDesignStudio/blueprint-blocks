@@ -9,13 +9,13 @@ if($column_num){ ?>
 		<div class="<?php echo GRAV_BLOCKS::css()->row()->get();?> align-center">
 	<?php
 		for ($i=1; $i <= $column_num; $i++) {
-			$buttons = ($cta_columns['buttons_' . $i]) ? $cta_columns['buttons_' . $i] : get_sub_field('buttons_' . $i);
-			$title = ($cta_columns['title_' . $i]) ? $cta_columns['title_' . $i] : get_sub_field('title_' . $i);
-			$description = ($cta_columns['description_' . $i]) ? $cta_columns['description_' . $i] : get_sub_field('description_' . $i);
+			$buttons = isset($cta_columns['buttons_' . $i]) ? $cta_columns['buttons_' . $i] : get_sub_field('buttons_' . $i);
+			$title = isset($cta_columns['title_' . $i]) ? $cta_columns['title_' . $i] : get_sub_field('title_' . $i);
+			$description = isset($cta_columns['description_' . $i]) ? $cta_columns['description_' . $i] : get_sub_field('description_' . $i);
 			$form = isset($cta_columns['form_' . $i]) ? $cta_columns['form_' . $i] : get_sub_field('form_' . $i);
-			$align_content = ($cta_columns['alignment_' . $i]) ? $cta_columns['alignment_' . $i] : get_sub_field('alignment_' . $i);
-			$background = ($cta_columns['block_background_' . $i]) ? $cta_columns['block_background_' . $i] : get_sub_field('block_background_' . $i);
-			$background_image = ($cta_columns['block_background_image_' . $i]) ? $cta_columns['block_background_image_' . $i] : get_sub_field('block_background_image_' . $i);
+			$align_content = isset($cta_columns['alignment_' . $i]) ? $cta_columns['alignment_' . $i] : get_sub_field('alignment_' . $i);
+			$background = isset($cta_columns['block_background_' . $i]) ? $cta_columns['block_background_' . $i] : get_sub_field('block_background_' . $i);
+			$background_image = isset($cta_columns['block_background_image_' . $i]) ? $cta_columns['block_background_image_' . $i] : get_sub_field('block_background_image_' . $i);
 
 			if($title || $description || $buttons || $form){ ?>
 

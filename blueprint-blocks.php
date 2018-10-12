@@ -1039,6 +1039,8 @@ class GRAV_BLOCKS {
 						}
 					}
 				}
+
+				do_action('grav_blocks_display_complete');
 			}
 		}
 	}
@@ -1338,7 +1340,11 @@ class GRAV_BLOCKS {
 
 		$block_container_attributes = self::format_block_attributes($block_attributes);
 
+		do_action('grav_blocks_pre_block_output', $block_name, $block_attributes);
+
 		include $handler_file;
+
+		do_action('grav_blocks_post_block_output', $block_name, $block_attributes);
 	}
 
 
