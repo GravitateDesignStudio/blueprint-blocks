@@ -2082,7 +2082,7 @@ class GRAV_BLOCKS {
 		<script>
 			// Blueprint Blocks required scripts initialization
 			document.addEventListener('DOMContentLoaded', function () {
-				if (jQuery === 'undefined') {
+				if (jQuery === 'undefined' || !jQuery().colorbox) {
 					return;
 				}
 
