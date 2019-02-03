@@ -50,52 +50,63 @@ class GRAV_BLOCKS {
 	 */
 	public static function add_head_css()
 	{
-		?><style>
+		$output_default_styles = apply_filters('grav_blocks_output_default_styles', true);
 
-		/* Gravitate Block Option Classes */
-		.block-options-padding-remove-top .block-inner {
-			padding-top: 0;
-		}
-		.block-options-padding-remove-bottom .block-inner {
-			padding-bottom: 0;
-		}
-		.block-bg-image {
-			background-size: cover;
-			background-position: center;
-		}
-		.block-bg-video {
-			overflow: hidden;
-		}
-		.block-bg-video .block-video-container {
-			position: absolute;
-			top: 50%;
-			left: 50%;
-			-webkit-transform: translateX(-50%) translateY(-50%);
-			transform: translateX(-50%) translateY(-50%);
-			min-width: 100%;
-			min-height: 100%;
-			width: auto;
-			height: auto;
-			overflow: hidden;
-			z-index: -1;
-		}
-		.block-bg-video,
-		.block-bg-overlay,
-		.block-bg-video .block-inner,
-		.block-bg-overlay .block-inner {
-			position: relative;
-		}
-		.block-bg-overlay::before {
-			content: '';
-			display: block;
-			position: absolute;
-			background-color: rgba(0, 0, 0, 0.5);
-			top: 0;
-			right: 0;
-			bottom: 0;
-			left: 0;
+		if (!$output_default_styles) {
+			return;
 		}
 
+		?>
+		<style>
+			/* Gravitate Block Option Classes */
+			.block-options-padding-remove-top .block-inner {
+				padding-top: 0;
+			}
+			
+			.block-options-padding-remove-bottom .block-inner {
+				padding-bottom: 0;
+			}
+
+			.block-bg-image {
+				background-size: cover;
+				background-position: center;
+			}
+			
+			.block-bg-video {
+				overflow: hidden;
+			}
+
+			.block-bg-video .block-video-container {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				-webkit-transform: translateX(-50%) translateY(-50%);
+				transform: translateX(-50%) translateY(-50%);
+				min-width: 100%;
+				min-height: 100%;
+				width: auto;
+				height: auto;
+				overflow: hidden;
+				z-index: -1;
+			}
+
+			.block-bg-video,
+			.block-bg-overlay,
+			.block-bg-video .block-inner,
+			.block-bg-overlay .block-inner {
+				position: relative;
+			}
+
+			.block-bg-overlay::before {
+				content: '';
+				display: block;
+				position: absolute;
+				background-color: rgba(0, 0, 0, 0.5);
+				top: 0;
+				right: 0;
+				bottom: 0;
+				left: 0;
+			}
 		</style>
 	<?php
 	}
