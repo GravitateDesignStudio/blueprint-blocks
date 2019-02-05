@@ -7,14 +7,17 @@ Plugin URI: http://www.gravitatedesign.com
 Author: Gravitate
 */
 
+require_once('blueprint-dependency-manager.php');
+
 register_activation_hook( __FILE__, array( 'GRAV_BLOCKS', 'activate' ));
 register_deactivation_hook( __FILE__, array( 'GRAV_BLOCKS', 'deactivate' ));
 
 add_action( 'admin_menu', array( 'GRAV_BLOCKS', 'admin_menu' ));
 add_action( 'admin_init', array( 'GRAV_BLOCKS', 'admin_init' ));
 add_action( 'wp_loaded', array( 'GRAV_BLOCKS', 'init' ));
+add_action( 'wp_footer', array( 'GRAV_BLOCKS', 'do_footer_stuff' ));
 add_action( 'admin_enqueue_scripts', array('GRAV_BLOCKS', 'enqueue_admin_files' ));
-add_action( 'wp_enqueue_scripts', array('GRAV_BLOCKS', 'enqueue_files' ));
+// add_action( 'wp_enqueue_scripts', array('GRAV_BLOCKS', 'enqueue_files' ));
 add_filter( 'plugin_action_links_'.plugin_basename(__FILE__), array('GRAV_BLOCKS', 'plugin_settings_link' ));
 
 /**
@@ -41,6 +44,11 @@ class GRAV_BLOCKS {
 		echo '<pre>';
 		var_dump($var);
 		echo '</pre>';
+	}
+
+	public static function do_footer_stuff()
+	{
+		\BlueprintBlocks\DependencyManager::load_dependencies();
 	}
 
 	/**
@@ -109,6 +117,54 @@ class GRAV_BLOCKS {
 			}
 		</style>
 	<?php
+	}
+
+	/**
+	 * Register all global JS and CSS dependencies used by the default blocks
+	 *
+	 * @return void
+	 */
+	private static function register_global_dependencies()
+	{
+		$plugin_dep_url = plugin_dir_url(__FILE__).'library/dependencies';
+
+		// Google Maps API
+		$google_maps_api_key = GRAV_BLOCKS_PLUGIN_SETTINGS::get_setting_value('google_maps_api_key');
+
+		if ($google_maps_api_key) {
+			wp_register_script(
+				'google_maps_api',
+				'https://maps.googleapis.com/maps/api/js?key='.$google_maps_api_key,
+				[],
+				$ver,
+				true
+			);
+		}
+
+		// Swiper
+		wp_register_script(
+			'swiper',
+			$plugin_dep_url.'/js/swiper.min.js',
+			[],
+			'4.4.6',
+			true
+		);
+
+		wp_register_style(
+			'swiper',
+			$plugin_dep_url.'/css/swiper.min.css',
+			[],
+			'4.4.6'
+		);
+
+		// Colorbox
+		wp_register_script(
+			'colorbox',
+			$plugin_dep_url.'/js/jquery.colorbox-min.js',
+			['jquery'],
+			'1.6.4',
+			true
+		);
 	}
 
 	/**
@@ -744,6 +800,7 @@ class GRAV_BLOCKS {
 		self::setup();
 		self::add_hooks();
 		self::prepare_blocks();
+		self::register_global_dependencies();
 	}
 
 	/**
@@ -1208,8 +1265,10 @@ class GRAV_BLOCKS {
 		// Check for JS and CSS Files
 		if($block_path = self::get_path($block_name))
 		{
+			\BlueprintBlocks\DependencyManager::add_block($block_name, $block_path);
+
 			// JS
-			if(file_exists($block_path.'/block.js'))
+			/* if(file_exists($block_path.'/block.js'))
 			{
 				add_action( 'wp_footer', function() use ($block_name, $block_path)
 				{
@@ -1228,10 +1287,10 @@ class GRAV_BLOCKS {
 					}
 
 				}, 100);
-			}
+			} */
 
 			// CSS
-			if(file_exists($block_path.'/block.css'))
+			/* if(file_exists($block_path.'/block.css'))
 			{
 				add_action( 'wp_footer', function() use ($block_name, $block_path)
 				{
@@ -1250,7 +1309,7 @@ class GRAV_BLOCKS {
 					}
 
 				});
-			}
+			} */
 		}
 
 		// Add Aria Label
@@ -2047,7 +2106,8 @@ class GRAV_BLOCKS {
 		if ( 'toplevel_page_gravitate-blocks' != $hook ) {
 	        return;
 	    }
-    	wp_enqueue_script( 'grav_blocks_scripts_js', plugin_dir_url( __FILE__ ) . 'library/js/blocks.min.js', array('jquery'), self::$version, true );
+		
+		// wp_enqueue_script( 'grav_blocks_scripts_js', plugin_dir_url( __FILE__ ) . 'library/js/blocks.min.js', array('jquery'), self::$version, true );
 	    wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_script( 'wp-color-picker' );
 	}
@@ -2065,6 +2125,7 @@ class GRAV_BLOCKS {
 		{
 			wp_enqueue_script( 'grav_blocks_scripts_js', plugin_dir_url( __FILE__ ) . 'library/js/blocks.min.js', array('jquery'), self::$version, true );
 		}
+
 		// if (GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('css_options', 'use_foundation') && self::is_viewable())
 		// {
 		// 	$foundation_file = self::get_foundation_file_name();
@@ -2085,6 +2146,12 @@ class GRAV_BLOCKS {
 	 */
 	public static function add_footer_js()
 	{
+		$output_default_js = apply_filters('grav_blocks_output_default_js', true);
+
+		if (!$output_default_js) {
+			return;
+		}
+
 		if (!GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('advanced_options', 'enqueue_scripts')) {
 			return;
 		}

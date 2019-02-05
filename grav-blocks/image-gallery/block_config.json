@@ -1,0 +1,10 @@
+{
+	"dependencies": {
+		"js": [
+			"swiper"
+		],
+		"css": [
+			"swiper"
+		]
+	}
+}
