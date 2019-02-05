@@ -1521,30 +1521,23 @@ class GRAV_BLOCKS {
 	 *
 	 * @return void
 	 */
-	public static function get_block($block='', $block_variables=array())
+	public static function get_block($block = '', $block_variables = array(), $block_attributes = array())
 	{
-		if(!empty($block_variables))
-		{
+		if (!empty($block_variables)) {
 			extract($block_variables);
 		}
 
-		if($path = self::get_path($block))
-		{
-			if(file_exists($path.'/block.php'))
-			{
-				do_action('grav_blocks_display_before', $block, $block_variables);
-				include($path.'/block.php');
-				do_action('grav_blocks_display_after', $block, $block_variables);
-			}
-			else
-			{
-				// Error
-			}
+		$path = self::get_path($block);
+
+		if (!$path || !file_exists($path.'/block.php')) {
+			return;
 		}
-		else
-		{
-			// Error
-		}
+
+		do_action('grav_blocks_display_before', $block, $block_variables, $block_attributes);
+
+		include($path.'/block.php');
+
+		do_action('grav_blocks_display_after', $block, $block_variables, $block_attributes);
 	}
 
 	/**
