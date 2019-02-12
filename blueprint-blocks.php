@@ -1581,16 +1581,19 @@ class GRAV_BLOCKS {
 	 *
 	 * @return array if no setting specified, string if setting is specified
 	 */
-	public static function get_block_settings($block='', $setting='')
+	public static function get_block_settings($block = '', $setting = '')
 	{
-		$block = ($block != '') ? $block : self::$current_block_name;
+		$block = ($block !== '') ? $block : self::$current_block_name;
 
-		if($path = self::get_path($block))
+		if ($path = self::get_path($block))
 		{
-			if(file_exists($path.'/block_fields.php'))
+			if (file_exists($path.'/block_fields.php'))
 			{
 				$fields = include($path.'/block_fields.php');
-				$settings = ($setting === '') ? $fields['grav_blocks_settings'] : $fields['grav_blocks_settings'][$setting];
+
+				$settings = ($setting === '') ?
+					($fields['grav_blocks_settings'] ?? '') :
+					($fields['grav_blocks_settings'][$setting] ?? '');
 
 				return $settings;
 			}
@@ -2006,10 +2009,10 @@ class GRAV_BLOCKS {
 
 		<br>
 		<div class="gravitate-redirects-page-links">
-			<a href="<?php echo self::$page;?>&section=general" class="<?php echo self::get_current_tab($_GET['section'], 'general'); ?>">General</a>
-			<a href="<?php echo self::$page;?>&section=advanced" class="<?php echo self::get_current_tab($_GET['section'], 'advanced'); ?>">Advanced</a>
-			<a href="<?php echo self::$page;?>&section=developers" class="<?php echo self::get_current_tab($_GET['section'], 'developers'); ?>">Developers</a>
-			<a href="<?php echo self::$page;?>&section=usage" class="<?php echo self::get_current_tab($_GET['section'], 'usage'); ?>">Block Usage</a>
+			<a href="<?php echo self::$page;?>&section=general" class="<?php echo self::get_current_tab($_GET['section'] ?? '', 'general'); ?>">General</a>
+			<a href="<?php echo self::$page;?>&section=advanced" class="<?php echo self::get_current_tab($_GET['section'] ?? '', 'advanced'); ?>">Advanced</a>
+			<a href="<?php echo self::$page;?>&section=developers" class="<?php echo self::get_current_tab($_GET['section'] ?? '', 'developers'); ?>">Developers</a>
+			<a href="<?php echo self::$page;?>&section=usage" class="<?php echo self::get_current_tab($_GET['section'] ?? '', 'usage'); ?>">Block Usage</a>
 		</div>
 
 		<br>

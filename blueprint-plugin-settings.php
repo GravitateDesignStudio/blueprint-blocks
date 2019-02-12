@@ -5,9 +5,7 @@
 *
 */
 
-
-if(function_exists('add_action'))
-{
+if (function_exists('add_action')) {
 	add_action( 'admin_enqueue_scripts', array('GRAV_BLOCKS_PLUGIN_SETTINGS', 'add_sortable') );
 }
 
@@ -418,31 +416,43 @@ class GRAV_BLOCKS_PLUGIN_SETTINGS
 	{
 		$deprecated = array();
 
-		?><span class="settings-field-wrapper"><?php
+		?>
+		<span class="settings-field-wrapper">
+		<?php
+		
 		$settings_attribute = 'settings['.$meta_key.']';
 
-		if($repeater_key && !empty($field['label']))
-		{
-
+		if ($repeater_key && !empty($field['label'])) {
 			$settings_attribute = 'settings['.$repeater_key.']['.$rep_i.']['.$meta_key.']';
 
-			?><label for="<?php echo $meta_key;?>"><strong><?php echo $field['label'];?></strong></label><br><?php
+			?>
+			<label for="<?php echo $meta_key; ?>">
+				<strong><?php echo $field['label']; ?></strong>
+			</label>
+			<br>
+			<?php
 		}
 
-		if(!empty($field['type']) && $field['type'] == 'text')
-		{
-			?><input type="text" name="<?php echo $settings_attribute;?>" id="<?php echo $meta_key;?>"<?php echo (isset($field['maxlength']) ? ' maxlength="'.$field['maxlength'].'"' : '');?> value="<?php echo esc_attr( (isset($field['value']) ? $field['value'] : '') );?>" class="regular-text" /><br /><?php
-		}
-		else if(!empty($field['type']) && $field['type'] == 'textarea')
-		{
-			?><textarea rows="6" cols="38" name="<?php echo $settings_attribute;?>" id="<?php echo $meta_key;?>"><?php echo ($meta_key == 'google_maps_styles') ? stripcslashes(esc_attr( (isset($field['value']) ? $field['value'] : '') )): esc_attr( (isset($field['value']) ? $field['value'] : '') ); ?></textarea><br /><?php
-		}
-		else if(!empty($field['type']) && $field['type'] == 'select')
+		if (!empty($field['type']) && $field['type'] == 'text')
 		{
 			?>
-			<select name="<?php echo $settings_attribute;?>" id="<?php echo $meta_key;?>">
+			<input type="text" name="<?php echo $settings_attribute; ?>" id="<?php echo $meta_key; ?>"<?php echo (isset($field['maxlength']) ? ' maxlength="'.$field['maxlength'].'"' : '');?> value="<?php echo esc_attr((isset($field['value']) ? $field['value'] : '')); ?>" class="regular-text" />
+			<br />
+			<?php
+		}
+		else if (!empty($field['type']) && $field['type'] == 'textarea')
+		{
+			?>
+			<textarea rows="6" cols="38" name="<?php echo $settings_attribute; ?>" id="<?php echo $meta_key; ?>"><?php echo ($meta_key == 'google_maps_styles') ? stripcslashes(esc_attr((isset($field['value']) ? $field['value'] : ''))): esc_attr((isset($field['value']) ? $field['value'] : '')); ?></textarea>
+			<br />
+			<?php
+		}
+		else if (!empty($field['type']) && $field['type'] == 'select')
+		{
+			?>
+			<select name="<?php echo $settings_attribute; ?>" id="<?php echo $meta_key; ?>">
 				<?php
-				if(!empty($field['allow_null']))
+				if (!empty($field['allow_null']))
 				{
 					?>
 					<option value="">- Select -</option>
@@ -452,19 +462,18 @@ class GRAV_BLOCKS_PLUGIN_SETTINGS
 				{
 					$options_label = (is_array($options)) ? $options['label'] : $options;
 					$real_value = ($option_value !== $options_label && !is_numeric($option_value) ? $option_value : $options_label);
+					
 					?>
 					<option<?php echo ($real_value !== $options_label ? ' value="'.$real_value.'"' : '');?> <?php selected( ($real_value !== $options_label ? $real_value : $options_label), esc_attr( (isset($field['value']) ? $field['value'] : '') ));?>><?php echo $options_label;?></option>
 					<?php
-				} ?>
+				}
+				?>
 			</select>
 			<?php
 		}
-		else if(!empty($field['type']) && $field['type'] == 'checkbox')
+		else if (!empty($field['type']) && $field['type'] == 'checkbox')
 		{
-
-
-			if(is_string($field['options']))
-			{
+			if (is_string($field['options'])) {
 				$field['options'] = explode(',', $field['options']);
 				$field['options'] = array_combine($field['options'], $field['options']);
 			}
@@ -473,82 +482,98 @@ class GRAV_BLOCKS_PLUGIN_SETTINGS
 			<input type="hidden" name="<?php echo $settings_attribute;?>" value="">
 			<?php
 
-			foreach($field['options'] as $option_value => $options)
+			foreach ($field['options'] as $option_value => $options)
 			{
-				if(isset($options['deprecated']) ){
+				if (isset($options['deprecated'])) {
 					$deprecated[$option_value] = $options;
 					continue;
 				}
-				$options_label = (is_array($options)) ? $options['label'] : $options;
-				$block_icon = (is_array($options) && $options['icon']) ? $options['icon'] : '';
-				$block_description = (is_array($options) && $options['description']) ? $options['description'] : '';
-				$real_value = ($option_value !== $options_label && !is_numeric($option_value) ? $option_value : $options_label);
 
-				if(isset($field['value']) && is_array($field['value']))
-				{
+				$options_label = (is_array($options) && isset($options['label'])) ? $options['label'] : $options;
+				$block_icon = (is_array($options) && isset($options['icon'])) ? $options['icon'] : '';
+				$block_description = (is_array($options) && isset($options['description'])) ? $options['description'] : '';
+				$real_value = ($option_value !== $options_label && !is_numeric($option_value)) ? $option_value : $options_label;
+
+				if (isset($field['value']) && is_array($field['value'])) {
 					$checked = (in_array($real_value, $field['value'])) ? 'checked' : '';
-				}
-				else
-				{
+				} else {
 					$checked = '';
 				}
+
 				?>
 				<span class="grav-option-wrapper">
 					<label>
 						<input type="checkbox" name="<?php echo $settings_attribute;?>[]" value="<?php echo $option_value; ?>" <?php echo $checked; ?>>
 						<span <?php if($block_icon){ echo 'class="'.esc_attr($block_icon).'"'; } ?>><?php echo ucfirst($options_label); ?></span>
 					</label>
-					<?php if($block_description){ ?>
+					<?php
+					if ($block_description)
+					{
+						?>
 						<a class="grav-inline thickbox" href="#TB_inline?width=600&height=550&inlineId=<?php echo $option_value; ?>" title="<?php echo ucfirst($options_label); ?>">?</a>
-						<div style="display:none;"><div id="<?php echo $option_value; ?>">
-							<div class="grav-modal-content">
-								<?php echo $block_description; ?>
+						<div style="display:none;">
+							<div id="<?php echo $option_value; ?>">
+								<div class="grav-modal-content">
+									<?php echo $block_description; ?>
+								</div>
 							</div>
-						</div></div>
-					<?php } ?>
+						</div>
+						<?php
+					}
+					?>
 				</span>
 				<?php
 			}
-			if(!empty($deprecated)){
-				?> <h4 style="width:100%;margin-bottom:0">Deprecated Blocks</h4><span class="description" style="margin-bottom:30px;">These blocks are marked for deprecation and will no longer be updated or supported. Please use the replacing blocks.</span><?php
-				foreach($deprecated as $option_value => $options)
-				{
-					$options_label = (is_array($options)) ? $options['label'] : $options;
-					$block_icon = (is_array($options) && $options['icon']) ? $options['icon'] : '';
-					$block_description = (is_array($options) && $options['description']) ? $options['description'] : '';
-					$real_value = ($option_value !== $options_label && !is_numeric($option_value) ? $option_value : $options_label);
 
-					if(isset($field['value']) && is_array($field['value']))
-					{
+			if (!empty($deprecated))
+			{
+				?>
+				<h4 style="width:100%;margin-bottom:0">Deprecated Blocks</h4>
+				<span class="description" style="margin-bottom:30px;">These blocks are marked for deprecation and will no longer be updated or supported. Please use the replacing blocks.</span>
+				<?php
+
+				foreach ($deprecated as $option_value => $options)
+				{
+					$options_label = (is_array($options) && isset($options['label'])) ? $options['label'] : $options;
+					$block_icon = (is_array($options) && isset($options['icon'])) ? $options['icon'] : '';
+					$block_description = (is_array($options) && isset($options['description'])) ? $options['description'] : '';
+					$real_value = ($option_value !== $options_label && !is_numeric($option_value)) ? $option_value : $options_label;
+
+					if (isset($field['value']) && is_array($field['value'])) {
 						$checked = (in_array($real_value, $field['value'])) ? 'checked' : '';
-					}
-					else
-					{
+					} else {
 						$checked = '';
 					}
+
 					?>
 					<span class="grav-option-wrapper">
 						<label>
 							<input type="checkbox" name="<?php echo $settings_attribute;?>[]" value="<?php echo $option_value; ?>" <?php echo $checked; ?>>
 							<span <?php if($block_icon){ echo 'class="'.esc_attr($block_icon).'"'; } ?>><?php echo ucfirst($options_label); ?></span>
 						</label>
-						<?php if($block_description){ ?>
+						<?php
+						if ($block_description)
+						{
+							?>
 							<a class="grav-inline thickbox" href="#TB_inline?width=600&height=550&inlineId=<?php echo $option_value; ?>" title="<?php echo ucfirst($options_label); ?>">?</a>
-							<div style="display:none;"><div id="<?php echo $option_value; ?>">
-								<div class="grav-modal-content">
-									<?php echo $block_description; ?>
+							<div style="display:none;">
+								<div id="<?php echo $option_value; ?>">
+									<div class="grav-modal-content">
+										<?php echo $block_description; ?>
+									</div>
 								</div>
-							</div></div>
-						<?php } ?>
+							</div>
+							<?php
+						}
+						?>
 					</span>
 					<?php
 				}
 			}
 		}
-		else if(!empty($field['type']) && $field['type'] == 'radio')
+		else if (!empty($field['type']) && $field['type'] == 'radio')
 		{
-			if(is_string($field['options']))
-			{
+			if (is_string($field['options'])) {
 				$field['options'] = explode(',', $field['options']);
 				$field['options'] = array_combine($field['options'], $field['options']);
 			}
@@ -557,51 +582,62 @@ class GRAV_BLOCKS_PLUGIN_SETTINGS
 			<input type="hidden" name="<?php echo $settings_attribute;?>" value="">
 			<?php
 
-			foreach($field['options'] as $option_value => $options)
+			foreach ($field['options'] as $option_value => $options)
 			{
+				$options_label = (is_array($options) && isset($options['label'])) ? $options['label'] : $options;
+				$block_icon = (is_array($options) && isset($options['icon'])) ? $options['icon'] : '';
+				$block_description = (is_array($options) && isset($options['description'])) ? $options['description'] : '';
+				$real_value = ($option_value !== $options_label && !is_numeric($option_value)) ? $option_value : $options_label;
 
-				$options_label = (is_array($options)) ? $options['label'] : $options;
-				$block_icon = (is_array($options) && $options['icon']) ? $options['icon'] : '';
-				$block_description = (is_array($options) && $options['description']) ? $options['description'] : '';
-				$real_value = ($option_value !== $options_label && !is_numeric($option_value) ? $option_value : $options_label);
-
-				if(isset($field['value']) && is_array($field['value']))
-				{
+				if (isset($field['value']) && is_array($field['value'])) {
 					$checked = (in_array($real_value, $field['value'])) ? 'checked' : '';
-				}
-				else
-				{
+				} else {
 					$checked = '';
 				}
+
 				?>
 				<span class="grav-option-wrapper">
 					<label>
 						<input type="radio" name="<?php echo $settings_attribute;?>[]" value="<?php echo $option_value; ?>" <?php echo $checked; ?>>
-						<span <?php if($block_icon){ echo 'class="'.esc_attr($block_icon).'"'; } ?>><?php echo ucfirst($options_label); ?></span>
+						<span <?php if ($block_icon) { echo 'class="'.esc_attr($block_icon).'"'; } ?>><?php echo ucfirst($options_label); ?></span>
 					</label>
-					<?php if($block_description){ ?>
+					<?php
+					if ($block_description)
+					{
+						?>
 						<a class="grav-inline thickbox" href="#TB_inline?width=600&height=550&inlineId=<?php echo $option_value; ?>" title="<?php echo ucfirst($options_label); ?>">?</a>
-						<div style="display:none;"><div id="<?php echo $option_value; ?>">
-							<div class="grav-modal-content">
-								<?php echo $block_description; ?>
+						<div style="display:none;">
+							<div id="<?php echo $option_value; ?>">
+								<div class="grav-modal-content">
+									<?php echo $block_description; ?>
+								</div>
 							</div>
-						</div></div>
-					<?php } ?>
+						</div>
+						<?php
+					}
+					?>
 				</span>
 				<?php
 			}
 		}
-		else if(!empty($field['type']) && $field['type'] == 'colorpicker')
+		else if (!empty($field['type']) && $field['type'] == 'colorpicker')
 		{
-			?><input type="text" class="grav-blocks-colorpicker" name="<?php echo $settings_attribute;?>" id="<?php echo $meta_key;?>"<?php echo (isset($field['maxlength']) ? ' maxlength="'.$field['maxlength'].'"' : '');?> value="<?php echo esc_attr( (isset($field['value']) ? $field['value'] : '') );?>" class="regular-text" /><br /><?php
+			?>
+			<input type="text" class="grav-blocks-colorpicker" name="<?php echo $settings_attribute;?>" id="<?php echo $meta_key;?>"<?php echo (isset($field['maxlength']) ? ' maxlength="'.$field['maxlength'].'"' : '');?> value="<?php echo esc_attr( (isset($field['value']) ? $field['value'] : '') );?>" class="regular-text" />
+			<br />
+			<?php
 		}
+
 		?>
 		</span>
 		<?php
 
-		if(!empty($field['description']))
+		if (!empty($field['description']))
 		{
-			?><span class="description"><?php echo $field['description'];?></span><br><?php
+			?>
+			<span class="description"><?php echo $field['description'];?></span>
+			<br>
+			<?php
 		}
 	}
 }
