@@ -15,7 +15,7 @@ register_deactivation_hook( __FILE__, array( 'GRAV_BLOCKS', 'deactivate' ));
 add_action( 'admin_menu', array( 'GRAV_BLOCKS', 'admin_menu' ));
 add_action( 'admin_init', array( 'GRAV_BLOCKS', 'admin_init' ));
 add_action( 'wp_loaded', array( 'GRAV_BLOCKS', 'init' ));
-add_action( 'wp_footer', array( 'GRAV_BLOCKS', 'do_footer_stuff' ));
+add_action( 'wp_footer', array( 'GRAV_BLOCKS', 'load_dependencies' ));
 add_action( 'admin_enqueue_scripts', array('GRAV_BLOCKS', 'enqueue_admin_files' ));
 // add_action( 'wp_enqueue_scripts', array('GRAV_BLOCKS', 'enqueue_files' ));
 add_filter( 'plugin_action_links_'.plugin_basename(__FILE__), array('GRAV_BLOCKS', 'plugin_settings_link' ));
@@ -46,7 +46,7 @@ class GRAV_BLOCKS {
 		echo '</pre>';
 	}
 
-	public static function do_footer_stuff()
+	public static function load_dependencies()
 	{
 		\BlueprintBlocks\DependencyManager::load_dependencies();
 	}
@@ -133,13 +133,22 @@ class GRAV_BLOCKS {
 
 		if ($google_maps_api_key) {
 			wp_register_script(
-				'google_maps_api',
+				'google-maps-api',
 				'https://maps.googleapis.com/maps/api/js?key='.$google_maps_api_key,
 				[],
-				$ver,
+				null,
 				true
 			);
 		}
+
+		// Infobubble for Google Maps
+		wp_register_script(
+			'infobubble',
+			$plugin_dep_url.'/js/infobubble.js',
+			['google-maps-api'],
+			'1.0.0',
+			true
+		);
 
 		// Swiper
 		wp_register_script(

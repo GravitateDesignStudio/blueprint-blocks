@@ -1,0 +1,8 @@
+{
+	"dependencies": {
+		"js": [
+			"google-maps-api",
+			"infobubble"
+		]
+	}
+}
