@@ -1127,48 +1127,39 @@ class GRAV_BLOCKS {
 	{
 		$block_attributes = array();
 
-		if(!empty($block_variables))
-		{
+		if (!empty($block_variables)) {
 			extract($block_variables);
 		}
 
-		if(!isset($block_unique_id))
-		{
+		if (!isset($block_unique_id)) {
 			$block_unique_id = get_sub_field('unique_id');
 		}
 
-		if(!isset($block_custom_class))
-		{
+		if (!isset($block_custom_class)) {
 			$block_custom_class = get_sub_field('block_option_custom_class');
 		}
 
-		if(!isset($block_padding))
-		{
+		if (!isset($block_padding)) {
 			$block_padding = get_sub_field('block_option_padding');
 		}
 
-		if(!isset($block_hide))
-		{
+		if (!isset($block_hide)) {
 			$block_hide = get_sub_field('block_option_hide');
 		}
 
-		if(!isset($block_background))
-		{
+		if (!isset($block_background)) {
 			$block_background = ($block_bg = get_sub_field('block_background')) ? $block_bg : 'block-bg-none';
 		}
 
-		if(!isset($block_background_image))
-		{
+		if (!isset($block_background_image)) {
 			$block_background_image = get_sub_field('block_background_image');
 		}
 
-		if(!isset($block_background_overlay))
-		{
+		if (!isset($block_background_overlay)) {
 			$block_background_overlay = get_sub_field('block_background_overlay');
 		}
 
-		if(!isset($block_animate))
-		{
+		if (!isset($block_animate)) {
 			$block_animate = get_sub_field('block_animate');
 		}
 
@@ -1176,25 +1167,19 @@ class GRAV_BLOCKS {
 		$block_attributes['data-block-index'] = $block_index;
 
 		// ID
-		//$block_unique_id = get_sub_field('unique_id');
+		// $block_unique_id = get_sub_field('unique_id');
 
-		if($block_unique_id)
-		{
+		if ($block_unique_id) {
 			$block_attributes['id'] = sanitize_title($block_unique_id);
 		}
 
 		$sections = self::get_registered_sections();
 
-		if(!empty($sections['fields'][0]['layouts']))
-		{
-			foreach ($sections['fields'][0]['layouts'] as $layout_name => $layout)
-			{
-				if(!empty($layout['sub_fields']))
-				{
-					foreach ($layout['sub_fields'] as $sub_field)
-					{
-						if(!empty($sub_field['block_data_attribute']))
-						{
+		if (!empty($sections['fields'][0]['layouts'])) {
+			foreach ($sections['fields'][0]['layouts'] as $layout_name => $layout) {
+				if (!empty($layout['sub_fields'])) {
+					foreach ($layout['sub_fields'] as $sub_field) {
+						if (!empty($sub_field['block_data_attribute'])) {
 							$block_attributes['data-'.str_replace('_', '-', strtolower($sub_field['name']))] = trim(get_sub_field($sub_field['name']));
 						}
 					}
@@ -1205,20 +1190,17 @@ class GRAV_BLOCKS {
 		// Class
 		$block_attributes['class'] = array();
 
-		if(!empty($block_custom_class))
-		{
+		if (!empty($block_custom_class)) {
 			$block_attributes['class'] = array_merge($block_attributes['class'], explode(' ', $block_custom_class));
 		}
 
 		// Padding Options
-		if($block_padding)
-		{
+		if ($block_padding) {
 			$block_attributes['class'] = array_merge($block_attributes['class'], $block_padding);
 		}
 
 		// Screen Options
-		if($block_hide)
-		{
+		if ($block_hide) {
 			$small = in_array('small', $block_hide);
 			$medium = in_array('medium', $block_hide);
 			$large = in_array('large', $block_hide);
@@ -1233,106 +1215,66 @@ class GRAV_BLOCKS {
 		// Background
 		$block_attributes['class'][] = $block_background;
 
-		if(!empty(self::$settings['background_colors']))
-		{
-			foreach (self::$settings['background_colors'] as $color_key => $color_params)
-			{
+		if (!empty(self::$settings['background_colors'])) {
+			foreach (self::$settings['background_colors'] as $color_key => $color_params) {
 				$use_css_variable = (!empty($color_params['class']) && GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('css_options', 'add_custom_color_class'));
 
-				if(!empty($color_params['_repeater_id']) && $block_background === 'block-bg-'.$color_params['_repeater_id'] && $use_css_variable)
-				{
-					if(!GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('css_options', 'enqueue_css'))
-					{
+				if (!empty($color_params['_repeater_id']) && $block_background === 'block-bg-'.$color_params['_repeater_id'] && $use_css_variable) {
+					if (!GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('css_options', 'enqueue_css')) {
 						$block_background = '';
 					}
+
 					$block_attributes['class'][] = $color_params['class'];
 				}
 			}
 		}
 
 		// Background Image
-		if($block_background === 'block-bg-image' && $block_background_image)
-		{
-			if(is_string($block_background_image))
-			{
-				$block_attributes['style'] = " background-image: url('".esc_url($block_background_image)."'); ";
-			}
-			else
-			{
-				$image_src = self::get_prefered_image_size_src($block_background_image);
-				$block_attributes['style'] = ($image_src ? " background-image: url('".$image_src."'); " : '');
+		if ($block_background === 'block-bg-image' && $block_background_image) {
+			$bg_image_attrs = [];
+			$bg_image_style = '';
 
+			if (is_string($block_background_image)) {
+				$bg_image_style = "background-image: url('".esc_url($block_background_image)."'); ";
+			} else {
+				$image_src = self::get_prefered_image_size_src($block_background_image);
+
+				if ($image_src) {
+					$bg_image_style = "background-image: url('".$image_src."'); ";
+				}
 			}
+
+			$bg_image_attrs['style'] = isset($block_attributes['style']) ?
+				$block_attributes['style'].' '.$bg_image_style :
+				$bg_image_style;
+
+			$bg_image_attrs = apply_filters('grav_blocks_background_image_attributes', $bg_image_attrs, $block_attributes, $block_background_image);
+			$block_attributes = array_merge($block_attributes, $bg_image_attrs);
 		}
 
 		// Background Overlay
-		if(in_array($block_background, array('block-bg-image', 'block-bg-video')) && $block_background_overlay)
-		{
+		if (in_array($block_background, array('block-bg-image', 'block-bg-video')) && $block_background_overlay) {
 			$block_attributes['class'][] = 'block-bg-overlay';
 		}
 
 		// Check for JS and CSS Files
-		if($block_path = self::get_path($block_name))
-		{
+		if ($block_path = self::get_path($block_name)) {
 			\BlueprintBlocks\DependencyManager::add_block($block_name, $block_path);
-
-			// JS
-			/* if(file_exists($block_path.'/block.js'))
-			{
-				add_action( 'wp_footer', function() use ($block_name, $block_path)
-				{
-					global $grav_block_js_loaded;
-
-					if(empty($grav_block_js_loaded[$block_name]))
-					{
-						if(empty($grav_block_js_loaded))
-						{
-							$grav_block_js_loaded = array();
-						}
-
-						$grav_block_js_loaded[$block_name] = true;
-
-						echo "<script>\n".file_get_contents($block_path.'/block.js')."</script>\n";
-					}
-
-				}, 100);
-			} */
-
-			// CSS
-			/* if(file_exists($block_path.'/block.css'))
-			{
-				add_action( 'wp_footer', function() use ($block_name, $block_path)
-				{
-					global $grav_block_css_loaded;
-
-					if(empty($grav_block_css_loaded[$block_name]))
-					{
-						if(empty($grav_block_css_loaded))
-						{
-							$grav_block_css_loaded = array();
-						}
-
-						$grav_block_css_loaded[$block_name] = true;
-
-						echo "<style>\n".file_get_contents($block_path.'/block.css')."</style>\n";
-					}
-
-				});
-			} */
 		}
 
 		// Add Aria Label
 		$block_attributes['aria-label'] = ucwords(str_replace(array('-','_'), ' ', $block_name));
 
 		// Style (Keep for Older Versions) #TODO Depricate as this can be handled by "grav_blocks_attributes" hook
-		$block_attributes['style'] = apply_filters( 'grav_block_background_style', (isset($block_attributes['style']) ? $block_attributes['style'] : ''));
+		$block_attributes['style'] = apply_filters('grav_block_background_style', (isset($block_attributes['style']) ? $block_attributes['style'] : ''));
 
 		// Class (Keep for Older Versions) #TODO Depricate as this can be handled by "grav_blocks_attributes" hook
 		$block_attributes['class'] = GRAV_BLOCKS::css()->add($block_attributes['class'])->get();
 		$block_attributes['class'] = explode(' ', $block_attributes['class']);
 
 		// Allow filtering all attributes - remove empty values, but leave 0
-		$block_attributes = array_filter(apply_filters('grav_blocks_container_attributes', $block_attributes, $block_name), function($value) {
+		$block_attributes = apply_filters('grav_blocks_container_attributes', $block_attributes, $block_name);
+		$block_attributes = array_filter($block_attributes, function($value) {
     		return ($value !== null && $value !== false && $value !== '');
 		});
 
@@ -2816,19 +2758,16 @@ class GRAV_BLOCKS {
 
 		$sizes = array();
 
-		foreach ( get_intermediate_image_sizes() as $_size )
-		{
-			if ( in_array( $_size, array('thumbnail', 'medium', 'medium_large', 'large') ) ) {
-				$sizes[ $_size ]['width']  = get_option( "{$_size}_size_w" );
-				$sizes[ $_size ]['height'] = get_option( "{$_size}_size_h" );
-				$sizes[ $_size ]['crop']   = (bool) get_option( "{$_size}_crop" );
-			}
-			elseif ( isset( $_wp_additional_image_sizes[ $_size ] ) )
-			{
-				$sizes[ $_size ] = array(
-					'width'  => $_wp_additional_image_sizes[ $_size ]['width'],
-					'height' => $_wp_additional_image_sizes[ $_size ]['height'],
-					'crop'   => $_wp_additional_image_sizes[ $_size ]['crop'],
+		foreach (get_intermediate_image_sizes() as $_size) {
+			if (in_array( $_size, array('thumbnail', 'medium', 'medium_large', 'large'))) {
+				$sizes[$_size]['width'] = get_option("{$_size}_size_w");
+				$sizes[$_size]['height'] = get_option("{$_size}_size_h");
+				$sizes[$_size]['crop'] = (bool)get_option("{$_size}_crop");
+			} else if (isset($_wp_additional_image_sizes[$_size])) {
+				$sizes[$_size] = array(
+					'width' => $_wp_additional_image_sizes[$_size]['width'],
+					'height' => $_wp_additional_image_sizes[$_size]['height'],
+					'crop' => $_wp_additional_image_sizes[$_size]['crop'],
 				);
 			}
 		}
@@ -2839,23 +2778,19 @@ class GRAV_BLOCKS {
 
 	private static function get_prefered_image_size_src($image, $size='')
 	{
-		if(!empty($image['sizes'][$size]))
-		{
+		if (!empty($image['sizes'][$size])) {
 			return $image['sizes'][$size];
 		}
 
-		if(!empty($image['sizes']['xlarge']))
-		{
+		if (!empty($image['sizes']['xlarge'])) {
 			return $image['sizes']['xlarge'];
 		}
 
-		if(!empty($image['sizes']['large']))
-		{
+		if (!empty($image['sizes']['large'])) {
 			return $image['sizes']['large'];
 		}
 
-		if(!empty($image['url']))
-		{
+		if (!empty($image['url'])) {
 			return $image['url'];
 		}
 
@@ -2863,58 +2798,44 @@ class GRAV_BLOCKS {
 	}
 
 
-
-	public static function image_sources($image='featured', $return_as_array=false)
+	public static function image_sources($image = 'featured', $return_as_array = false)
 	{
 		$sources = array();
 
-		if(is_numeric($image) && get_post_type($image) !== 'attachment')
-		{
+		if (is_numeric($image) && get_post_type($image) !== 'attachment') {
 			$image = get_post_thumbnail_id($image);
 		}
 
-		if($image === 'featured')
-		{
+		if ($image === 'featured') {
 			$image = get_post_thumbnail_id();
 		}
 
-		if(is_numeric($image) || !empty($image['sizes']))
-		{
+		if (is_numeric($image) || !empty($image['sizes'])) {
 			$image_sizes = self::get_image_sizes();
 
-			if(is_numeric($image))
-			{
-				foreach ($image_sizes as $size => $image_size)
-				{
+			if (is_numeric($image)) {
+				foreach ($image_sizes as $size => $image_size) {
 					// Only include sizes that are not cropped.
-					if(empty($image_size['crop']) && $image_size['width'])
-					{
-						if($url = wp_get_attachment_image_src( $image, $size ))
-						{
+					if (empty($image_size['crop']) && $image_size['width']) {
+						if ($url = wp_get_attachment_image_src($image, $size)) {
 							$sources['data-rimg-'.$size] = $url[0];
 						}
 					}
 				}
-			}
-			else
-			{
-				foreach ($image['sizes'] as $size => $url)
-				{
-					if(!preg_match('/\-width|\-height/i', $size) && isset($image_sizes[$size]['crop']) && empty($image_sizes[$size]['crop']))
-					{
+			} else {
+				foreach ($image['sizes'] as $size => $url) {
+					if (!preg_match('/\-width|\-height/i', $size) && isset($image_sizes[$size]['crop']) && empty($image_sizes[$size]['crop'])) {
 						$sources['data-rimg-'.$size] = $url;
 					}
 				}
 			}
 		}
 
-		if($return_as_array)
-		{
+		if ($return_as_array) {
 			return $sources;
 		}
 
-		foreach ($sources as $key => $source)
-		{
+		foreach ($sources as $key => $source) {
 			$sources[$key] = '"'.$source.'"';
 		}
 
@@ -2922,22 +2843,16 @@ class GRAV_BLOCKS {
 	}
 
 
-	public static function image_background($image='featured', $fallback_size='large')
+	public static function image_background($image = 'featured', $fallback_size = 'large')
 	{
-
-		if($image === 'featured' || is_numeric($image) )
-		{
-			if(is_numeric($image) && get_post_type($image) !== 'attachment')
-			{
+		if ($image === 'featured' || is_numeric($image)) {
+			if (is_numeric($image) && get_post_type($image) !== 'attachment') {
 				$attachment = get_post(get_post_thumbnail_id($image));
-			}
-			else
-			{
+			} else {
 				$attachment = get_post(get_post_thumbnail_id());
 			}
 
-			if($attachment)
-			{
+			if ($attachment) {
 				$image = array(
 					'alt' => get_post_meta( $attachment->ID, '_wp_attachment_image_alt', true ),
 					'caption' => $attachment->post_excerpt,
@@ -2950,13 +2865,10 @@ class GRAV_BLOCKS {
 
 				$image['sizes'] = array();
 
-				foreach (self::get_image_sizes() as $size => $image_size)
-				{
+				foreach (self::get_image_sizes() as $size => $image_size) {
 					// Only include sizes that are not cropped.
-					if(empty($image_size['crop']) && $image_size['width'])
-					{
-						if($url = wp_get_attachment_image_src( $attachment->ID, $size ))
-						{
+					if (empty($image_size['crop']) && $image_size['width']) {
+						if ($url = wp_get_attachment_image_src($attachment->ID, $size)) {
 							$image['sizes'][$size] = $url[0];
 						}
 					}
@@ -2964,45 +2876,36 @@ class GRAV_BLOCKS {
 			}
 		}
 
-		if(!empty($image))
-		{
+		if (!empty($image)) {
 			$prefered_image_src = self::get_prefered_image_size_src($image, $fallback_size);
 
-			if($prefered_image_src)
-			{
+			if ($prefered_image_src) {
 				return " style=\"background-image: url('".$prefered_image_src."');\" ";
 			}
 		}
 
 		return '';
-
 	}
 
 	protected static function get_acf_image_object($source)
 	{
-		if (!$source)
-		{
+		if (!$source) {
 			return false;
 		}
 
 		$attachment_id = 0;
 
-		if (is_int($source) || intval($source))
-		{
+		if (is_int($source) || intval($source)) {
 			// treat as attachment id
 			$attachment_id = intval($source);
-		}
-		else if (is_string($source))
-		{
-			if ($source == 'featured')
-			{
+		} else if (is_string($source)) {
+			if ($source == 'featured') {
 				$attachment = get_post(get_post_thumbnail_id());
 				$attachment_id = $attachment ? $attachment->ID : 0;
 			}
 		}
 
-		if (!$attachment_id)
-		{
+		if (!$attachment_id) {
 			return false;
 		}
 
@@ -3037,18 +2940,13 @@ class GRAV_BLOCKS {
 
 		$image['sizes'] = array();
 
-		foreach (self::get_image_sizes() as $size => $image_size)
-		{
+		foreach (self::get_image_sizes() as $size => $image_size) {
 			// Only include sizes that are not cropped.
-			if (empty($image_size['crop']) && $image_size['width'])
-			{
-				if ($url = wp_get_attachment_image_src( $attachment->ID, $size ))
-				{
+			if (empty($image_size['crop']) && $image_size['width']) {
+				if ($url = wp_get_attachment_image_src($attachment->ID, $size)) {
 					$image['sizes'][$size] = $url[0];
 				}
-			}
-			else
-			{
+			} else {
 				$cropped_sizes[] = $size;
 			}
 		}
@@ -3065,205 +2963,45 @@ class GRAV_BLOCKS {
 
 		$image_sources = array();
 
-		if(GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('advanced_options', 'add_responsive_img'))
-		{
+		if (GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('advanced_options', 'add_responsive_img')) {
 			// 1x1 transparent PNG
 			$add_attr['src'] = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
 			$image_sources = self::image_sources($image, true);
-		}
-		else
-		{
+		} else {
 			$prefered_image_src = self::get_prefered_image_size_src($image, $fallback_size);
 
-			if($tag_type === 'img' && !isset($add_attr['src']))
-			{
-				if($prefered_image_src)
-				{
+			if ($tag_type === 'img' && !isset($add_attr['src'])) {
+				if ($prefered_image_src) {
 					$add_attr['src'] = $prefered_image_src;
 				}
 			}
 
-			if($tag_type !== 'img' && $prefered_image_src)
-			{
+			if ($tag_type !== 'img' && $prefered_image_src) {
 				$add_attr['style'] = " background-image: url('".$prefered_image_src."'); ";
 			}
 		}
 
-		foreach ($add_attr as $attribute_key => $attribute_value)
-		{
+		foreach ($add_attr as $attribute_key => $attribute_value) {
 			$add_attr[$attribute_key] = '"'.esc_attr($attribute_value).'"';
 		}
 
 		$attributes_array = array_filter(array_merge($image_sources, $add_attr));
 
 		// If not alt then add an empty one for validation
-		if($tag_type === 'img' && empty($add_attr['alt']))
-		{
+		if ($tag_type === 'img' && empty($add_attr['alt'])) {
 			$attributes_array['alt'] = '""';
 		}
 
 		$attributes_str = trim(urldecode(http_build_query($attributes_array, '', ' ')));
 
-		if($attributes_str)
-		{
+		if ($attributes_str) {
 			$default_markup = ($tag_type === 'div') ? '<div '.$attributes_str.'></div>' : '<img '.$attributes_str.' />';
 
-			$acf_image_sizes = array();
-
-			if (isset($acf_image['sizes']) && is_array($acf_image['sizes'])) {
-				foreach ($acf_image['sizes'] as $size => $url) {
-					// not a url value
-					if (stripos($size, '-width') !== false || stripos($size, '-height') !== false) {
-						continue;
-					}
-
-					// is a cropped size
-					if (in_array($size, $cropped_sizes)) {
-						continue;
-					}
-
-					$acf_image_sizes[$size] = array(
-						'url' => $url,
-						'width' => $acf_image['sizes'][$size.'-width'],
-						'height' => $acf_image['sizes'][$size.'-height']
-					);
-				}
-			}
-
-			$acf_image_sizes['full'] = array(
-				'url' => $acf_image['url'],
-				'width' => $acf_image['width'],
-				'height' => $acf_image['height']
-			);
-
-			return apply_filters('grav_blocks_image_tag', $default_markup, $tag_type, $attributes_array, $acf_image_sizes);
+			return apply_filters('grav_blocks_image_tag', $default_markup, $tag_type, $attributes_array, $acf_image);
 		}
 
 		return '';
 	}
-
-	/* public static function image($image='featured', $additional_attributes=array(), $tag_type='img', $fallback_size='')
-	{
-		if ($tag_type == 'url') {
-			if ($fallback_size) {
-				return $image['sizes'][$fallback_size];
-			}
-
-			return $image['url'];
-		}
-
-		if(empty($image)){
-			return '';
-		}
-
-		if($image === 'featured' || is_numeric($image))
-		{
-			if(is_numeric($image) && get_post_type($image) !== 'attachment')
-			{
-				$attachment = get_post(get_post_thumbnail_id($image));
-			}
-			else
-			{
-				$attachment = get_post(get_post_thumbnail_id());
-			}
-
-			if($attachment)
-			{
-				$image = array(
-					'alt' => get_post_meta( $attachment->ID, '_wp_attachment_image_alt', true ),
-					'caption' => $attachment->post_excerpt,
-					'description' => $attachment->post_content,
-					'href' => get_permalink( $attachment->ID ),
-					'src' => $attachment->guid,
-					'url' => $attachment->guid,
-					'title' => $attachment->post_title
-				);
-
-				$image['sizes'] = array();
-
-				foreach (self::get_image_sizes() as $size => $image_size)
-				{
-					// Only include sizes that are not cropped.
-					if(empty($image_size['crop']) && $image_size['width'])
-					{
-						if($url = wp_get_attachment_image_src( $attachment->ID, $size ))
-						{
-							$image['sizes'][$size] = $url[0];
-						}
-					}
-				}
-			}
-			else
-			{
-				return '';
-			}
-		}
-
-		if($tag_type === 'img' && !isset($additional_attributes['alt']) && !empty($image['alt']))
-		{
-			$additional_attributes['alt'] = esc_attr($image['alt']);
-		}
-
-		if(!isset($additional_attributes['title']) && !empty($image['title']))
-		{
-			$additional_attributes['title'] = esc_attr($image['title']);
-		}
-
-		// Accessibility
-		if($tag_type === 'img' && empty($additional_attributes['alt']) && !empty($additional_attributes['title']))
-		{
-			$additional_attributes['alt'] = $additional_attributes['title'];
-		}
-
-		$image_sources = array();
-
-		$prefered_image_src = self::get_prefered_image_size_src($image, $fallback_size);
-
-		if($tag_type === 'img' && !isset($additional_attributes['src']))
-		{
-			if($prefered_image_src)
-			{
-				$additional_attributes['src'] = $prefered_image_src;
-			}
-		}
-
-		if($tag_type !== 'img' && $prefered_image_src)
-		{
-			$additional_attributes['style'] = " background-image: url('".$prefered_image_src."'); ";
-		}
-
-		$additional_attributes = array_filter($additional_attributes);
-
-		foreach ($additional_attributes as $attribute_key => $attribute_value)
-		{
-			$additional_attributes[$attribute_key] = '"'.esc_attr($attribute_value).'"';
-		}
-
-		$attributes_array = array_filter(array_merge($image_sources, $additional_attributes));
-
-		// If not ALt then add an empty one for validation
-		if($tag_type === 'img' && empty($additional_attributes['alt']))
-		{
-			$attributes_array['alt'] = '""';
-		}
-
-		$attributes_str = trim(urldecode(http_build_query($attributes_array, '', ' ')));
-
-
-		if($attributes_str)
-		{
-			if($tag_type === 'div')
-			{
-				return '<div '.$attributes_str.'></div>';
-			}
-			else
-			{
-				return '<img '.$attributes_str.' />';
-			}
-		}
-
-		return '';
-	} */
 
 
 	public static function allow_br($value)
