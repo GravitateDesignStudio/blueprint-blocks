@@ -36,8 +36,8 @@ if ($map_block_api_key) {
 	$content_col = 12;
 
 	if ($format !== 'map') {
-		$map_order = ($map_position == 'right') ? ' medium-order-2' : ' medium-order-1';
-		$content_order = ($map_position == 'right') ? ' medium-order-1' : ' medium-order-2';
+		$map_order = ($map_position == 'right') ? 'medium-order-2' : 'medium-order-1';
+		$content_order = ($map_position == 'right') ? 'medium-order-1' : 'medium-order-2';
 		$map_col = ($format == 'small-map') ? 4 : 8;
 		$content_col = ($format == 'small-map') ? 8 : 4;
 	}
@@ -50,7 +50,14 @@ if ($map_block_api_key) {
 		<div class="block-inner">
 			<div class="<?php echo GRAV_BLOCKS::css()->row()->get(); ?> align-center">
 				<?php /* map */ ?>
-				<div class="<?php echo GRAV_BLOCKS::css()->col(12, $map_col)->get() . $map_order;?> map">
+				<?php
+				$map_classes = [
+					GRAV_BLOCKS::css()->col(12, $map_col)->get(),
+					$map_order,
+					'map'
+				];
+				?>
+				<div class="<?php echo implode(' ', $map_classes); ?>">
 					<div data-zoom="<?php the_sub_field('zoom_offset'); ?>"
 						id="<?php echo GRAV_BLOCKS::$block_index;?>_map"
 						class="block-map__google-map">
@@ -60,8 +67,15 @@ if ($map_block_api_key) {
 				/* content */
 				if ($format !== 'map')
 				{
+					$content_classes = [
+						GRAV_BLOCKS::css()->col(12, $content_col)->get(),
+						$content_order,
+						'content',
+						GRAV_BLOCKS::get_wysiwyg_container_class()
+					];
+
 					?>
-					<div class="<?php echo GRAV_BLOCKS::css()->col(12, $content_col)->get() . $content_order; ?> content">
+					<div class="<?php echo implode(' ', $content_classes); ?>">
 						<?php the_sub_field('content'); ?>
 					</div>
 					<?php
@@ -75,11 +89,17 @@ if ($map_block_api_key) {
 	$script_vars = [
 		'locations' => json_encode($location_data),
 		'infoWindows' => json_encode($infowindow_data),
-		'markerClose' => plugin_dir_url(__FILE__).'/assets/map-close.png',
-		'markerUrl' => plugin_dir_url(__FILE__).'/assets/map-marker.png',
-		'markerCloseSvg' => plugin_dir_url(__FILE__).'/assets/map-close.svg',
-		'markerUrlSvg' => plugin_dir_url(__FILE__).'/assets/map-marker.svg',
-		'markerColor' => '#666666'
+		'markerClose' => apply_filters('grav_blocks_map_marker_close_image_url', plugin_dir_url(__FILE__).'/assets/map-close.png'),
+		'markerUrl' => apply_filters('grav_blocks_map_marker_pin_image_url', plugin_dir_url(__FILE__).'/assets/map-marker.png'),
+		'markerCloseSvg' => apply_filters('grav_blocks_map_marker_close_svg_url', plugin_dir_url(__FILE__).'/assets/map-close.svg'),
+		'markerUrlSvg' => apply_filters('grav_blocks_map_marker_pin_svg_url', plugin_dir_url(__FILE__).'/assets/map-marker.svg'),
+		'infoBubbleParams' => apply_filters('grav_blocks_map_infobubble_params', [
+			'backgroundColor' => '#fff',
+            'borderColor' => '#000',
+            'padding' => 10,
+            'borderRadius' => 0,
+            'arrowSize' => 10,
+		])
 	];
 
 	$custom_styles = GRAV_BLOCKS_PLUGIN_SETTINGS::get_setting_value('google_maps_styles');

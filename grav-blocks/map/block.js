@@ -191,8 +191,7 @@
         var map = new google.maps.Map(document.getElementById(blockIndex + '_map'), mapOptions);
         map.setTilt(45);
 
-        //google map custom marker icon - .png fallback for IE11
-        // TODO: Add in this IE11 check
+        // google map custom marker icon - .png fallback for IE11
         var is_internetExplorer11 = navigator.userAgent.toLowerCase().indexOf('trident') > -1;
 
         var marker_url = (is_internetExplorer11) ? mapConfig.markerUrl : mapConfig.markerUrlSvg;
@@ -201,27 +200,20 @@
             url: marker_url
         };
 
-        // var locations = $('#' + blockIndex + '_map').data('locations');
         var locations = mapConfig.locations.replace(/'/g, '"');
         var gravMarkerLocations = JSON.parse(locations);
 
         // Array for infoWindow
-        // var infoWindows = $('#' + blockIndex + '_map').data('infowindows');
         var infoWindows = mapConfig.infoWindows.replace(/'/g, '"').replace('<br />', '');
 
         var InfoWindowContent = JSON.parse(infoWindows);
         // Display multiple markers on a map
-        var infoWindow = new InfoBubble({
-            backgroundColor: mapConfig.markerColor,
-            borderColor: mapConfig.markerColor,
-            padding: 0,
-            borderRadius: 0,
-            minWidth: 290,
-            arrowSize: 10,
-            maxHeight: 200,
+        
+        var infoBubbleParams = Object.assign({
             closeSrc: markerClose
-        });
+        }, mapConfig.infoBubbleParams || {});
 
+        var infoWindow = new InfoBubble(infoBubbleParams)
         var marker = null;
 
         // Loop through our array of markers & place each one on the map
@@ -279,7 +271,6 @@
         }
 
         $blocks.each(function () {
-            // Setup map_blocks array
             initMap($(this));
         });
     });
