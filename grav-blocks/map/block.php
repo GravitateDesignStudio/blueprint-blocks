@@ -8,10 +8,13 @@ $infowindow_data = array();
 
 if ($markers) {
 	foreach ($markers as $key => $marker) {
+		$lat = $marker['location']['lat'];
+		$lng = $marker['location']['lng'];
+
 		$location_data[$key] = array(
 			$marker['marker_name'],
-			$marker['lattitude'],
-			$marker['longitude']
+			$lat,
+			$lng
 		);
 
 		$infowindow_data[$key] = array(
@@ -22,8 +25,10 @@ if ($markers) {
 		);
 
 		if ($marker['link_type'] !== 'none') {
-			$infowindow_data[$key]['marker_link'] = ($marker['link_type'] == 'directions') ? 'https://www.google.com/maps/dir/Current+Location/' . $marker['lattitude'] .',' .$marker['longitude'] : $marker['link_' . $marker['link_type']];
 			$infowindow_data[$key]['marker_link_text'] = $marker['link_text'];
+			$infowindow_data[$key]['marker_link'] = ($marker['link_type'] == 'directions') ? 
+				'https://www.google.com/maps/dir/Current+Location/'.$lat.','.$lng :
+				$marker['link_'.$marker['link_type']];
 		}
 	}
 }

@@ -120,12 +120,16 @@ class GRAV_BLOCKS_PLUGIN_SETTINGS
 	 *
 	 * @return boolean
 	 */
-	public static function get_setting_value($setting_type = '', $setting_key = ''){
+	public static function get_setting_value($setting_type = '', $setting_key = '', $default_value = false)
+	{
 		self::get_settings(true);
-		$setting = (!empty(self::$settings[$setting_type])) ? self::$settings[$setting_type] : false;
-		if($setting_key !== ''){
-			$setting = (!empty(self::$settings[$setting_type][$setting_key])) ? self::$settings[$setting_type][$setting_key] : false;
+
+		$setting = (!empty(self::$settings[$setting_type])) ? self::$settings[$setting_type] : $default_value;
+
+		if ($setting_key !== '') {
+			$setting = (!empty(self::$settings[$setting_type][$setting_key])) ? self::$settings[$setting_type][$setting_key] : $default_value;
 		}
+
 		return $setting;
 	}
 

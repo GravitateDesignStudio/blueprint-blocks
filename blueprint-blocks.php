@@ -196,6 +196,15 @@ class GRAV_BLOCKS {
 		self::get_settings(true);
 
 		/**
+		 * Register Google Maps API key with ACF
+		 */
+		add_filter('acf/fields/google_map/api', function($api) {
+			$api['key'] = GRAV_BLOCKS_PLUGIN_SETTINGS::get_setting_value('google_maps_api_key');
+
+			return $api;
+		});
+
+		/**
 		 *  Include Blocks in Flexible Content
 		 */
 		$layouts = array();
@@ -1831,6 +1840,8 @@ class GRAV_BLOCKS {
 
 				$fields['google_maps_api_key'] = array('type' => 'text', 'label' => 'Google Maps API Key', 'description' => 'Add a Google maps api key');
 				$fields['google_maps_styles'] = array('type' => 'textarea', 'label' => 'Google Maps Custom Styles', 'description' => 'Add your own custom styles. We reccommend using a site like <a href="https://snazzymaps.com/" target="_blank">Snazzy Maps</a> to create custom map styles.');
+				$fields['google_maps_default_lat_lng'] = array('type' => 'text', 'label' => 'Google Maps Default Latitude', 'description' => 'Set the default latitude and longitude for Google Maps fields used in block editors. This value must be comma separated. Ex: <code>45.5426225,-122.7944697</code>');
+				$fields['google_maps_default_zoom'] = array('type' => 'text', 'label' => 'Google Maps Default Zoom Level', 'description' => 'Set the default zoom level for Google Maps fields used in block editors.');
 				// $fields['background_colors'] = array('type' => 'repeater', 'label' => 'Background Color Options', 'fields' => $background_colors_repeater, 'description' => 'Choose what Background Colors you want to have the Gravitate Blocks.');
 				$fields['post_types'] = array('type' => 'checkbox', 'label' => 'Post Types', 'options' => $post_types, 'description' => 'Determine the post types that Gravitate Blocks will appear on.');
 				$fields['templates'] = array('type' => 'checkbox', 'label' => 'Page Templates', 'options' => $template_options, 'description' => 'Determine the page templates that Gravitate Blocks will appear on.');

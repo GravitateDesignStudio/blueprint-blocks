@@ -1,5 +1,4 @@
 <?php
-
 /*
 *
 * Gravitate Content Block
@@ -12,6 +11,10 @@
 * This file must return an array();
 *
 */
+
+$default_zoom = GRAV_BLOCKS_PLUGIN_SETTINGS::get_setting_value('google_maps_default_zoom', '', 8);
+$default_lat_lng = GRAV_BLOCKS_PLUGIN_SETTINGS::get_setting_value('google_maps_default_lat_lng', '', '45.5426225,-122.7944697');
+list($default_lat, $default_lng) = explode(',', $default_lat_lng);
 
 $link_options = array(
 	'none' => 'None',
@@ -137,6 +140,22 @@ $block_fields = array(
 	    'button_label' => 'Add Marker',
 	    'sub_fields' => array (
 			array (
+				'key' => 'field_'.$block.'_tab_marker_content',
+				'label' => 'Content',
+				'name' => 'tab_marker_content',
+				'type' => 'tab',
+				'instructions' => '',
+				'required' => 0,
+				'conditional_logic' => 0,
+				'wrapper' => array (
+					'width' => '',
+					'class' => '',
+					'id' => '',
+				),
+				'placement' => 'top',
+				'endpoint' => 0,          // end tabs to start a new group
+			),
+			array (
 			    'key' => 'field_'.$block.'_marker_name',
 			    'label' => 'Name',
 			    'name' => 'marker_name',
@@ -180,49 +199,39 @@ $block_fields = array(
 			    'disabled' => 0,
 			),
 			GRAV_BLOCKS::get_link_fields(array('name' => 'link', 'includes' => $link_options, 'show_text' => true)),
-	        array (
-	            'key' => 'field_'.$block.'_lattitude',
-	            'label' => 'Lattitude',
-	            'name' => 'lattitude',
-	            'type' => 'text',
-	            'instructions' => '',
-	            'required' => 0,
-	            'conditional_logic' => 0,
-	            'wrapper' => array (
-	                'width' => '50',
-	                'class' => '',
-	                'id' => '',
-	            ),
-	            'default_value' => '',
-	            'placeholder' => '',
-	            'formatting' => 'none',       // none | html
-	            'prepend' => '',
-	            'append' => '',
-	            'maxlength' => '',
-	            'readonly' => 0,
-	            'disabled' => 0,
-	        ),
 			array (
-			    'key' => 'field_'.$block.'_longitude',
-			    'label' => 'Longitude',
-			    'name' => 'longitude',
-			    'type' => 'text',
-			    'instructions' => '',
-			    'required' => 0,
-			    'conditional_logic' => 0,
-			    'wrapper' => array (
-			        'width' => '50',
-			        'class' => '',
-			        'id' => '',
-			    ),
-			    'default_value' => '',
-			    'placeholder' => '',
-			    'formatting' => 'none',       // none | html
-			    'prepend' => '',
-			    'append' => '',
-			    'maxlength' => '',
-			    'readonly' => 0,
-			    'disabled' => 0,
+				'key' => 'field_'.$block.'_tab_marker_location',
+				'label' => 'Location',
+				'name' => 'tab_marker_location',
+				'type' => 'tab',
+				'instructions' => '',
+				'required' => 0,
+				'conditional_logic' => 0,
+				'wrapper' => array (
+					'width' => '',
+					'class' => '',
+					'id' => '',
+				),
+				'placement' => 'top',
+				'endpoint' => 0,          // end tabs to start a new group
+			),
+			array (
+				'key' => 'field_'.$block.'_location',
+				'label' => 'Location',
+				'name' => 'location',
+				'type' => 'google_map',
+				'height' => 300,
+				'center_lat' => $default_lat,
+				'center_lng' => $default_lng,
+				'zoom' => $default_zoom,
+				'instructions' => '',
+				'required' => 1,
+				'conditional_logic' => 0,
+				'wrapper' => array (
+					'width' => '',
+					'class' => '',
+					'id' => '',
+				),
 			),
 	    ),
 	),
