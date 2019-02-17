@@ -17,7 +17,6 @@ add_action( 'admin_init', array( 'GRAV_BLOCKS', 'admin_init' ));
 add_action( 'wp_loaded', array( 'GRAV_BLOCKS', 'init' ));
 add_action( 'wp_footer', array( 'GRAV_BLOCKS', 'load_dependencies' ));
 add_action( 'admin_enqueue_scripts', array('GRAV_BLOCKS', 'enqueue_admin_files' ));
-// add_action( 'wp_enqueue_scripts', array('GRAV_BLOCKS', 'enqueue_files' ));
 add_filter( 'plugin_action_links_'.plugin_basename(__FILE__), array('GRAV_BLOCKS', 'plugin_settings_link' ));
 
 /**
@@ -875,7 +874,8 @@ class GRAV_BLOCKS {
 			}
 		}
 
-		self::add_hook('action', 'wp_footer', 'add_footer_js', 100);
+		// self::add_hook('action', 'wp_footer', 'add_footer_js', 100);
+		self::add_hook('action', 'wp_enqueue_scripts', 'add_footer_js');
 
 		if(!function_exists('acf_add_local_field_group') && (!isset($_GET['page']) || $_GET['page'] != 'gravitate_blocks'))
 		{
@@ -929,7 +929,7 @@ class GRAV_BLOCKS {
 			$current_settings = array(
 				'post_types' => array_keys(self::get_usable_post_types()),
 				'templates' => '',
-				'advanced_options' => array('filter_content', 'enqueue_scripts'),
+				'advanced_options' => array('filter_content'),
 				// 'css_options' => array('enqueue_css', 'use_foundation', 'use_default'),
 				'search_options' => array('include_in_search'),
 				'background_colors' => array(
@@ -937,7 +937,7 @@ class GRAV_BLOCKS {
 					array('name' => 'Light Gray', 'value' => '#eeeeee'),
 					array('name' => 'Dark Gray', 'value' => '#555555')
 				),
-				'foundation' => array('f5'),
+				// 'foundation' => array('f5'),
 			);
 			$blocks_groups = self::get_available_block_groups();
 			foreach($blocks_groups as $group_name => $group_info){
@@ -1770,7 +1770,6 @@ class GRAV_BLOCKS {
 				$advanced_options = array(
 					'filter_content' => 'Gravitate Blocks will be added to the end of your content. <span class="extra-info">( Using "the_content" filter )</span>',
 					'filter_excerpt' => 'Filter the_excerpt() with Block Fields (all postmeta fields) when the_excerpt() or the_content() is empty.',
-					'enqueue_scripts' => 'Add necessary jQuery plugins. <span class="extra-info">( adds Cycle2 and Colorbox scripts for sliders and lightbox )</span>',
 					'after_title' => 'Place Gravitate Blocks directly after the title in the WordPress admin. <span class="extra-info">( changes position using acf_after_title )</span>',
 					'hide_content' => 'Remove the WordPress content box from Gravitate Blocks enabled pages. <span class="extra-info">( if content has already been entered it may still show on the front end of the website. )</span>',
 				);
@@ -1781,11 +1780,12 @@ class GRAV_BLOCKS {
 				// 	'use_default' => 'Use the default Gravitate Blocks CSS. <span class="extra-info">( Affects padding and some basic styling. )</span>',
 				// 	'use_foundation' => 'Use the <a target="_blank" href="http://foundation.zurb.com/sites/docs/">Foundation</a> CSS grid. <span class="extra-info">( This will add the foundation CSS file to your site. )</span>',
 				// );
-				$foundation_options = array(
-					'f5' => '<a href="http://foundation.zurb.com/sites/docs/v/5.5.3/" target="_blank">5.5.3</a>',
-					'f6' => '<a href="http://foundation.zurb.com/sites/docs/grid.html" target="_blank">6.2.0</a>',
-					'f6flex' => '<a href="http://foundation.zurb.com/sites/docs/flex-grid.html" target="_blank">6.2.0</a> <span class="extra-info">( flex grid )</span>',
-				);
+				
+				// $foundation_options = array(
+				// 	'f5' => '<a href="http://foundation.zurb.com/sites/docs/v/5.5.3/" target="_blank">5.5.3</a>',
+				// 	'f6' => '<a href="http://foundation.zurb.com/sites/docs/grid.html" target="_blank">6.2.0</a>',
+				// 	'f6flex' => '<a href="http://foundation.zurb.com/sites/docs/flex-grid.html" target="_blank">6.2.0</a> <span class="extra-info">( flex grid )</span>',
+				// );
 
 				$search_options = array(
 					'include_in_search' => 'Includes Block Fields (all postmeta fields) in the search criteria.',
@@ -1794,7 +1794,7 @@ class GRAV_BLOCKS {
 				$fields = array();
 				$fields['advanced_options'] = array('type' => 'checkbox', 'label' => 'Advanced Options', 'options' => $advanced_options, 'description' => '');
 				// $fields['css_options'] = array('type' => 'checkbox', 'label' => 'CSS Settings', 'options' => $css_options, 'description' => '');
-				$fields['foundation'] = array('type' => 'radio', 'label' => 'Foundation Version', 'options' => $foundation_options, 'description' => 'If you are using the foundation grid, this will determine which version of the grid to use.');
+				// $fields['foundation'] = array('type' => 'radio', 'label' => 'Foundation Version', 'options' => $foundation_options, 'description' => 'If you are using the foundation grid, this will determine which version of the grid to use.');
 				$fields['search_options'] = array('type' => 'checkbox', 'label' => 'Search Settings', 'options' => $search_options, 'description' => '');
 
 			break;
@@ -1824,16 +1824,14 @@ class GRAV_BLOCKS {
 
 				$fields = array();
 
-				foreach ($block_groups as $group => $blocks)
-				{
-					foreach($blocks as $block_slug => $block_label)
-					{
-						if($block_settings = self::get_block_settings($block_slug))
-						{
+				foreach ($block_groups as $group => $blocks) {
+					foreach($blocks as $block_slug => $block_label) {
+						if ($block_settings = self::get_block_settings($block_slug)) {
 							$block_settings['label'] = $block_label;
 							$blocks[$block_slug] = $block_settings;
 						}
 					}
+
 					$description = ($group == 'default') ? 'Determine what default blocks will be available.' : '';
 					$fields['blocks_enabled_'.$group] = array('type' => 'checkbox', 'label' => ucwords(str_replace('_', ' ', $group)).' Blocks', 'options' => $blocks, 'description' => $description);
 				}
@@ -1846,20 +1844,15 @@ class GRAV_BLOCKS {
 				$fields['post_types'] = array('type' => 'checkbox', 'label' => 'Post Types', 'options' => $post_types, 'description' => 'Determine the post types that Gravitate Blocks will appear on.');
 				$fields['templates'] = array('type' => 'checkbox', 'label' => 'Page Templates', 'options' => $template_options, 'description' => 'Determine the page templates that Gravitate Blocks will appear on.');
 
-				if(!empty($taxonomies))
-				{
+				if (!empty($taxonomies)) {
 					$fields['taxonomies'] = array('type' => 'checkbox', 'label' => 'Taxonomies', 'options' => $taxonomies, 'description' => 'Determine the Taxonomy Archive Pages that Gravitate Blocks will appear on.');
 				}
 
-				if(!empty($option_pages))
-				{
+				if (!empty($option_pages)) {
 					$fields['option_pages'] = array('type' => 'checkbox', 'label' => 'Option Pages', 'options' => $option_pages, 'description' => 'Determine the ACF Option Pages that Gravitate Blocks will appear on.');
 				}
 
-
-
 			break;
-
 		}
 
 		return $fields;
@@ -1884,11 +1877,11 @@ class GRAV_BLOCKS {
 	 *
 	 * @return
 	 */
-	public static function get_foundation_version()
-	{
-		$foundation_version = GRAV_BLOCKS_PLUGIN_SETTINGS::get_setting_value('foundation', 0);
-		return $foundation_version;
-	}
+	// public static function get_foundation_version()
+	// {
+	// 	$foundation_version = GRAV_BLOCKS_PLUGIN_SETTINGS::get_setting_value('foundation', 0);
+	// 	return $foundation_version;
+	// }
 
 	/**
 	 * Gets current version of foundation
@@ -1896,26 +1889,26 @@ class GRAV_BLOCKS {
 	 *
 	 * @return
 	 */
-	public static function get_foundation_file_name()
-	{
-		$foundation_version = self::get_foundation_version();
-		switch ($foundation_version){
-			case 'f5':
-				$foundation_file_name = 'foundation5';
-				break;
+	// public static function get_foundation_file_name()
+	// {
+	// 	$foundation_version = self::get_foundation_version();
+	// 	switch ($foundation_version){
+	// 		case 'f5':
+	// 			$foundation_file_name = 'foundation5';
+	// 			break;
 
-			case 'f6':
-				$foundation_file_name = 'foundation6';
-				break;
+	// 		case 'f6':
+	// 			$foundation_file_name = 'foundation6';
+	// 			break;
 
-			default:
-			case 'f6flex':
-				$foundation_file_name = 'foundation6flex';
-				break;
+	// 		default:
+	// 		case 'f6flex':
+	// 			$foundation_file_name = 'foundation6flex';
+	// 			break;
 
-		}
-		return $foundation_file_name;
-	}
+	// 	}
+	// 	return $foundation_file_name;
+	// }
 
 
 	/**
@@ -2070,30 +2063,6 @@ class GRAV_BLOCKS {
 		wp_enqueue_script( 'wp-color-picker' );
 	}
 
-	/**
-	 * Enqueue Front End Scripts
-	 *
-	 * @param $hook
-	 *
-	 * @return runs enqueue for front end where required
-	 */
-	public static function enqueue_files($hook)
-	{
-		if (GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('advanced_options', 'enqueue_scripts') && self::is_viewable())
-		{
-			wp_enqueue_script( 'grav_blocks_scripts_js', plugin_dir_url( __FILE__ ) . 'library/js/blocks.min.js', array('jquery'), self::$version, true );
-		}
-
-		// if (GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('css_options', 'use_foundation') && self::is_viewable())
-		// {
-		// 	$foundation_file = self::get_foundation_file_name();
-		// 	wp_enqueue_style( 'foundation_css', plugin_dir_url( __FILE__ ) . 'library/css/'.$foundation_file.'.css' , array(), '6.0.0');
-		// }
-		// if (GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('css_options', 'use_default') && self::is_viewable())
-		// {
-		// 	wp_enqueue_style( 'default_css', plugin_dir_url( __FILE__ ) . 'library/css/blocks.min.css' , array(), self::$version);
-		// }
-	}
 
 	/**
 	 * Add any necessary JS to footer
@@ -2110,24 +2079,46 @@ class GRAV_BLOCKS {
 			return;
 		}
 
-		if (!GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('advanced_options', 'enqueue_scripts')) {
+		$colorbox_params = [
+			'.block-link-video' => [
+				'iframe' => true,
+				'height' => '80%',
+				'width' => '80%'
+			],
+			'.block-link-gallery' => [
+				'rel' => 'block-link-gallery',
+				'height' => '80%',
+				'width' => '80%',
+				'transition' => 'fade'
+			],
+			'.grav-inline' => [
+				'inline' => 'true',
+				'height' => '80%',
+				'width' => '80%',
+				'transition' => 'fade'
+			]
+		];
+
+		$colorbox_params = apply_filters('grav_blocks_colorbox_params', $colorbox_params);
+
+		if (!count($colorbox_params)) {
 			return;
 		}
 
-		?>
-		<script>
-			// Blueprint Blocks required scripts initialization
-			document.addEventListener('DOMContentLoaded', function () {
-				if (jQuery === 'undefined' || !jQuery().colorbox) {
-					return;
-				}
+		wp_register_script(
+			'grav_blocks_default_js',
+			plugin_dir_url(__FILE__).'library/js/blocks-colorbox-init.js',
+			['jquery'],
+			filemtime(plugin_dir_path(__FILE__).'library/js/blocks-colorbox-init.js'),
+			true
+		);
 
-				jQuery('.block-link-video').colorbox({ iframe: true, height: '80%', width: '80%' });
-				jQuery('.block-link-gallery').colorbox({ rel: 'block-link-gallery', height: '80%', width: '80%', transition: 'fade' });
-				jQuery('.grav-inline').colorbox({ inline: true, height: '80%', width: '80%', transition: 'fade' });
-			});
-		</script>
-		<?php
+		wp_localize_script('grav_blocks_default_js', 'blocksColorboxConfig', [
+			'params' => $colorbox_params,
+			'scriptUrl' => plugin_dir_url(__FILE__).'library/dependencies/js/jquery.colorbox-min.js'
+		]);
+
+		wp_enqueue_script('grav_blocks_default_js');
 	}
 
 	/**
