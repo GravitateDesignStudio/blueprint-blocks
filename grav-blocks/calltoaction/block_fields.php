@@ -176,7 +176,7 @@ for( $i = 1; $i <= $num_columns; $i++ ) {
 return array (
 	'label' => 'Call to Action',
 	'name' => $block,
-	'display' => 'row',
+	'display' => 'block',
 	'min' => '',
 	'max' => '',
 	'sub_fields' => $block_fields,

@@ -53,7 +53,7 @@ $block_fields = array(
 return array (
 	'label' => 'Blockquote',
 	'name' => $block,
-	'display' => 'row',
+	'display' => 'block',
 	'min' => '',
 	'max' => '',
 	'sub_fields' => $block_fields,

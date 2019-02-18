@@ -174,9 +174,9 @@ $block_fields = array(
 );
 
 return array (
-	'label' => 'Accordion/Tabs',
+	'label' => 'Accordion / Tabs',
 	'name' => $block,
-	'display' => 'row',
+	'display' => 'block',
 	'min' => '',
 	'max' => '',
 	'sub_fields' => $block_fields,

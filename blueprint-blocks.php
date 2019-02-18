@@ -24,9 +24,8 @@ add_filter( 'plugin_action_links_'.plugin_basename(__FILE__), array('GRAV_BLOCKS
  * @author Gravitate
  *
  */
-class GRAV_BLOCKS {
-
-
+class GRAV_BLOCKS
+{
 	private static $version = '1.1.0';
 	private static $page = 'admin.php?page=gravitate-blocks';
 	private static $settings = array();
@@ -314,30 +313,26 @@ class GRAV_BLOCKS {
 						'endpoint' => 0,          // end tabs to start a new group
 					);
 
-					$guidelines_fields =	array(
+					$guidelines_text = apply_filters('grav_blocks_'.$block_layout['name'].'_guidelines_text', '');
+					$guidelines_fields = $guidelines_text ? array(
 						array (
 							'key' => 'field_'.$block_layout['name'].'_guidelines',
-						    'label' => 'Guidelines',
-						    'name' => 'guidelines',
-						    'type' => 'text',
-						    'instructions' => '',
-						    'required' => 0,
-						    'conditional_logic' => 0,
-						    'wrapper' => array (
-						        'width' => '',
-						        'class' => '',
-						        'id' => '',
-						    ),
-						    'default_value' => '',
-						    'placeholder' => '',
-						    'formatting' => 'none',       // none | html
-						    'prepend' => '',
-						    'append' => '',
-						    'maxlength' => '',
-						    'readonly' => 0,
-						    'disabled' => ($user_name == 'gravitate-admin') ? 0 : 1,
+							'label' => apply_filters('grav_blocks_'.$block_layout['name'].'_guidelines_title', 'Guidelines'),
+							'name' => 'guidelines',
+							'type' => 'message',
+							'instructions' => '',
+							'required' => 0,
+							'conditional_logic' => 0,
+							'wrapper' => array (
+								'width' => '',
+								'class' => '',
+								'id' => '',
+							),
+							'message' => $guidelines_text,
+							'new_lines' => 'wpautop',    // wpautop | br | ''
+							'esc_html' => 0,             // uses the WordPress esc_html function
 						)
-					);
+					) : [];
 
 					if($add_first_tab)
 					{

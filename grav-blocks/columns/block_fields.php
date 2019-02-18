@@ -15,10 +15,9 @@
 
 $content_column_choices = array();
 $block_fields = array();
-$num_columns = apply_filters('grav_blocks_content_columns_max', 4);
+$max_columns = apply_filters('grav_blocks_content_columns_max', 4);
 
-
-for( $i = 1; $i <= $num_columns; $i++ ) {
+for ($i = 1; $i <= $max_columns; $i++) {
 	$content_column_choices[$i] = $i;
 }
 
@@ -31,7 +30,7 @@ $block_fields[] = array (
     'required' => 0,
     'conditional_logic' => 0,
     'wrapper' => array (
-        'width' => '',
+        'width' => '50',
         'class' => '',
         'id' => '',
     ),
@@ -40,8 +39,9 @@ $block_fields[] = array (
     'save_other_choice' => 0,
     'default_value' => 1,
     'layout' => 'horizontal',
-	'block_options' => 1
+	// 'block_options' => 1
 );
+
 $block_fields[] = array (
     'key' => 'field_'.$block.'_format',
     'label' => 'Format',
@@ -59,7 +59,7 @@ $block_fields[] = array (
         ),
     ),
     'wrapper' => array (
-        'width' => '',
+        'width' => '50',
         'class' => '',
         'id' => '',
     ),
@@ -72,9 +72,10 @@ $block_fields[] = array (
     'save_other_choice' => 0,
     'default_value' => '',
     'layout' => 'horizontal',
-	'block_options' => 1
+	// 'block_options' => 1
 );
-for( $i = 1; $i <= $num_columns; $i++ ) {
+
+for ($i = 1; $i <= $max_columns; $i++) {
 	$block_fields[] = array (
 	    'key' => 'field_'.$block.'_'.$i,
 	    'label' => 'Column '.$i,
@@ -82,7 +83,7 @@ for( $i = 1; $i <= $num_columns; $i++ ) {
 	    'type' => 'wysiwyg',
 	    'instructions' => '',
 	    'required' => 0,
-	    'conditional_logic' => GRAV_BLOCKS::get_radio_num_conditionals('field_'.$block.'_num_columns', $i, $num_columns),
+	    'conditional_logic' => GRAV_BLOCKS::get_radio_num_conditionals('field_'.$block.'_num_columns', $i, $max_columns),
 	    'wrapper' => array (
 	        'width' => '',
 	        'class' => '',

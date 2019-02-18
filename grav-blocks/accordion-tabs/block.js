@@ -1,8 +1,4 @@
-document.addEventListener('DOMContentLoaded', function () {
-    if (typeof $ === 'undefined') {
-        return;
-    }
-
+jQuery(document).ready(function ($) {
     $('.block-accordion-tabs').each(function () {
         $('.block-accordion-tabs__tab-list li').each(function () {
             $(this).on('click', function () {

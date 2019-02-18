@@ -248,7 +248,7 @@ $block_fields = array(
 return array (
 	'name' => $block,
 	'label' => 'Form',
-	'display' => 'row',
+	'display' => 'block',
 	'sub_fields' => $block_fields,
 	'min' => '',
 	'max' => '',
