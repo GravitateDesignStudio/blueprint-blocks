@@ -90,14 +90,21 @@ abstract class DependencyManager
 	{
 		$block_css_file = $block_path.DIRECTORY_SEPARATOR.'block.css';
 		$use_default_css = apply_filters('grav_block_use_default_css', true, $block_name);
+		$additional_deps = $block_config->dependencies->css ?? [];
 
 		if (!file_exists($block_css_file) || !$use_default_css) {
+			// 'block.css' doesn't exist, but we may need additional dependencies
+			if ($additional_deps) {
+				foreach ($additional_deps as $additional_dep) {
+					wp_enqueue_style($additional_dep);
+				}
+			}
+
 			return [];
 		}
 
 		$block_base_url = self::get_url_for_path($block_name, $block_path);
 		$style_handle = 'block_'.$block_name.'_css';
-		$additional_deps = $block_config->dependencies->js ?? [];
 
 		wp_enqueue_style(
 			$style_handle,
