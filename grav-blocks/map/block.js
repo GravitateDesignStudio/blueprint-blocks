@@ -163,6 +163,12 @@
     function initMap($block) {
         var blockIndex = $block.attr('data-block-index');
         var mapConfig = window['mapBlockConfig' + blockIndex] || {};
+
+        if (!mapConfig) {
+            console.error('failed to load map configuration for block index ' + blockIndex);
+            return;
+        }
+
         var mapStyles = (typeof mapConfig.customMapStyles !== 'undefined' && mapConfig.customMapStyles.length > 1) ? JSON.parse(mapConfig.customMapStyles.replace(/\r?\n|\r/g, '')) : defaultStyles;
         var $map = $block.find('.block-map__google-map');
 
@@ -189,7 +195,7 @@
 
         // Display a map on the page
         var map = new google.maps.Map(document.getElementById(blockIndex + '_map'), mapOptions);
-        map.setTilt(45);
+        // map.setTilt(45);
 
         // google map custom marker icon - .png fallback for IE11
         var is_internetExplorer11 = navigator.userAgent.toLowerCase().indexOf('trident') > -1;
@@ -200,58 +206,59 @@
             url: marker_url
         };
 
-        var locations = mapConfig.locations.replace(/'/g, '"');
+        var locations = mapConfig.hasOwnProperty('markers') ? mapConfig.markers.replace(/'/g, '"') : [];
         var gravMarkerLocations = JSON.parse(locations);
 
-        // Array for infoWindow
-        var infoWindows = mapConfig.infoWindows.replace(/'/g, '"').replace('<br />', '');
-
-        var InfoWindowContent = JSON.parse(infoWindows);
-        // Display multiple markers on a map
-        
-        var infoBubbleParams = Object.assign({
-            closeSrc: markerClose
-        }, mapConfig.infoBubbleParams || {});
-
-        var infoWindow = new InfoBubble(infoBubbleParams)
-        var marker = null;
-
         // Loop through our array of markers & place each one on the map
-        for (var i = 0; i < gravMarkerLocations.length; i++) {
+        gravMarkerLocations.forEach(function (location) {
+            var infoWindowData = location.infowindow_data;
             var position = new google.maps.LatLng(
-                gravMarkerLocations[i][1],
-                gravMarkerLocations[i][2]
+                location.lat,
+                location.lng
             );
 
+            // Automatically center the map fitting all markers on the screen
             bounds.extend(position);
 
-            marker = new google.maps.Marker({
+            var marker = new google.maps.Marker({
                 icon: gravMarker,
                 position: position,
                 map: map,
-                title: gravMarkerLocations[i][0]
+                title: location.name
             });
 
-            // Allow each marker to have an info window
-            google.maps.event.addListener(marker, 'click', (function (marker, i) {
-                return function () {
-                    var link = (InfoWindowContent[i]['marker_link']) ? '<p><a href="' + InfoWindowContent[i]['marker_link'] + '" target="_blank">' + InfoWindowContent[i]['marker_link_text'] + '</a></p>' : '';
-                    infoWindow.setContent('<div class="info-bubble-content">' + InfoWindowContent[i]['marker_name'] + InfoWindowContent[i]['marker_text'] + link + '</div>');
-                    infoWindow.open(map, marker);
-                }
-            })(marker, i));
+            if (!infoWindowData.marker_text && !infoWindowData.marker_link_text) {
+                return;
+            }
 
-            // Automatically center the map fitting all markers on the screen
-            map.fitBounds(bounds);
-        }
+            var content = infoWindowData.marker_text;
+
+            if (infoWindowData.marker_link && infoWindowData.marker_link_text) {
+                content += '<p><a href="' + infoWindowData.marker_link + '">' + infoWindowData.marker_link_text + '</a></p>';
+            }
+
+            var snazzyInfoWindowParams = Object.assign({
+                // closeSrc: markerClose
+                marker: marker,
+                content: content,
+                closeOnMapClick: true,
+                closeWhenOthersOpen: true
+            }, mapConfig.snazzyInfoWindowParams || {});
+
+            var snazzyInfoWindow = new SnazzyInfoWindow(snazzyInfoWindowParams);
+        });
+
+        map.fitBounds(bounds);
 
         // Override our map zoom level once our fitBounds function runs (Make sure it only runs once)
         var zoomOffest = $map.data('zoom');
 
+        // setup a listener for the 'bounds_changed' event and
+        // zoom the map to the new ideal zoom level
         var boundsListener = google.maps.event.addListener(map, 'bounds_changed', function () {
-            var theZoom = this.getZoom();
+            var newZoom = this.getZoom();
 
-            this.setZoom(theZoom - zoomOffest);
+            this.setZoom(newZoom);
 
             google.maps.event.removeListener(boundsListener);
         });

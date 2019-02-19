@@ -2,7 +2,10 @@
 	"dependencies": {
 		"js": [
 			"google-maps-api",
-			"infobubble"
+			"snazzy-info-window"
+		],
+		"css": [
+			"snazzy-info-window"
 		]
 	}
 }

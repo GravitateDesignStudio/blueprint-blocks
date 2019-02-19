@@ -3,35 +3,36 @@ $format = isset($format) ? $format : get_sub_field('format');
 $map_position = isset($map_position) ? $map_position : get_sub_field('map_position');
 $markers = isset($markers) ? $markers : get_sub_field('markers');
 
-$location_data = array();
-$infowindow_data = array();
+$marker_data = array_reduce(is_array($markers) ? $markers : [], function ($records, $marker) {
+	if (!isset($marker['location']) || !isset($marker['location']['lat']) || !isset($marker['location']['lng'])) {
+		return $records;
+	}
 
-if ($markers) {
-	foreach ($markers as $key => $marker) {
-		$lat = $marker['location']['lat'];
-		$lng = $marker['location']['lng'];
+	$lat = $marker['location']['lat'];
+	$lng = $marker['location']['lng'];
 
-		$location_data[$key] = array(
-			$marker['marker_name'],
-			$lat,
-			$lng
-		);
-
-		$infowindow_data[$key] = array(
-			'marker_name' => '<h5>'.$marker['marker_name'].'</h5>',
+	$marker_data = [
+		'name' => $marker['marker_name'],
+		'lat' => $lat,
+		'lng' => $lng,
+		'infowindow_data' => [
 			'marker_text' => trim($marker['info_window'], " \t\n\r\0\x0B"),
 			'marker_link' => '',
-			'marker_link_text' => '',
-		);
+			'marker_link_text' => ''
+		]
+	];
 
-		if ($marker['link_type'] !== 'none') {
-			$infowindow_data[$key]['marker_link_text'] = $marker['link_text'];
-			$infowindow_data[$key]['marker_link'] = ($marker['link_type'] == 'directions') ? 
-				'https://www.google.com/maps/dir/Current+Location/'.$lat.','.$lng :
-				$marker['link_'.$marker['link_type']];
-		}
+	if ($marker['link_type'] !== 'none') {
+		$marker_data['infowindow_data']['marker_link_text'] = $marker['link_text'];
+		$marker_data['infowindow_data']['marker_link'] = ($marker['link_type'] == 'directions') ? 
+			'https://www.google.com/maps/dir/Current+Location/'.$lat.','.$lng :
+			$marker['link_'.$marker['link_type']];
 	}
-}
+
+	$records[] = $marker_data;
+	
+	return $records;
+}, []);
 
 $map_block_api_key = GRAV_BLOCKS_PLUGIN_SETTINGS::get_setting_value('google_maps_api_key');
 
@@ -92,19 +93,12 @@ if ($map_block_api_key) {
 	}
 
 	$script_vars = [
-		'locations' => json_encode($location_data),
-		'infoWindows' => json_encode($infowindow_data),
-		'markerClose' => apply_filters('grav_blocks_map_marker_close_image_url', plugin_dir_url(__FILE__).'/assets/map-close.png'),
-		'markerUrl' => apply_filters('grav_blocks_map_marker_pin_image_url', plugin_dir_url(__FILE__).'/assets/map-marker.png'),
-		'markerCloseSvg' => apply_filters('grav_blocks_map_marker_close_svg_url', plugin_dir_url(__FILE__).'/assets/map-close.svg'),
-		'markerUrlSvg' => apply_filters('grav_blocks_map_marker_pin_svg_url', plugin_dir_url(__FILE__).'/assets/map-marker.svg'),
-		'infoBubbleParams' => apply_filters('grav_blocks_map_infobubble_params', [
-			'backgroundColor' => '#fff',
-            'borderColor' => '#000',
-            'padding' => 10,
-            'borderRadius' => 0,
-            'arrowSize' => 10,
-		])
+		'markers' => json_encode($marker_data),
+		'markerClose' => apply_filters('grav_blocks_map_marker_close_image_url', plugin_dir_url(__FILE__).'assets/map-close.png'),
+		'markerUrl' => apply_filters('grav_blocks_map_marker_pin_image_url', plugin_dir_url(__FILE__).'assets/map-marker.png'),
+		'markerCloseSvg' => apply_filters('grav_blocks_map_marker_close_svg_url', plugin_dir_url(__FILE__).'assets/map-close.svg'),
+		'markerUrlSvg' => apply_filters('grav_blocks_map_marker_pin_svg_url', plugin_dir_url(__FILE__).'assets/map-marker.svg'),
+		'snazzyInfoWindowParams' => apply_filters('grav_blocks_map_snazzyinfowindow_params', [])
 	];
 
 	$custom_styles = GRAV_BLOCKS_PLUGIN_SETTINGS::get_setting_value('google_maps_styles');

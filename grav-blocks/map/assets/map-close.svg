@@ -1,22 +1,14 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg width="12px" height="12px" viewBox="0 0 12 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 49.1 (51147) - http://www.bohemiancoding.com/sketch -->
-    <title>Solid/map-marker-alt Copy</title>
-    <desc>Created with Sketch.</desc>
+<svg width="12" height="12" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <defs>
-        <path d="M12.0984375,13.7828125 L13.7828125,12.0984375 C14.0765625,11.8046875 14.0765625,11.3328125 13.7828125,11.0390625 L10.7453125,8.0015625 L13.7828125,4.9640625 C14.0765625,4.6703125 14.0765625,4.1984375 13.7828125,3.9046875 L12.0984375,2.2203125 C11.8046875,1.9265625 11.3328125,1.9265625 11.0390625,2.2203125 L8.0015625,5.2578125 L4.9640625,2.2203125 C4.6703125,1.9265625 4.1984375,1.9265625 3.9046875,2.2203125 L2.2203125,3.9046875 C1.9265625,4.1984375 1.9265625,4.6703125 2.2203125,4.9640625 L5.2578125,8.0015625 L2.2203125,11.0390625 C1.9265625,11.3328125 1.9265625,11.8046875 2.2203125,12.0984375 L3.9046875,13.7828125 C4.1984375,14.0765625 4.6703125,14.0765625 4.9640625,13.7828125 L8.0015625,10.7453125 L11.0390625,13.7828125 C11.3296875,14.0734375 11.8046875,14.0734375 12.0984375,13.7828125 Z" id="path-1"></path>
+        <path d="M12.098 13.783l1.685-1.685a.747.747 0 0 0 0-1.059l-3.038-3.037 3.038-3.038a.747.747 0 0 0 0-1.06L12.098 2.22a.747.747 0 0 0-1.059 0L8.002 5.258 4.964 2.22a.747.747 0 0 0-1.06 0L2.22 3.905a.747.747 0 0 0 0 1.06l3.038 3.037-3.038 3.037a.747.747 0 0 0 0 1.06l1.685 1.684a.747.747 0 0 0 1.06 0l3.037-3.038 3.037 3.038c.29.29.766.29 1.06 0z" id="a"/>
     </defs>
-    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="block/map" transform="translate(-676.000000, -168.000000)">
-            <g id="Solid/times" transform="translate(674.000000, 166.000000)">
-                <mask id="mask-2" fill="white">
-                    <use xlink:href="#path-1"></use>
-                </mask>
-                <use id="Mask" fill="#000000" fill-rule="nonzero" xlink:href="#path-1"></use>
-                <g id="color/white" mask="url(#mask-2)" fill="#FFFFFF" fill-rule="evenodd">
-                    <rect id="default" x="0" y="0" width="16" height="16"></rect>
-                </g>
-            </g>
+    <g transform="translate(-2 -2)" fill="none" fill-rule="evenodd">
+        <mask id="b" fill="#fff">
+            <use xlink:href="#a"/>
+        </mask>
+        <use fill="#000" fill-rule="nonzero" xlink:href="#a"/>
+        <g mask="url(#b)" fill="#FFF">
+            <path d="M0 0h16v16H0z"/>
         </g>
     </g>
 </svg>

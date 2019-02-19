@@ -139,13 +139,20 @@ class GRAV_BLOCKS
 			);
 		}
 
-		// Infobubble for Google Maps
+		// Snazzy Info Window for Google Maps
 		wp_register_script(
-			'infobubble',
-			$plugin_dep_url.'/js/infobubble.js',
+			'snazzy-info-window',
+			$plugin_dep_url.'/js/snazzy-info-window.min.js',
 			['google-maps-api'],
-			'1.0.0',
+			'1.1.1',
 			true
+		);
+
+		wp_register_style(
+			'snazzy-info-window',
+			$plugin_dep_url.'/css/snazzy-info-window.min.css',
+			[],
+			'1.1.1'
 		);
 
 		// Swiper

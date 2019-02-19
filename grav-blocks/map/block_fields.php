@@ -177,26 +177,24 @@ $block_fields = array(
 			    'readonly' => 0,
 			    'disabled' => 0,
 			),
+
 			array (
-			    'key' => 'field_'.$block.'_info_window',
-			    'label' => 'Info Window Text',
-			    'name' => 'info_window',
-			    'type' => 'textarea',
-			    'instructions' => '',
-			    'required' => 0,
-			    'conditional_logic' => 0,
-			    'wrapper' => array (
-			        'width' => '',
-			        'class' => '',
-			        'id' => '',
-			    ),
-			    'default_value' => '',
-			    'placeholder' => '',
-			    'maxlength' => '',
-			    'rows' => '',
-			    'new_lines' => 'wpautop',        // wpautop | br | ''
-			    'readonly' => 0,
-			    'disabled' => 0,
+				'key' => 'field_'.$block.'_info_window',
+				'label' => 'Info Window Text',
+				'name' => 'info_window',
+				'type' => 'wysiwyg',
+				'instructions' => '',
+				'required' => 0,
+				'conditional_logic' => 0,
+				'wrapper' => array (
+					'width' => '',
+					'class' => '',
+					'id' => '',
+				),
+				'default_value' => '',
+				'tabs' => 'all',         // all | visual | text
+				'toolbar' => 'full',     // full | basic
+				'media_upload' => 0,
 			),
 			GRAV_BLOCKS::get_link_fields(array('name' => 'link', 'includes' => $link_options, 'show_text' => true)),
 			array (
