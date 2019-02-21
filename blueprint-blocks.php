@@ -7,17 +7,20 @@ Plugin URI: http://www.gravitatedesign.com
 Author: Gravitate
 */
 
-require_once('blueprint-dependency-manager.php');
+require_once(plugin_dir_path(__FILE__).'blueprint-blocks-css.php');
+require_once(plugin_dir_path(__FILE__).'blueprint-plugin-settings.php');
+require_once(plugin_dir_path(__FILE__).'blueprint-global-blocks.php');
+require_once(plugin_dir_path(__FILE__).'blueprint-dependency-manager.php');
 
-register_activation_hook( __FILE__, array( 'GRAV_BLOCKS', 'activate' ));
-register_deactivation_hook( __FILE__, array( 'GRAV_BLOCKS', 'deactivate' ));
+register_activation_hook(__FILE__, array('GRAV_BLOCKS', 'activate'));
+register_deactivation_hook(__FILE__, array('GRAV_BLOCKS', 'deactivate'));
 
-add_action( 'admin_menu', array( 'GRAV_BLOCKS', 'admin_menu' ));
-add_action( 'admin_init', array( 'GRAV_BLOCKS', 'admin_init' ));
-add_action( 'wp_loaded', array( 'GRAV_BLOCKS', 'init' ));
-add_action( 'wp_footer', array( 'GRAV_BLOCKS', 'load_dependencies' ));
-add_action( 'admin_enqueue_scripts', array('GRAV_BLOCKS', 'enqueue_admin_files' ));
-add_filter( 'plugin_action_links_'.plugin_basename(__FILE__), array('GRAV_BLOCKS', 'plugin_settings_link' ));
+add_action('admin_menu', array('GRAV_BLOCKS', 'admin_menu'));
+add_action('admin_init', array('GRAV_BLOCKS', 'admin_init'));
+add_action('wp_loaded', array('GRAV_BLOCKS', 'init'));
+add_action('wp_footer', array('GRAV_BLOCKS', 'load_dependencies'));
+add_action('admin_enqueue_scripts', array('GRAV_BLOCKS', 'enqueue_admin_files'));
+add_filter('plugin_action_links_'.plugin_basename(__FILE__), array('GRAV_BLOCKS', 'plugin_settings_link'));
 
 /**
  *
@@ -189,10 +192,6 @@ class GRAV_BLOCKS
 	private static function setup()
 	{
 		global $block;
-
-		include_once plugin_dir_path( __FILE__ ).'blueprint-blocks-css.php';
-		include plugin_dir_path( __FILE__ ).'blueprint-plugin-settings.php';
-		include plugin_dir_path( __FILE__ ).'blueprint-global-blocks.php';
 
 		GRAV_GLOBAL_BLOCKS::setup_global_blocks_cpt();
 
