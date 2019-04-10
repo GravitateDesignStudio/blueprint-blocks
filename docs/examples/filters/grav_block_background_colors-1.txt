@@ -1,0 +1,5 @@
+add_filter('grav_block_background_colors', function($block_background_colors) {
+    $block_background_colors['bg-landscape'] = 'Landscape';
+
+    return $block_background_colors;
+});

@@ -1,0 +1,3 @@
+add_filter('grav_blocks_post_block_output', function($block_name, $block_attributes) {
+    echo "post-block markup";
+});

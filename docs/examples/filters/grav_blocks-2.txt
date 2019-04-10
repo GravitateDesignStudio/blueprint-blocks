@@ -1,0 +1,5 @@
+add_filter('grav_blocks', function($blocks) {
+    unset($blocks['html']);
+
+    return $blocks;
+});

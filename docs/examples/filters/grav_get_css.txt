@@ -1,0 +1,7 @@
+add_filter('grav_get_css', function($css, $block_name) {
+    if ($block_name === 'content' && in_array('row', $css)) {
+        $css[] = 'align-center';
+    }
+
+    return $css;
+}, 10, 2);

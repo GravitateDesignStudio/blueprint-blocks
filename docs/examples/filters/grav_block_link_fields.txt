@@ -1,0 +1,5 @@
+add_filter('grav_block_link_fields', function($fields) {
+    $fields[0]['choices']['chat'] = 'Chat';
+
+    return $fields;
+});

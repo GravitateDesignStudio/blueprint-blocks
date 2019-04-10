@@ -1,0 +1,11 @@
+add_filter('grav_block_fields', function($fields) {
+    if (!empty($fields['quote']['sub_fields'])) {
+        foreach ($fields['quote']['sub_fields'] as $key => $field) {
+            if ($field['name'] === 'attribution') {
+                unset($fields['quote']['sub_fields'][$key]);
+            }
+        }
+    }
+    
+    return $fields;
+});

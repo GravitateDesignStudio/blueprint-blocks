@@ -1,0 +1,3 @@
+add_filter('grav_blocks_output_default_js', function($output_default_js) {
+    return false;
+});

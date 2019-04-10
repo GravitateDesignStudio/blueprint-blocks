@@ -1,0 +1,5 @@
+add_filter('grav_blocks_testimonials_cpt', function($testimonial_cpts) {
+    $testimonial_cpts = ['post', 'testimonial'];
+    
+    return $testimonial_cpts;
+});

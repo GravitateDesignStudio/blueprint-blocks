@@ -1,0 +1,3 @@
+add_filter('grav_blocks_display_before', function($block, $block_variables, $block_attributes) {
+    echo "pre-block markup";
+});

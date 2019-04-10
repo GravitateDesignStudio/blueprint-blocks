@@ -1,0 +1,5 @@
+add_filter('grav_block_background_colors', function($block_background_colors) {
+    unset($block_background_colors['block-bg-none']);
+
+    return $block_background_colors;
+});

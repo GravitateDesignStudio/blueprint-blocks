@@ -1,0 +1,3 @@
+add_filter('grav_block_mediacontent_columns', function($col_total, $col_width, $placement) {
+    return ($col_width < 6) ? 10 : $col_total;
+}, 10, 3);

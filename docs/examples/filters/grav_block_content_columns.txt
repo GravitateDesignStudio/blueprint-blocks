@@ -1,0 +1,16 @@
+add_filter('grav_block_content_columns', function($cols_span) {
+    switch ($cols_span) {
+        case 12:
+            $cols_span = 10;
+            break;
+
+        case 6:
+            $cols_span = 5;
+            break;
+        
+        default:
+            break;
+    }
+
+    return $cols_span;
+});

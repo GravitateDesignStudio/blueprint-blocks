@@ -1,0 +1,11 @@
+add_filter('grav_block_locations', function($locations) {
+    $locations[] = [
+        [
+            'param' => 'taxonomy',
+            'operator' => '==',
+            'value' => 'category'
+        ]
+    ];
+    
+    return $locations;
+});

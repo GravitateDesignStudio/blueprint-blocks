@@ -1,0 +1,3 @@
+add_action('grav_blocks_display_complete', function() {
+    echo "<p>But wait, there's more!</p>";
+});

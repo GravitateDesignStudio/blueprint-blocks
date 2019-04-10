@@ -1,0 +1,16 @@
+add_filter('grav_block_locations', function($locations) {
+    $locations[] = [
+        [
+            'param' => 'post_type',
+            'operator' => '==',
+            'value' => 'events'
+        ],
+        [
+            'param' => 'post',
+            'operator' => '!=',
+            'value' => '14'
+        ]
+    ];
+    
+    return $locations;
+});

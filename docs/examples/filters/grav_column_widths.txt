@@ -1,0 +1,10 @@
+add_filter('grav_column_widths', function($column_width_options) {
+    $column_width_options = [
+        2 => 'Small',
+        4 => 'Medium',
+        6 => 'Large',
+        7 => 'X-Large'
+    ];
+
+    return $column_width_options;
+});

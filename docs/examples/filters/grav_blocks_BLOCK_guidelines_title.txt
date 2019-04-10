@@ -1,0 +1,3 @@
+add_filter('grav_blocks_title_guidelines_title', function($title) {
+    return 'changed the title';
+});

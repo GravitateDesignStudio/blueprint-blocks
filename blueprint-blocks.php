@@ -37,9 +37,12 @@ class GRAV_BLOCKS
 	public  static $current_block_name = '';
 	public  static $block_index = 0;
 	public  static $block_wrapped_repeater_index = 0;
+	public  static $plugin_url = '';
+	public  static $plugin_path = '';
 	//private static $registered_sections = array(array());
 	private static $cache = array();
 	private static $registered_sections = array();
+
 
 	public static function dump($var){
 		echo '<pre>';
@@ -815,6 +818,9 @@ class GRAV_BLOCKS
 	 */
 	public static function init()
 	{
+		self::$plugin_url = trailingslashit(plugin_dir_url(__FILE__));
+		self::$plugin_path = trailingslashit(plugin_dir_path(__FILE__));
+
 		self::setup();
 		self::add_hooks();
 		self::prepare_blocks();
@@ -2020,11 +2026,14 @@ class GRAV_BLOCKS
 
 	private static function developers()
 	{
-		include_once('library/includes/developer.php');
+		wp_enqueue_style('prism', plugin_dir_url(__FILE__).'library/css/admin/prism.css', [], null);
+		wp_enqueue_script('prism', plugin_dir_url(__FILE__).'library/js/admin/prism.js', [], null, true);
+
+		include_once 'library/includes/developer.php';
 	}
 
 	private static function blocks_usage() {
-		include_once('library/includes/blocks-usage.php');
+		include_once 'library/includes/blocks-usage.php';
 	}
 
 	/**
@@ -3108,6 +3117,6 @@ class GRAV_BLOCKS
 
 	public static function get_wysiwyg_container_class()
 	{
-		return apply_filters('grav_blocks_wysiwyg_container_class', 'wysiwyg');
+		return esc_attr(apply_filters('grav_blocks_wysiwyg_container_class', 'wysiwyg'));
 	}
 }

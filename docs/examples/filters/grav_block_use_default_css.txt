@@ -1,0 +1,3 @@
+add_filter('grav_block_use_default_css', function($use_default_css, $block_name) {
+    return ($block_name === 'columns') ? false : $use_default_css;
+}, 10, 2);

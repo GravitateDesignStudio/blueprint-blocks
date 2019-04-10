@@ -1,0 +1,17 @@
+add_filter('grav_block_fields', function($fields) {
+    if (!empty($fields['quote']['sub_fields'])) {
+        $fields['quote']['sub_fields'][] = [
+            'key' => 'field_quote_image',
+            'label' => 'Image',
+            'name' => 'quote_image',
+            'instructions' => 'Image should be 120x120px',
+            'type' => 'image',
+            'column_width' => '',
+            'save_format' => 'object',		// url | object | id
+            'library' => 'all',				// all | uploadedTo
+            'preview_size' => 'medium',
+        ];
+    }
+    
+    return $fields;
+});

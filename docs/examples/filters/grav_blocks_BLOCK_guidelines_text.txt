@@ -1,0 +1,3 @@
+add_filter('grav_blocks_columns_guidelines_text', function($text) {
+    return 'custom guidelines text for the columns block';
+});

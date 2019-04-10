@@ -1,0 +1,55 @@
+[{
+	"name": "grav_blocks_display_complete",
+	"arguments": [],
+	"description": "Fired after the <code>GRAV_BLOCKS::display()</code> finishes",
+	"examples": [{
+		"label": "Example 1: Add markup after the output of blocks",
+		"file": "actions/grav_blocks_display_complete.txt"
+	}]
+}, {
+	"name": "grav_blocks_pre_block_output",
+	"arguments": [
+		"$block_name",
+		"$block_attributes"
+	],
+	"description": "Fired directly before each block is displayed",
+	"examples": [{
+		"label": "Example 1: Add markup before each block display",
+		"file": "actions/grav_blocks_pre_block_output.txt"
+	}]
+}, {
+	"name": "grav_blocks_post_block_output",
+	"arguments": [
+		"$block_name",
+		"$block_attributes"
+	],
+	"description": "Fired directly after each block is displayed",
+	"examples": [{
+		"label": "Example 1: Add markup after each block display",
+		"file": "actions/grav_blocks_post_block_output.txt"
+	}]
+}, {
+	"name": "grav_blocks_display_before",
+	"arguments": [
+		"$block",
+		"$block_variables",
+		"$block_attributes"
+	],
+	"description": "Fired directly before the block is displayed when using <code>GRAV_BLOCKS::get_block()</code>",
+	"examples": [{
+		"label": "Example 1: Add markup before the block display",
+		"file": "actions/grav_blocks_display_before.txt"
+	}]
+}, {
+	"name": "grav_blocks_display_after",
+	"arguments": [
+		"$block",
+		"$block_variables",
+		"$block_attributes"
+	],
+	"description": "Fired directly after the block is displayed when using <code>GRAV_BLOCKS::get_block()</code>",
+	"examples": [{
+		"label": "Example 1: Add markup after the block display",
+		"file": "actions/grav_blocks_display_after.txt"
+	}]
+}]

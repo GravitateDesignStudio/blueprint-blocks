@@ -1,0 +1,3 @@
+add_filter('grav_block_use_default_js', function($use_default_js, $block_name) {
+    return ($block_name === 'columns') ? false : $use_default_js;
+});

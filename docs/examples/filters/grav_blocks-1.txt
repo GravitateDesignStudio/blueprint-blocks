@@ -1,0 +1,9 @@
+add_filter('grav_blocks', function($blocks) {
+    $blocks['my_block'] = [
+        'label' => 'My Block',
+        'path' => 'path/to/your/block/folder/my_block',
+        'group' => 'Custom'
+    ];
+
+    return $blocks;
+});

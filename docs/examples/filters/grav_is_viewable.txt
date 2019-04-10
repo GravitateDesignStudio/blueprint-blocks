@@ -1,0 +1,7 @@
+add_filter('grav_is_viewable', function($is_viewable) {
+    if (is_tax('product_categories')) {
+        return true;
+    }
+
+    return $is_viewable;
+});

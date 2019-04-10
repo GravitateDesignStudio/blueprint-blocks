@@ -1,0 +1,208 @@
+[{
+	"name": "grav_blocks",
+	"arguments": [
+		"$blocks"
+	],
+	"description": "Filter through the available blocks.",
+	"examples": [{
+		"label": "Example 1: Adding Your Own",
+		"file": "filters/grav_blocks-1.txt"
+	}, {
+		"label": "Example 2: Removing A Block",
+		"file": "filters/grav_blocks-2.txt"
+	}]
+}, {
+	"name": "grav_block_locations",
+	"arguments": [
+		"$locations"
+	],
+	"description": "This filters through the locations to allow Gravitate Blocks.",
+	"examples": [{
+		"label": "Example 1: Adding a Location to Events where the ID is not 14",
+		"file": "filters/grav_block_locations-1.txt"
+	}, {
+		"label": "Example 2: Adding a Location to the Category Taxonomy",
+		"file": "filters/grav_block_locations-2.txt"
+	}]
+}, {
+	"name": "grav_block_fields",
+	"arguments": [
+		"$fields"
+	],
+	"description": "This filters through the fields for each block.",
+	"examples": [{
+		"label": "Example 1: Removing the Attribution option for the Quote Block",
+		"file": "filters/grav_block_fields-1.txt"
+	}, {
+		"label": "Example 2: Adding an Image to the Quote Block",
+		"file": "filters/grav_block_fields-2.txt",
+		"note": "* Keep in mind you will still need to update the markup to accept the new settings"
+	}]
+}, {
+	"name": "grav_is_viewable",
+	"arguments": [
+		"$is_viewable"
+	],
+	"description": "This filters the viewable areas for all blocks.",
+	"examples": [{
+		"label": "Example 1: Adding blocks to a taxonomy term page.",
+		"file": "filters/grav_is_viewable.txt",
+		"note": "* Keep in mind you will still need to update the markup to accept the new settings"
+	}]
+}, {
+	"name": "grav_get_css",
+	"arguments": [
+		"$css",
+		"$block_name"
+	],
+	"description": "This filters the css classes for each block.",
+	"examples": [{
+		"label": "Example 1: Adding a class only on the row of a certain block.",
+		"file": "filters/grav_get_css.txt"
+	}]
+}, {
+	"name": "grav_block_content_columns",
+	"arguments": [],
+	"description": "This filters the number of columns for the block \"Content\".",
+	"examples": [{
+		"label": "Example 1: Changing one column block to only take up 10 columns of the grid and two column block to only take up a total of 10 columns.",
+		"file": "filters/grav_block_content_columns.txt"
+	}]
+}, {
+	"name": "grav_block_background_colors",
+	"arguments": [
+		"$block_background_colors"
+	],
+	"description": "This filters the background options for all blocks.",
+	"examples": [{
+		"label": "Example 1: Adding another option to the background options.",
+		"file": "filters/grav_block_background_colors-1.txt"
+	}, {
+		"label": "Example 2: Remove the option for a background of none.",
+		"file": "filters/grav_block_background_colors-2.txt"
+	}]
+}, {
+	"name": "grav_hide_on_screen",
+	"arguments": [
+		"$hidden"
+	],
+	"description": "This filter gives the ability to hide other parts of the WordPress dashboard on Gravitate Block enabled areas.",
+	"examples": [{
+		"label": "Example 1: Remove the content and excerpt fields.",
+		"file": "filters/grav_hide_on_screen.txt"
+	}]
+}, {
+	"name": "grav_column_widths",
+	"arguments": [
+		"$column_width_options"
+	],
+	"description": "This filters the allowable column widths for the \"Media Content\" block.",
+	"examples": [{
+		"label": "Example 1: Change the width options. The key in the array is the number of columns for the media to use.",
+		"file": "filters/grav_column_widths.txt"
+	}]
+}, {
+	"name": "grav_block_mediacontent_columns",
+	"arguments": [
+		"$col_total",
+		"$col_width",
+		"$placement"
+	],
+	"description": "This filters the total columns to use for the \"Media Content\" block.",
+	"examples": [{
+		"label": "Example 1: Change the total number of columns to be used to 10 instead of 12 based on if the media column width is less than 6 columns.",
+		"file": "filters/grav_block_mediacontent_columns.txt"
+	}]
+}, {
+	"name": "grav_blocks_testimonials_cpt",
+	"arguments": [
+		"$testimonial_cpts"
+	],
+	"description": "This makes CPTs availble to use in the Testimonials block. You should add a field called <em>attribution_sub_title</em> to each of these CPTs for use in the Testmonials block if you want to display an attribution sub-title.",
+	"examples": [{
+		"label": "Example 1: Add CPTs of <em>post</em> and <em>testimonial</em> as options for the Testimonials block.",
+		"file": "filters/grav_blocks_testimonials_cpt.txt"
+	}]
+}, {
+	"name": "grav_block_background_style",
+	"arguments": [
+		"$block_background_style"
+	],
+	"description": "This filters options for the block background style.",
+	"examples": [{
+		"label": "Example 1: Adding a color picker option for background colors.",
+		"file": "filters/grav_block_background_style.txt"
+	}]
+}, {
+	"name": "grav_block_link_fields",
+	"arguments": [
+		"$fields"
+	],
+	"description": "This filters the fields for \"GRAV_BLOCKS::get_link_fields\" used to build button and links within the blocks.",
+	"examples": [{
+		"label": "Example 1: Adding a custom button type.",
+		"file": "filters/grav_block_link_fields.txt"
+	}]
+}, {
+	"name": "grav_blocks_output_default_styles",
+	"arguments": [
+		"$output_default_styles"
+	],
+	"description": "Control the output of default block styles by returning a boolean value",
+	"examples": [{
+		"label": "Example 1: Disable the default block styles output",
+		"file": "filters/grav_blocks_output_default_styles.txt"
+	}]
+}, {
+	"name": "grav_blocks_output_default_js",
+	"arguments": [
+		"$output_default_js"
+	],
+	"description": "Control the output of default block JavaScript by returning a boolean value",
+	"examples": [{
+		"label": "Example 1: Disable the default block JavaScript output",
+		"file": "filters/grav_blocks_output_default_js.txt"
+	}]
+}, {
+	"name": "grav_block_use_default_css",
+	"arguments": [
+		"$use_default_css",
+		"$block_name"
+	],
+	"description": "Control the output of block-specific default styles",
+	"examples": [{
+		"label": "Example 1: Disable the default block styles for the 'columns' block",
+		"file": "filters/grav_block_use_default_css.txt"
+	}]
+}, {
+	"name": "grav_block_use_default_js",
+	"arguments": [
+		"$use_default_js",
+		"$block_name"
+	],
+	"description": "Control the output of block-specific default JavaScript",
+	"examples": [{
+		"label": "Example 1: Disable the default block JavaScript for the 'columns' block",
+		"file": "filters/grav_block_use_default_js.txt"
+	}]
+}, {
+	"name": "grav_blocks_{block}_guidelines_title",
+	"arguments": [
+		"$title"
+	],
+	"description": "Control the 'guidelines' title for a specific block",
+	"examples": [{
+		"label": "Example 1: Modify the 'guidelines' title for the 'title' block",
+		"file": "filters/grav_blocks_BLOCK_guidelines_title.txt"
+	}]
+}, {
+	"name": "grav_blocks_{block}_guidelines_text",
+	"arguments": [
+		"$text"
+	],
+	"description": "Control the 'guidelines' text for a specific block",
+	"examples": [{
+		"label": "Example 1: Modify the 'guidelines' text for the 'columns' block",
+		"file": "filters/grav_blocks_BLOCK_guidelines_text.txt"
+	}]
+}]

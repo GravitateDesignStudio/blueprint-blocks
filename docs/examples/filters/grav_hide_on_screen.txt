@@ -1,0 +1,8 @@
+add_filter('grav_hide_on_screen', function($hidden) {
+    $hidden = [
+        'the_content',
+        'excerpt'
+    ];
+
+    return $hidden;
+});
