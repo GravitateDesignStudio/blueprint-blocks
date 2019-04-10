@@ -37,16 +37,40 @@ $marker_data = array_reduce(is_array($markers) ? $markers : [], function ($recor
 $map_block_api_key = GRAV_BLOCKS_PLUGIN_SETTINGS::get_setting_value('google_maps_api_key');
 
 if ($map_block_api_key) {
-	$map_order = ' medium-order-1';
-	$map_col = 12;
-	$content_col = 12;
+	$column_sizes = [
+		'map' => [
+			'small' => 12,
+			'medium' => 12,
+			'large' => 12,
+			'small-offset' => 0,
+			'medium-offset' => 0,
+			'large-offset' => 0,
+			'small-order' => 0,
+			'medium-order' => 0,
+			'large-order' => 0
+		]
+	];
 
 	if ($format !== 'map') {
-		$map_order = ($map_position == 'right') ? 'medium-order-2' : 'medium-order-1';
-		$content_order = ($map_position == 'right') ? 'medium-order-1' : 'medium-order-2';
-		$map_col = ($format == 'small-map') ? 4 : 8;
-		$content_col = ($format == 'small-map') ? 8 : 4;
+		$column_sizes['map']['medium'] = ($format === 'small-map') ? 4 : 8;
+		$column_sizes['map']['large'] = ($format === 'small-map') ? 4 : 8;
+		$column_sizes['map']['medium-order'] = ($map_position === 'right') ? 2 : 1;
+		$column_sizes['map']['large-order'] = ($map_position === 'right') ? 2 : 1;
+
+		$column_sizes['content'] = [
+			'small' => 12,
+			'medium' => ($format === 'small-map') ? 8 : 4,
+			'large' => ($format === 'small-map') ? 8 : 4,
+			'small-offset' => 0,
+			'medium-offset' => 0,
+			'large-offset' => 0,
+			'small-order' => 0,
+			'medium-order' => ($map_position === 'right') ? 1 : 2,
+			'large-order' => ($map_position === 'right') ? 1 : 2
+		];
 	}
+
+	$column_sizes = apply_filters('grav_blocks_map_column_sizes', $column_sizes, $format, $map_position);
 
 	$markers = get_sub_field('markers');
 
@@ -58,24 +82,27 @@ if ($map_block_api_key) {
 				<?php /* map */ ?>
 				<?php
 				$map_classes = [
-					GRAV_BLOCKS::css()->col(12, $map_col)->get(),
-					$map_order,
+					GRAV_BLOCKS::css()
+						->col($column_sizes['map']['small'], $column_sizes['map']['medium'], $column_sizes['map']['large'])
+						->col_offset($column_sizes['map']['small-offset'], $column_sizes['map']['medium-offset'], $column_sizes['map']['large-offset'])
+						->col_order($column_sizes['map']['small-order'], $column_sizes['map']['medium-order'], $column_sizes['map']['large-order'])
+						->get(),
 					'map'
 				];
 				?>
 				<div class="<?php echo implode(' ', $map_classes); ?>">
-					<div data-zoom="<?php the_sub_field('zoom_offset'); ?>"
-						id="<?php echo GRAV_BLOCKS::$block_index;?>_map"
-						class="block-map__google-map">
-					</div>
+					<div id="<?php echo GRAV_BLOCKS::$block_index;?>_map" class="block-map__google-map"></div>
 				</div>
 				<?php
 				/* content */
 				if ($format !== 'map')
 				{
 					$content_classes = [
-						GRAV_BLOCKS::css()->col(12, $content_col)->get(),
-						$content_order,
+						GRAV_BLOCKS::css()
+							->col($column_sizes['content']['small'], $column_sizes['content']['medium'], $column_sizes['content']['large'])
+							->col_offset($column_sizes['content']['small-offset'], $column_sizes['content']['medium-offset'], $column_sizes['content']['large-offset'])
+							->col_order($column_sizes['content']['small-order'], $column_sizes['content']['medium-order'], $column_sizes['content']['large-order'])
+							->get(),
 						'content',
 						GRAV_BLOCKS::get_wysiwyg_container_class()
 					];
@@ -92,13 +119,17 @@ if ($map_block_api_key) {
 		<?php
 	}
 
+	$zoom_value = get_sub_field('zoom_offset');
+
 	$script_vars = [
 		'markers' => json_encode($marker_data),
 		'markerClose' => apply_filters('grav_blocks_map_marker_close_image_url', plugin_dir_url(__FILE__).'assets/map-close.png'),
 		'markerUrl' => apply_filters('grav_blocks_map_marker_pin_image_url', plugin_dir_url(__FILE__).'assets/map-marker.png'),
 		'markerCloseSvg' => apply_filters('grav_blocks_map_marker_close_svg_url', plugin_dir_url(__FILE__).'assets/map-close.svg'),
 		'markerUrlSvg' => apply_filters('grav_blocks_map_marker_pin_svg_url', plugin_dir_url(__FILE__).'assets/map-marker.svg'),
-		'snazzyInfoWindowParams' => apply_filters('grav_blocks_map_snazzyinfowindow_params', [])
+		'snazzyInfoWindowParams' => apply_filters('grav_blocks_map_snazzyinfowindow_params', []),
+		'mapPaddingBottom' => apply_filters('grav_blocks_map_padding_bottom', '62.5%'),
+		'zoom' => $zoom_value ? (int)$zoom_value : 8
 	];
 
 	$custom_styles = GRAV_BLOCKS_PLUGIN_SETTINGS::get_setting_value('google_maps_styles');

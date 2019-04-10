@@ -163,6 +163,7 @@
     function initMap($block) {
         var blockIndex = $block.attr('data-block-index');
         var mapConfig = window['mapBlockConfig' + blockIndex] || {};
+        var mapZoomLevel = mapConfig.zoom || 8;
 
         if (!mapConfig) {
             console.error('failed to load map configuration for block index ' + blockIndex);
@@ -172,12 +173,12 @@
         var mapStyles = (typeof mapConfig.customMapStyles !== 'undefined' && mapConfig.customMapStyles.length > 1) ? JSON.parse(mapConfig.customMapStyles.replace(/\r?\n|\r/g, '')) : defaultStyles;
         var $map = $block.find('.block-map__google-map');
 
-        $map.css('padding-bottom', '75%');
+        $map.css('padding-bottom', mapConfig.mapPaddingBottom);
 
         var bounds = new google.maps.LatLngBounds();
         var mapOptions = {
             zoomControl: true,
-            zoom: 8,
+            zoom: mapZoomLevel,
             zoomControlOptions: {
                 position: google.maps.ControlPosition.LEFT_BOTTOM
             },
@@ -250,13 +251,14 @@
 
         map.fitBounds(bounds);
 
-        // Override our map zoom level once our fitBounds function runs (Make sure it only runs once)
-        var zoomOffest = $map.data('zoom');
-
         // setup a listener for the 'bounds_changed' event and
         // zoom the map to the new ideal zoom level
         var boundsListener = google.maps.event.addListener(map, 'bounds_changed', function () {
-            var newZoom = this.getZoom();
+            var newZoom = this.getZoom() - (this.getZoom() - mapZoomLevel);
+
+            if (newZoom < 0) {
+                newZoom = 0;
+            }
 
             this.setZoom(newZoom);
 
@@ -265,8 +267,10 @@
 
         google.maps.event.addDomListener(window, 'resize', function () {
             map.fitBounds(bounds);
-            // get current zoom and set map to zoom - 1
-            map.setZoom(map.getZoom() - zoomOffest);
+
+            var newZoom = map.getZoom() - (map.getZoom() - mapZoomLevel);
+            
+            map.setZoom(newZoom);
         });
     }
 
