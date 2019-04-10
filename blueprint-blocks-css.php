@@ -76,6 +76,27 @@ class GRAV_BLOCKS_CSS
 		return $this;
 	}
 
+	public function col_order($small = null, $med = null, $large = null, $xlarge = null)
+	{
+		if (is_numeric($small) && $small > 0) {
+			$this->class[] = 'small-order-'.$small;
+		}
+
+		if (is_numeric($med) && $med > 0) {
+			$this->class[] = 'medium-order-'.$med;
+		}
+
+		if (is_numeric($large) && $large > 0) {
+			$this->class[] = 'large-order-'.$large;
+		}
+
+		if (is_numeric($xlarge) && $xlarge > 0) {
+			$this->class[] = 'xlarge-order-'.$xlarge;
+		}
+
+		return $this;
+	}
+
 	public function col_push($small = null, $med = null, $large = null, $xlarge = null)
 	{
 		if (is_numeric($small)) {

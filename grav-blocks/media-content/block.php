@@ -33,7 +33,7 @@ $col_widths = [
 
 $col_widths = apply_filters('grav_block_mediacontent_column_widths', $col_widths, $media_column_width, $placement);
 
-$column_content_add_classes = [$col_class];
+$column_content_add_classes = [$col_class, GRAV_BLOCKS::get_wysiwyg_container_class()];
 $column_media_add_classes = [$col_class];
 
 if ($placement === 'right') {
@@ -92,8 +92,12 @@ $row_classes = apply_filters('grav_block_mediacontent_row_classes', $row_classes
 
 			if ($link && $media_type != 'embed')
 			{
+				$link_type = get_sub_field('link_type');
+				$link_classes = ['block-link-'.esc_attr($link_type)];
+				$link_classes = apply_filters('grav_blocks_media_content_link_classes', $link_classes, $link_type, $link);
+
 				?>
-				<a class="block-link-<?php echo esc_attr(get_sub_field('link_type')); ?>" href="<?php echo esc_url($link); ?>" <?php if (get_sub_field('link_type') == 'video') { ?>data-modal-video<?php } ?>>
+				<a class="<?php echo esc_attr(implode(' ', $link_classes)); ?>" href="<?php echo esc_url($link); ?>" <?php if ($link_type === 'video') { ?>data-modal-video<?php } ?>>
 				<?php
 			}
 

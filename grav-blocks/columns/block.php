@@ -35,7 +35,10 @@ if ($column_num) {
 				$col_sizes = [
 					'small' => 12,
 					'medium' => $medium_col,
-					'large' => $large_col
+					'large' => $large_col,
+					'small-offset' => 0,
+					'medium-offset' => 0,
+					'large-offset' => 0
 				];
 
 				if ($sidebar != '' && $column_num == 2)
@@ -54,6 +57,20 @@ if ($column_num) {
 
 				$col_sizes = apply_filters('grav_block_content_column_sizes', $col_sizes, $i, $column_num, $format);
 				$col_classes = explode(' ', GRAV_BLOCKS::css()->col($col_sizes['small'], $col_sizes['medium'], $col_sizes['large'])->add('col-content')->get());
+				$col_classes[] = GRAV_BLOCKS::get_wysiwyg_container_class();
+
+				if ($col_sizes['small-offset']) {
+					$col_classes[] = 'small-offset-'.$col_sizes['small-offset'];
+				}
+
+				if ($col_sizes['medium-offset']) {
+					$col_classes[] = 'medium-offset-'.$col_sizes['medium-offset'];
+				}
+
+				if ($col_sizes['large-offset']) {
+					$col_classes[] = 'large-offset-'.$col_sizes['large-offset'];
+				}
+
 				$col_classes = apply_filters('grav_block_content_column_classes', $col_classes, $i, $column_num, $format);
 
 				?>

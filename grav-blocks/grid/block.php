@@ -43,10 +43,10 @@ if ($grid_items)
 				{
 					foreach ($grid_items as $grid_item)
 					{
-						$image = $grid_item['item_image'];
-						$title = $grid_item['item_title'];
-						$link_type = $grid_item['link_type'];
-						$link = $grid_item['link_' . $link_type];
+						$image = $grid_item['item_image'] ?? '';
+						$title = $grid_item['item_title'] ?? '';
+						$link_type = $grid_item['link_type'] ?? '';
+						$link = ($link_type && $link_type !== 'none') ? $grid_item['link_' . $link_type] : '';
 
 						?>
 						<div class="columns block-grid__item">
