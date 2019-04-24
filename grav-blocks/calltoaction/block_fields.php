@@ -1,5 +1,4 @@
 <?php
-
 /*
 *
 * Gravitate Content Block
@@ -13,49 +12,44 @@
 *
 */
 
-$gforms = array(0 => '- None');
-
-foreach(GRAV_BLOCKS::get_gravity_forms() as $gform)
-{
-	$gforms[$gform['id']] = $gform['title'];
-}
-
 $calltoaction_column_choices = array();
 $block_fields = array();
 $num_columns = apply_filters('grav_blocks_calltoaction_columns_max', 3);
+$supports_form = apply_filters('grav_blocks_calltoaction_supports_form', true);
 
-for( $i = 1; $i <= $num_columns; $i++ ) {
+for ($i = 1; $i <= $num_columns; $i++) {
 	$calltoaction_column_choices[$i] = $i;
 }
 
-$block_fields[] = array (
-    'key' => 'field_'.$block.'_num_columns',
-    'label' => 'Number of Columns',
-    'name' => 'num_columns',
-    'type' => 'radio',
-    'instructions' => '',
-    'required' => 0,
-    'conditional_logic' => 0,
-    'wrapper' => array (
-        'width' => '',
-        'class' => '',
-        'id' => '',
-    ),
-    'choices' => $calltoaction_column_choices,
-    'other_choice' => 0,
-    'save_other_choice' => 0,
-    'default_value' => 1,
-    'layout' => 'horizontal',
-	'block_options' => 1
-);
+if ($num_columns > 1) {
+	$block_fields[] = array (
+		'key' => 'field_'.$block.'_num_columns',
+		'label' => 'Number of Columns',
+		'name' => 'num_columns',
+		'type' => 'radio',
+		'instructions' => '',
+		'required' => 0,
+		'conditional_logic' => 0,
+		'wrapper' => array (
+			'width' => '',
+			'class' => '',
+			'id' => '',
+		),
+		'choices' => $calltoaction_column_choices,
+		'other_choice' => 0,
+		'save_other_choice' => 0,
+		'default_value' => 1,
+		'layout' => 'horizontal',
+		'block_options' => 1
+	);
+}
 
-for( $i = 1; $i <= $num_columns; $i++ ) {
-	//Setup background fields
+for ($i = 1; $i <= $num_columns; $i++) {
+	// Setup background fields
 	$background_fields = GRAV_BLOCKS::get_background_fields($block, 'Background ' . $i, 'background_' . $i);
 
-	//Rename background fields
+	// Rename background fields
 	foreach ($background_fields as $key => $field) {
-
 		$background_fields[$key]['name'] = $field['name'] . '_'. $i;
 	}
 
@@ -70,12 +64,16 @@ for( $i = 1; $i <= $num_columns; $i++ ) {
 		}
 	}
 
-	//Merge block_fields with background_fields
-	$block_fields = array_merge_recursive($block_fields, $background_fields);
+	// Merge block_fields with background_fields
+	if ($num_columns > 1) {
+		$block_fields = array_merge_recursive($block_fields, $background_fields);
+	}
+
+	$label_append_index = ($num_columns > 1) ? " {$i}" : '';
 
 	$block_fields[] = array (
 		'key' => 'field_'.$block.'_title_'.$i,
-		'label' => 'Title (optional) '.$i,
+		'label' => 'Title (optional)'.$label_append_index,
 		'name' => 'title_'.$i,
 		'type' => 'text',
 		'conditional_logic' => GRAV_BLOCKS::get_radio_num_conditionals('field_'.$block.'_num_columns', $i, $num_columns),
@@ -88,9 +86,10 @@ for( $i = 1; $i <= $num_columns; $i++ ) {
 		'formatting' => 'none', 		// none | html
 		'maxlength' => '',
 	);
+
 	$block_fields[] = array (
 		'key' => 'field_'.$block.'_description_'.$i,
-		'label' => 'Description (optional) '.$i,
+		'label' => 'Description (optional)'.$label_append_index,
 		'name' => 'description_'.$i,
 		'type' => 'textarea',
 		'conditional_logic' => GRAV_BLOCKS::get_radio_num_conditionals('field_'.$block.'_num_columns', $i, $num_columns),
@@ -101,9 +100,10 @@ for( $i = 1; $i <= $num_columns; $i++ ) {
 		'rows' => '',
 		'formatting' => 'html',
 	);
+
 	$block_fields[] = array (
 		'key' => 'field_'.$block.'_buttons_'.$i,
-		'label' => 'Buttons '.$i,
+		'label' => 'Buttons'.$label_append_index,
 		'name' => 'buttons_'.$i,
 		'type' => 'repeater',
 		'instructions' => '',
@@ -123,33 +123,44 @@ for( $i = 1; $i <= $num_columns; $i++ ) {
 			GRAV_BLOCKS::get_link_fields( 'button')
 		),
 	);
-	$block_fields[] = array (
-	    'key' => 'field_'.$block.'_form_'.$i,
-	    'label' => 'Form '.$i,
-	    'name' => 'form_'.$i,
-	    'type' => 'select',
-	    'instructions' => '',
-	    'required' => 0,
-	    'conditional_logic' => GRAV_BLOCKS::get_radio_num_conditionals('field_'.$block.'_num_columns', $i, $num_columns),
-	    'wrapper' => array (
-	        'width' => '',
-	        'class' => '',
-	        'id' => '',
-	    ),
-	    'choices' => $gforms,
-	    'default_value' => array (
-	    ),
-	    'allow_null' => 0,
-	    'multiple' => 0,         // allows for multi-select
-	    'ui' => 0,               // creates a more stylized UI
-	    'ajax' => 0,
-	    'placeholder' => '',
-	    'disabled' => 0,
-	    'readonly' => 0,
-	);
+
+	if ($supports_form) {
+		$gforms = array(0 => 'None');
+
+		foreach(GRAV_BLOCKS::get_gravity_forms() as $gform)
+		{
+			$gforms[$gform['id']] = $gform['title'];
+		}
+
+		$block_fields[] = array (
+			'key' => 'field_'.$block.'_form_'.$i,
+			'label' => 'Form'.$label_append_index,
+			'name' => 'form_'.$i,
+			'type' => 'select',
+			'instructions' => '',
+			'required' => 0,
+			'conditional_logic' => GRAV_BLOCKS::get_radio_num_conditionals('field_'.$block.'_num_columns', $i, $num_columns),
+			'wrapper' => array (
+				'width' => '',
+				'class' => '',
+				'id' => '',
+			),
+			'choices' => $gforms,
+			'default_value' => array (
+			),
+			'allow_null' => 0,
+			'multiple' => 0,         // allows for multi-select
+			'ui' => 0,               // creates a more stylized UI
+			'ajax' => 0,
+			'placeholder' => '',
+			'disabled' => 0,
+			'readonly' => 0,
+		);
+	}
+
 	$block_fields[] = array (
 	    'key' => 'field_'.$block.'_alignment_'.$i,
-	    'label' => 'Alignment '.$i,
+	    'label' => 'Alignment'.$label_append_index,
 	    'name' => 'alignment_'.$i,
 	    'type' => 'radio',
 	    'instructions' => '',

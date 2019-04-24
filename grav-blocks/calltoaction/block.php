@@ -1,6 +1,12 @@
 <?php
 $column_num = isset($column_num) ? $column_num : get_sub_field('num_columns');
 $cta_columns = isset($cta_columns) ? $cta_columns : array();
+$title_tag = apply_filters('grav_blocks_calltoaction_title_tag', 'h2');
+$description_tag = apply_filters('grav_blocks_calltoaction_description_tag', 'h4');
+
+if ($column_num === false) {
+	$column_num = 1;
+}
 
 if ($column_num)
 {
@@ -8,7 +14,7 @@ if ($column_num)
 	<div class="block-inner">
 		<div class="<?php echo GRAV_BLOCKS::css()->row()->get();?> align-center">
 			<?php
-			for ($i=1; $i <= $column_num; $i++)
+			for ($i = 1; $i <= $column_num; $i++)
 			{
 				$buttons = isset($cta_columns['buttons_' . $i]) ? $cta_columns['buttons_' . $i] : get_sub_field('buttons_' . $i);
 				$title = isset($cta_columns['title_' . $i]) ? $cta_columns['title_' . $i] : get_sub_field('title_' . $i);
@@ -28,10 +34,10 @@ if ($column_num)
 							echo GRAV_BLOCKS::image_background($background_image);
 						} ?>>
 						<?php if($title){ ?>
-							<h2 class="block-calltoaction__title"><?php echo esc_html($title); ?></h2>
+							<<?php echo esc_attr($title_tag); ?> class="block-calltoaction__title"><?php echo esc_html($title); ?></<?php echo esc_attr($title_tag); ?>>
 						<?php } ?>
 						<?php if($description){ ?>
-							<h4 class="block-calltoaction__description"><?php echo esc_html($description); ?></h4>
+							<<?php echo esc_attr($description_tag); ?> class="block-calltoaction__description"><?php echo esc_html($description); ?></<?php echo esc_attr($description_tag); ?>>
 						<?php } ?>
 						<?php
 
