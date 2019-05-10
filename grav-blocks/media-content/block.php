@@ -106,7 +106,7 @@ $row_classes = apply_filters('grav_block_mediacontent_row_classes', $row_classes
 				<?php
 				if (get_sub_field('link_type') == 'video')
 				{
-					do_action('grav_blocks_get_video_link_button', $block);
+					do_action('grav_blocks_get_video_link_button', $block, get_sub_field('link_video'));
 				}
 
 				if ($media_type === 'video' && $video_url)
