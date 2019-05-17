@@ -2,10 +2,10 @@ jQuery(document).ready(function ($) {
 	function gravBlocksFormatVideoURL(url) {
 		var videoId = new RegExp('[\\?&]v=([^&#]*)').exec(url);
 		var formattedUrl = '';
-		
+
 		if (videoId && videoId[1]) {
 			// YouTube URL
-			formattedUrl = `https://youtube.com/embed/${videoId[1]}?rel=0&wmode=transparent&autoplay=1&showinfo=0`;
+			formattedUrl = 'https://youtube.com/embed/' + videoId[1] + '?rel=0&wmode=transparent&autoplay=1&showinfo=0';
 		} else if (videoSrc.indexOf('vimeo.com') !== -1) {
 			// Vimeo URL
 			var urlTest = document.createElement('a');
