@@ -74,7 +74,7 @@ class GRAV_BLOCKS
 			.block-options-padding-remove-top .block-inner {
 				padding-top: 0;
 			}
-			
+
 			.block-options-padding-remove-bottom .block-inner {
 				padding-bottom: 0;
 			}
@@ -83,7 +83,7 @@ class GRAV_BLOCKS
 				background-size: cover;
 				background-position: center;
 			}
-			
+
 			.block-bg-video {
 				overflow: hidden;
 			}
@@ -1787,7 +1787,7 @@ class GRAV_BLOCKS
 				// 	'use_default' => 'Use the default Gravitate Blocks CSS. <span class="extra-info">( Affects padding and some basic styling. )</span>',
 				// 	'use_foundation' => 'Use the <a target="_blank" href="http://foundation.zurb.com/sites/docs/">Foundation</a> CSS grid. <span class="extra-info">( This will add the foundation CSS file to your site. )</span>',
 				// );
-				
+
 				// $foundation_options = array(
 				// 	'f5' => '<a href="http://foundation.zurb.com/sites/docs/v/5.5.3/" target="_blank">5.5.3</a>',
 				// 	'f6' => '<a href="http://foundation.zurb.com/sites/docs/grid.html" target="_blank">6.2.0</a>',
@@ -2067,7 +2067,7 @@ class GRAV_BLOCKS
 		if ( 'toplevel_page_gravitate-blocks' != $hook ) {
 	        return;
 	    }
-		
+
 		// wp_enqueue_script( 'grav_blocks_scripts_js', plugin_dir_url( __FILE__ ) . 'library/js/blocks.min.js', array('jquery'), self::$version, true );
 	    wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_script( 'wp-color-picker' );
@@ -2437,11 +2437,11 @@ class GRAV_BLOCKS
 	public static function get_video_url($url)
 	{
 		$autoplay = (strpos($url, 'autoplay=0') || strpos($url, 'autoplay=false')) ? 0 : 1;
-		
+
 		if (strpos($url, 'vimeo'))
 		{
 			$id = self::get_vimeo_id($url);
-			
+
 			if (is_numeric($id))
 			{
 				return 'https://player.vimeo.com/video/'.$id.'?autoplay='.$autoplay;
@@ -2513,8 +2513,12 @@ class GRAV_BLOCKS
 			$post_types = array_keys($post_types);
 		}
 
+		$params = [];
+
 		if(is_array($label))
 		{
+			$params = $label;
+
 			$arr = $label;
 			$label = isset($arr['label']) ? $arr['label'] : (isset($arr['name']) ? ucwords(str_replace(array('_', '-'), ' ', $arr['name'])) : 'link');
 			$name = isset($arr['name']) ? sanitize_title($arr['name']) : sanitize_title($label);
@@ -2572,7 +2576,11 @@ class GRAV_BLOCKS
 			'name' => $name.'_type',
 			'type' => 'radio',
 			'layout' => 'horizontal',
-			'column_width' => '',
+			'wrapper' => array (
+				'width' => $params['column_width_type'] ?? $params['column_width'] ?? '',
+				'class' => '',
+				'id' => '',
+			),
 			'choices' => $allowed_fields,
 			'default_value' => $default,
 			'allow_null' => 0,
@@ -2603,7 +2611,11 @@ class GRAV_BLOCKS
 				'type' => 'text',
 				'required' => 1,
 				'conditional_logic' => $field_conditional_logic,
-				'column_width' => '',
+				'wrapper' => array (
+					'width' => $params['column_width_text'] ?? $params['column_width'] ?? '',
+					'class' => '',
+					'id' => '',
+				),
 				'default_value' => '',
 				'placeholder' => '',
 				'prepend' => '',
@@ -2625,7 +2637,11 @@ class GRAV_BLOCKS
 				'type' => 'text',
 				'required' => 1,
 				'conditional_logic' => $field_conditional_logic,
-				'column_width' => '',
+				'wrapper' => array (
+					'width' => $params['column_width_url'] ?? $params['column_width'] ?? '',
+					'class' => '',
+					'id' => '',
+				),
 				'default_value' => '',
 				'placeholder' => 'http://',
 				'prepend' => '',
@@ -2647,7 +2663,11 @@ class GRAV_BLOCKS
 				'type' => 'page_link',
 				'required' => 1,
 				'conditional_logic' => $field_conditional_logic,
-				'column_width' => '',
+				'wrapper' => array (
+					'width' => $params['column_width_page'] ?? $params['column_width'] ?? '',
+					'class' => '',
+					'id' => '',
+				),
 				'post_type' => $post_types,
 				'allow_null' => 0,
 				'multiple' => 0,
@@ -2666,7 +2686,11 @@ class GRAV_BLOCKS
 				'type' => 'file',
 				'required' => 1,
 				'conditional_logic' => $field_conditional_logic,
-				'column_width' => '',
+				'wrapper' => array (
+					'width' => $params['column_width_file'] ?? $params['column_width'] ?? '',
+					'class' => '',
+					'id' => '',
+				),
 				'save_format' => 'url',
 				'library' => 'all',
 			);
@@ -2685,7 +2709,11 @@ class GRAV_BLOCKS
 				'required' => 1,
 				'instructions' => 'This works for Vimeo or Youtube. Just paste in the url to the video you want to show.',
 				'conditional_logic' => $field_conditional_logic,
-				'column_width' => '',
+				'wrapper' => array (
+					'width' => $params['column_width_video'] ?? $params['column_width'] ?? '',
+					'class' => '',
+					'id' => '',
+				),
 				'default_value' => '',
 				'placeholder' => 'http://',
 				'prepend' => '',
