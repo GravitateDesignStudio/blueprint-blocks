@@ -2514,6 +2514,7 @@ class GRAV_BLOCKS
 		}
 
 		$params = [];
+		$supports_button_styles = true;
 
 		if(is_array($label))
 		{
@@ -2526,6 +2527,7 @@ class GRAV_BLOCKS
 			$show_text = isset($arr['show_text']) ? $arr['show_text'] : true;
 			$post_types = isset($arr['post_types']) ? $arr['post_types'] : $post_types;
 			$conditional_logic = isset($arr['conditional_logic']) ? $arr['conditional_logic'] : array();
+			$supports_button_styles = $arr['suppports_button_styles'] ?? $supports_button_styles;
 		}
 
 		if(empty($name))
@@ -2721,6 +2723,39 @@ class GRAV_BLOCKS
 				'formatting' => 'none',
 				'maxlength' => '',
 			);
+		}
+
+		if ($supports_button_styles) {
+			$button_style_options = apply_filters('grav_blocks_button_style_options', [
+				'' => 'Primary',
+				'button--secondary' => 'Secondary'
+			]);
+
+			if (is_array($button_style_options) && $button_style_options) {
+				$fields[] = array (
+					'key' => 'field_'.$block.'_'.$name.'_style',
+					'label' => 'Style',
+					'name' => $name.'_style',
+					'type' => 'select',
+					'instructions' => '',
+					'required' => 0,
+					'conditional_logic' => 0,
+					'wrapper' => array (
+						'width' => $params['column_width_style'] ?? $params['column_width'] ?? '',
+						'class' => '',
+						'id' => '',
+					),
+					'choices' => $button_style_options,
+					'default_value' => '',
+					'allow_null' => 0,
+					'multiple' => 0,         // allows for multi-select
+					'ui' => 0,               // creates a more stylized UI
+					'ajax' => 0,
+					'placeholder' => '',
+					'disabled' => 0,
+					'readonly' => 0,
+				);
+			}
 		}
 
 		$filtered_fields = apply_filters('grav_block_link_fields', $fields);
