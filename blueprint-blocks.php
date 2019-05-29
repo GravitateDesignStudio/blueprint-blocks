@@ -2739,7 +2739,15 @@ class GRAV_BLOCKS
 					'type' => 'select',
 					'instructions' => '',
 					'required' => 0,
-					'conditional_logic' => 0,
+					'conditional_logic' => array (
+						array (
+							array (
+								'field' => 'field_'.$block.'_'.$name.'_type',
+								'operator' => '!=',
+								'value' => 'none',
+							),
+						),
+					),
 					'wrapper' => array (
 						'width' => $params['column_width_style'] ?? $params['column_width'] ?? '',
 						'class' => '',
