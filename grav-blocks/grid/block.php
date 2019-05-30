@@ -4,12 +4,17 @@ $alt_title_location = get_sub_field('move_title');
 $block_format = isset($block_format) ? $block_format : get_sub_field('format');
 $block_format = $block_format ? $block_format : 'grid'; // Set Defualt
 
-$num_columns_small =  isset($num_columns_small)  ? $num_columns_small  : (get_sub_field('num_columns_small')  ? get_sub_field('num_columns_small')  : 1); // Set Defaults for older Plugin Versions
-$num_columns_medium = isset($num_columns_medium) ? $num_columns_medium : (get_sub_field('num_columns_medium') ? get_sub_field('num_columns_medium') : 2); // Set Defaults for older Plugin Versions
-$num_columns_large =  isset($num_columns_large)  ? $num_columns_large  : (get_sub_field('num_columns_large')  ? get_sub_field('num_columns_large')  : 4); // Set Defaults for older Plugin Versions
-$num_columns_xlarge = isset($num_columns_xlarge) ? $num_columns_xlarge : (get_sub_field('num_columns_xlarge') ? get_sub_field('num_columns_xlarge') : 6); // Set Defaults for older Plugin Versions
+$title_tag = apply_filters('grav_blocks_grid_title_tag', 'h3');
+$content_tag = apply_filters('grav_blocks_grid_content_tag', 'p');
 
-$grid_class = ' '.GRAV_BLOCKS::css()->grid($num_columns_small, $num_columns_medium, $num_columns_large, $num_columns_xlarge)->get();
+$image_aspect_ratio = get_sub_field('image_aspect_ratio') ?? '';
+
+$num_columns_small = $num_columns_small ?? get_sub_field('num_columns_small') ?? 1;
+$num_columns_medium = $num_columns_medium ?? get_sub_field('num_columns_medium') ?? 2;
+$num_columns_large = $num_columns_large ?? get_sub_field('num_columns_large') ?? 4;
+$num_columns_xlarge = $num_columns_xlarge ?? get_sub_field('num_columns_xlarge') ?? 6;
+
+$grid_classes = explode(' ', GRAV_BLOCKS::css()->grid($num_columns_small, $num_columns_medium, $num_columns_large, $num_columns_xlarge)->get());
 
 $block_title = isset($block_title) ? $block_title : get_sub_field('grid_title');
 $grid_items = isset($grid_items) ? $grid_items : get_sub_field('grid_items');
@@ -29,7 +34,7 @@ if ($grid_items)
 			</div>
 			<?php
 		}
-		
+
 		?>
 		<div class="<?php echo GRAV_BLOCKS::css()->add('block-grid__items-container')->get(); ?>"
 			data-columns-small="<?php echo $num_columns_small; ?>"
@@ -37,7 +42,7 @@ if ($grid_items)
 			data-columns-large="<?php echo $num_columns_large; ?>"
 			data-columns-xlarge="<?php echo $num_columns_xlarge; ?>"
 		>
-			<div class="<?php echo GRAV_BLOCKS::css()->row()->get(); ?> <?php echo GRAV_BLOCKS::css()->add('block-grid__items')->get().$grid_class; ?>">
+			<div class="<?php echo GRAV_BLOCKS::css()->row()->add(array_merge(['block-grid__items'], $grid_classes))->get(); ?>">
 				<?php
 				if ($grid_items)
 				{
@@ -54,19 +59,23 @@ if ($grid_items)
 							if ($link)
 							{
 								?>
-								<a class="block-link-<?php echo esc_attr($link_type);?> block-grid__item--link" href="<?php echo esc_url($link); ?>" title="<?php echo esc_attr($image['alt']); ?>">
+								<a class="block-link-<?php echo esc_attr($link_type);?> block-grid__item-link" href="<?php echo esc_url($link); ?>" title="<?php echo esc_attr($image['alt']); ?>">
 								<?php
 							}
 							?>
-							<div class="block-grid__item--container">
+							<div class="block-grid__item-container">
 								<?php
 								if ($image)
 								{
+									$image_container_classes = ['block-grid__item-image-container'];
+
+									if ($image_aspect_ratio) {
+										$image_container_classes[] = 'block-grid__item-image-container--'.$image_aspect_ratio;
+									}
+
 									?>
-									<div class="block-grid__item--image-container">
-										<div class="block-grid__item--image">
-											<?php echo GRAV_BLOCKS::image($image); ?>
-										</div>
+									<div class="<?php echo implode(' ', $image_container_classes); ?>">
+										<?php echo GRAV_BLOCKS::image($image, ['class' => 'block-grid__item-image']); ?>
 									</div>
 									<?php
 								}
@@ -74,14 +83,14 @@ if ($grid_items)
 								if ($title)
 								{
 									?>
-									<h3 class="block-grid__item--title"><span><?php echo $title; ?></span></h3>
+									<<?php echo $title_tag; ?> class="block-grid__item-title"><?php echo $title; ?></<?php echo $title_tag; ?>>
 									<?php
 								}
 
 								if ($content = $grid_item['item_content'])
 								{
 									?>
-									<p class="block-grid__item--content"><span><?php echo $content; ?></span></p>
+									<<?php echo $content_tag; ?> class="block-grid__item-content"><?php echo $content; ?></<?php echo $content_tag; ?>>
 									<?php
 								}
 								?>
@@ -95,7 +104,7 @@ if ($grid_items)
 									<span class="button"><?php echo $button_text; ?></span>
 									<?php
 								}
-								
+
 								?>
 								</a>
 								<?php

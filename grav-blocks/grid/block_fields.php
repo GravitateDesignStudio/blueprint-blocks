@@ -137,6 +137,31 @@ $block_fields = array(
 		'block_options' => 1,
 	),
 	array (
+		'key' => 'field_'.$block.'_image_aspect_ratio',
+		'label' => 'Image Aspect Ratio',
+		'name' => 'image_aspect_ratio',
+		'type' => 'radio',
+		'instructions' => '',
+		'required' => 0,
+		'conditional_logic' => 0,
+		'wrapper' => array (
+			'width' => '',
+			'class' => '',
+			'id' => '',
+		),
+		'choices' => array (
+			'' => 'Natural',
+			'1x1' => '1 x 1 (square)',
+			'16x9' => '16 x 9',
+			'16x10' => '16 x 10'
+		),
+		'other_choice' => 0,
+		'save_other_choice' => 0,
+		'default_value' => '',
+		'layout' => 'horizontal',
+		'block_options' => 1
+	),
+	array (
 		'key' => 'field_'.$block.'_2',
 		'label' => 'Grid Items',
 		'name' => 'grid_items',
