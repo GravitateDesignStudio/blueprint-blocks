@@ -100,8 +100,16 @@ if ($grid_items)
 							{
 								if ($button_text = $grid_item['button_text'])
 								{
+									$button_classes = ['button'];
+
+									if ($grid_item['link_style']) {
+										$button_classes[] = $grid_item['link_style'];
+									}
+
 									?>
-									<span class="button"><?php echo $button_text; ?></span>
+									<div class="block-grid__item-button-container">
+										<span class="<?php echo implode(' ', $button_classes); ?>"><?php echo $button_text; ?></span>
+									</div>
 									<?php
 								}
 
