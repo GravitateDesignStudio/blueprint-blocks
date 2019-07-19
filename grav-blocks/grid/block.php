@@ -4,9 +4,6 @@ $alt_title_location = get_sub_field('move_title');
 $block_format = isset($block_format) ? $block_format : get_sub_field('format');
 $block_format = $block_format ? $block_format : 'grid'; // Set Defualt
 
-$title_tag = apply_filters('grav_blocks_grid_title_tag', 'h3');
-$content_tag = apply_filters('grav_blocks_grid_content_tag', 'p');
-
 $image_aspect_ratio = get_sub_field('image_aspect_ratio') ?? '';
 
 $num_columns_small = $num_columns_small ?? get_sub_field('num_columns_small') ?? 1;
@@ -16,26 +13,12 @@ $num_columns_xlarge = $num_columns_xlarge ?? get_sub_field('num_columns_xlarge')
 
 $grid_classes = explode(' ', GRAV_BLOCKS::css()->grid($num_columns_small, $num_columns_medium, $num_columns_large, $num_columns_xlarge)->get());
 
-$block_title = isset($block_title) ? $block_title : get_sub_field('grid_title');
 $grid_items = isset($grid_items) ? $grid_items : get_sub_field('grid_items');
 
 if ($grid_items)
 {
 	?>
 	<div class="block-inner">
-		<?php
-		if ($block_title)
-		{
-			?>
-			<div class="<?php echo GRAV_BLOCKS::css()->row()->add('block-title-container')->get(); ?>">
-				<div class="<?php echo GRAV_BLOCKS::css()->col()->get(); ?>">
-					<h2 class="block-title"><?php echo $block_title; ?></h2>
-				</div>
-			</div>
-			<?php
-		}
-
-		?>
 		<div class="<?php echo GRAV_BLOCKS::css()->add('block-grid__items-container')->get(); ?>"
 			data-columns-small="<?php echo $num_columns_small; ?>"
 			data-columns-medium="<?php echo $num_columns_medium; ?>"
@@ -80,17 +63,10 @@ if ($grid_items)
 									<?php
 								}
 
-								if ($title)
-								{
-									?>
-									<<?php echo $title_tag; ?> class="block-grid__item-title"><?php echo $title; ?></<?php echo $title_tag; ?>>
-									<?php
-								}
-
 								if ($content = $grid_item['item_content'])
 								{
 									?>
-									<<?php echo $content_tag; ?> class="block-grid__item-content"><?php echo $content; ?></<?php echo $content_tag; ?>>
+									<div class="block-grid__item-content"><?php echo $content; ?></div>
 									<?php
 								}
 								?>

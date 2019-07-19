@@ -15,20 +15,6 @@
 
 $block_fields = array(
 	array (
-		'key' => 'field_'.$block.'_1',
-		'label' => 'Grid Title',
-		'name' => 'grid_title',
-		'type' => 'text',
-		'column_width' => '',
-		'default_value' => '',
-		'instructions' => '',
-		'placeholder' => '',
-		'prepend' => '',
-		'append' => '',
-		'formatting' => 'none',
-		'maxlength' => '',
-	),
-	array (
 	    'key' => 'field_'.$block.'_num_columns_small',
 	    'label' => 'Number of Columns on Small Screens',
 	    'name' => 'num_columns_small',
@@ -162,7 +148,7 @@ $block_fields = array(
 		'block_options' => 1
 	),
 	array (
-		'key' => 'field_'.$block.'_2',
+		'key' => 'field_'.$block.'_grid_items',
 		'label' => 'Grid Items',
 		'name' => 'grid_items',
 		'type' => 'repeater',
@@ -170,22 +156,7 @@ $block_fields = array(
 		'instructions' => '',
 		'sub_fields' => array (
 			array (
-				'key' => 'field_'.$block.'_8',
-				'label' => 'Item Title',
-				'name' => 'item_title',
-				'type' => 'text',
-				'column_width' => '',
-				'default_value' => '',
-				'instructions' => '',
-				'placeholder' => '',
-				'prepend' => '',
-				'append' => '',
-				'formatting' => 'none',
-				'maxlength' => '',
-				'conditional_logic' => 0,
-			),
-			array (
-				'key' => 'field_'.$block.'_9',
+				'key' => 'field_'.$block.'_item_image',
 				'label' => 'Image',
 				'name' => 'item_image',
 				'instructions' => '',
@@ -229,13 +200,22 @@ $block_fields = array(
 			    'disabled' => 0,
 			),
 			array (
-				'key' => 'field_'.$block.'_10',
+				'key' => 'field_'.$block.'_item_content',
 				'label' => 'Content',
 				'name' => 'item_content',
-				'type' => 'textarea',
-				'column_width' => '',
-				'default_value' => '',
+				'type' => 'wysiwyg',
+				'instructions' => '',
+				'required' => 0,
 				'conditional_logic' => 0,
+				'wrapper' => array (
+					'width' => '',
+					'class' => '',
+					'id' => '',
+				),
+				'default_value' => '',
+				'tabs' => 'all',         // all | visual | text
+				'toolbar' => 'full',     // full | basic
+				'media_upload' => 0,
 			),
 		),
 		'min' => '1',
