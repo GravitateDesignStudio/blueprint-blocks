@@ -2055,24 +2055,17 @@ class GRAV_BLOCKS
 	 *
 	 * @return runs enqueue for admin
 	 */
-	public static function enqueue_admin_files($hook){
+	public static function enqueue_admin_files($hook)
+	{
+		wp_enqueue_style('grav_blocks_admin_css', plugin_dir_url(__FILE__) . 'library/css/master.min.css', true, '1.0.0');
+		wp_enqueue_script('grav_blocks_controls_js', plugin_dir_url(__FILE__) . 'library/js/block-admin.js', array('jquery'), true, true);
 
-		wp_enqueue_style( 'grav_blocks_admin_css', plugin_dir_url( __FILE__ ) . 'library/css/master.min.css', true, '1.0.0' );
-		wp_enqueue_script( 'grav_blocks_controls_js', plugin_dir_url( __FILE__ ) . 'library/js/block-admin.js', array('jquery'), true, true );
+		wp_enqueue_style('grav_blocks_icons_css', 'https://i.icomoon.io/public/790bec4572/GravitateBlocks/style.css', true, '1.1.0');
 
-		// Why is this here? $block_data is not defined anywhere
-		// wp_localize_script( 'grav_blocks_controls_js', 'gravBlockData', $block_data );
-
-		wp_enqueue_style( 'grav_blocks_icons_css', 'https://i.icomoon.io/public/790bec4572/GravitateBlocks/style.css', true, '1.1.0' );
-		if ( 'toplevel_page_gravitate-blocks' != $hook ) {
+		if ('toplevel_page_gravitate-blocks' != $hook) {
 	        return;
 	    }
-
-		// wp_enqueue_script( 'grav_blocks_scripts_js', plugin_dir_url( __FILE__ ) . 'library/js/blocks.min.js', array('jquery'), self::$version, true );
-	    wp_enqueue_style( 'wp-color-picker' );
-		wp_enqueue_script( 'wp-color-picker' );
 	}
-
 
 	/**
 	 * Add any necessary JS to footer
