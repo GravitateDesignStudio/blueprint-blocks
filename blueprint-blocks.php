@@ -2,7 +2,7 @@
 /*
 Plugin Name: Gravitate Blueprint Blocks
 Description: Create Content Blocks.
-Version: 1.1.0
+Version: 1.1.1
 Plugin URI: http://www.gravitatedesign.com
 Author: Gravitate
 */
@@ -11,6 +11,7 @@ require_once(plugin_dir_path(__FILE__).'blueprint-blocks-css.php');
 require_once(plugin_dir_path(__FILE__).'blueprint-plugin-settings.php');
 require_once(plugin_dir_path(__FILE__).'blueprint-global-blocks.php');
 require_once(plugin_dir_path(__FILE__).'blueprint-dependency-manager.php');
+require_once(plugin_dir_path(__FILE__).'blueprint-blocks-util.php');
 
 register_activation_hook(__FILE__, array('GRAV_BLOCKS', 'activate'));
 register_deactivation_hook(__FILE__, array('GRAV_BLOCKS', 'deactivate'));
@@ -1007,16 +1008,18 @@ class GRAV_BLOCKS
 		{
 			global $wpdb;
 
+			$search_query = \BlueprintBlocks\Util::get_search_query();
+
 			// If is Search, then first check to see if we can find results that matches the search
-			if(is_main_query() && get_search_query() && is_search() && GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('search_options', 'include_in_search'))
+			if(is_main_query() && $search_query && \BlueprintBlocks\Util::is_search() && GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('search_options', 'include_in_search'))
 			{
-				$results = $wpdb->get_var("SELECT meta_value FROM ".$wpdb->postmeta." WHERE meta_value LIKE '%".get_search_query()."%' AND meta_key NOT LIKE '\_%' AND post_id = ".get_the_ID()." ORDER BY CHAR_LENGTH(meta_value) DESC LIMIT 1");
+				$results = $wpdb->get_var("SELECT meta_value FROM ".$wpdb->postmeta." WHERE meta_value LIKE '%" . esc_sql($search_query) . "%' AND meta_key NOT LIKE '\_%' AND post_id = ".get_the_ID()." ORDER BY CHAR_LENGTH(meta_value) DESC LIMIT 1");
 			}
 
 			// If no matches are found or if not Search then check for any fields to show data
 			if(empty($results))
 			{
-				if(GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('search_options', 'include_in_search') || !is_search() || !is_main_query())
+				if(GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('search_options', 'include_in_search') || !\BlueprintBlocks\Util::is_search() || !is_main_query())
 				{
 					$results = $wpdb->get_var("SELECT meta_value FROM ".$wpdb->postmeta." WHERE meta_key NOT LIKE '\_%' AND post_id = ".get_the_ID()." ORDER BY CHAR_LENGTH(meta_value) DESC LIMIT 1");
 				}
@@ -1034,12 +1037,14 @@ class GRAV_BLOCKS
 
 	public static function add_search_filtering($search)
 	{
-		if(!is_admin() && is_search() && is_main_query())
+		if (!is_admin() && \BlueprintBlocks\Util::is_search() && is_main_query())
 		{
 			global $wpdb;
-			$post_ids = array();
 
-			if($results = $wpdb->get_results("SELECT * FROM ".$wpdb->postmeta.", ".$wpdb->posts." WHERE meta_value LIKE '%".get_search_query()."%' AND post_id = ID AND post_status = 'publish' GROUP BY post_id"))
+			$post_ids = array();
+			$search_query = \BlueprintBlocks\Util::get_search_query();
+
+			if($results = $wpdb->get_results("SELECT * FROM ".$wpdb->postmeta.", ".$wpdb->posts." WHERE meta_value LIKE '%" . esc_sql($search_query) . "%' AND post_id = ID AND post_status = 'publish' GROUP BY post_id"))
 			{
 			    foreach ($results as $result)
 			    {
