@@ -38,7 +38,7 @@ abstract class DependencyManager
 			return plugin_dir_url(__FILE__).'grav-blocks/'.$block_name;
 		} else if (stripos($path, '/themes/') !== false) {
 			// block is in the theme folder
-			return get_template_directory_url().'grav-blocks/'.$block_name;
+			return get_template_directory_uri().'/grav-blocks/'.$block_name;
 		}
 
 		return '';
