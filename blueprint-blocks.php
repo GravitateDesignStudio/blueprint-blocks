@@ -2598,12 +2598,11 @@ class GRAV_BLOCKS
 			),
 		);
 
-		if(!empty($conditional_logic))
-		{
+		if (!empty($conditional_logic)) {
 			$field_conditional_logic[0][] = $conditional_logic[0][0];
 		}
 
-		if($show_text){
+		if ($show_text) {
 			$fields[] = array (
 				'key' => 'field_'.$block.'_'.$name.'_text',
 				'label' => $label_title.' Text',
@@ -2625,102 +2624,123 @@ class GRAV_BLOCKS
 			);
 		}
 
-		if(isset($allowed_fields['url']))
-		{
+		foreach ($allowed_fields as $allowed_field_key => $allowed_field_label) {
 			$field_conditional_logic[0][0]['operator'] = '==';
-			$field_conditional_logic[0][0]['value'] = 'url';
+			$field_conditional_logic[0][0]['value'] = $allowed_field_key;
 
-			$fields[] = array (
-				'key' => 'field_'.$block.'_'.$name.'_url',
-				'label' => $allowed_fields['url'],
-				'name' => $name.'_url',
-				'type' => 'text',
-				'required' => 1,
-				'conditional_logic' => $field_conditional_logic,
-				'wrapper' => array (
-					'width' => $params['column_width_url'] ?? $params['column_width'] ?? '',
-					'class' => '',
-					'id' => '',
-				),
-				'default_value' => '',
-				'placeholder' => 'http://',
-				'prepend' => '',
-				'append' => '',
-				'formatting' => 'none',
-				'maxlength' => '',
-			);
-		}
+			switch ($allowed_field_key) {
+				case 'url':
+					$fields[] = array (
+						'key' => 'field_'.$block.'_'.$name.'_url',
+						'label' => $allowed_field_label,
+						'name' => $name.'_url',
+						'type' => 'text',
+						'required' => 1,
+						'conditional_logic' => $field_conditional_logic,
+						'wrapper' => array (
+							'width' => $params['column_width_' . $allowed_field_key] ?? $params['column_width'] ?? '',
+							'class' => '',
+							'id' => '',
+						),
+						'default_value' => '',
+						'placeholder' => 'http://',
+						'prepend' => '',
+						'append' => '',
+						'formatting' => 'none',
+						'maxlength' => '',
+					);
+					break;
 
-		if(isset($allowed_fields['page']))
-		{
-			$field_conditional_logic[0][0]['operator'] = '==';
-			$field_conditional_logic[0][0]['value'] = 'page';
+				case 'page':
+					$fields[] = array (
+						'key' => 'field_'.$block.'_'.$name.'_page',
+						'label' => $allowed_field_label,
+						'name' => $name.'_page',
+						'type' => 'page_link',
+						'required' => 1,
+						'conditional_logic' => $field_conditional_logic,
+						'wrapper' => array (
+							'width' => $params['column_width_' . $allowed_field_key] ?? $params['column_width'] ?? '',
+							'class' => '',
+							'id' => '',
+						),
+						'post_type' => $post_types,
+						'allow_null' => 0,
+						'multiple' => 0,
+					);
+					break;
 
-			$fields[] = array (
-				'key' => 'field_'.$block.'_'.$name.'_page',
-				'label' => $allowed_fields['page'],
-				'name' => $name.'_page',
-				'type' => 'page_link',
-				'required' => 1,
-				'conditional_logic' => $field_conditional_logic,
-				'wrapper' => array (
-					'width' => $params['column_width_page'] ?? $params['column_width'] ?? '',
-					'class' => '',
-					'id' => '',
-				),
-				'post_type' => $post_types,
-				'allow_null' => 0,
-				'multiple' => 0,
-			);
-		}
+				case 'file':
+					$fields[] = array (
+						'key' => 'field_'.$block.'_'.$name.'_file',
+						'label' => $allowed_field_label,
+						'name' => $name.'_file',
+						'type' => 'file',
+						'required' => 1,
+						'conditional_logic' => $field_conditional_logic,
+						'wrapper' => array (
+							'width' => $params['column_width_' . $allowed_field_key] ?? $params['column_width'] ?? '',
+							'class' => '',
+							'id' => '',
+						),
+						'save_format' => 'url',
+						'library' => 'all',
+					);
+					break;
 
-		if(isset($allowed_fields['file']))
-		{
-			$field_conditional_logic[0][0]['operator'] = '==';
-			$field_conditional_logic[0][0]['value'] = 'file';
+				case 'video':
+					$fields[] = array (
+						'key' => 'field_'.$block.'_'.$name.'_video',
+						'label' => $allowed_field_label,
+						'name' => $name.'_video',
+						'type' => 'text',
+						'required' => 1,
+						'instructions' => 'This works for Vimeo or Youtube. Just paste in the url to the video you want to show.',
+						'conditional_logic' => $field_conditional_logic,
+						'wrapper' => array (
+							'width' => $params['column_width_' . $allowed_field_key] ?? $params['column_width'] ?? '',
+							'class' => '',
+							'id' => '',
+						),
+						'default_value' => '',
+						'placeholder' => 'http://',
+						'prepend' => '',
+						'append' => '',
+						'formatting' => 'none',
+						'maxlength' => '',
+					);
+					break;
 
-			$fields[] = array (
-				'key' => 'field_'.$block.'_'.$name.'_file',
-				'label' => $allowed_fields['file'],
-				'name' => $name.'_file',
-				'type' => 'file',
-				'required' => 1,
-				'conditional_logic' => $field_conditional_logic,
-				'wrapper' => array (
-					'width' => $params['column_width_file'] ?? $params['column_width'] ?? '',
-					'class' => '',
-					'id' => '',
-				),
-				'save_format' => 'url',
-				'library' => 'all',
-			);
-		}
+				default:
+					$custom_acf_field = apply_filters(
+						'grav_blocks_get_link_fields_' . $allowed_field_key,
+						[
+							'key' => 'field_'.$block.'_'.$name.'_'.$allowed_field_key,
+							'label' => $allowed_field_label,
+							'name' => $name.'_'.$allowed_field_key,
+							'type' => 'text',
+							'required' => 1,
+							'instructions' => '',
+							'conditional_logic' => $field_conditional_logic,
+							'wrapper' => array (
+								'width' => $params['column_width_' . $allowed_field_key] ?? $params['column_width'] ?? '',
+								'class' => '',
+								'id' => '',
+							),
+							'default_value' => '',
+							'placeholder' => '',
+							'prepend' => '',
+							'append' => '',
+							'formatting' => 'none',
+							'maxlength' => ''
+						]
+					);
 
-		if(isset($allowed_fields['video']))
-		{
-			$field_conditional_logic[0][0]['operator'] = '==';
-			$field_conditional_logic[0][0]['value'] = 'video';
-
-			$fields[] = array (
-				'key' => 'field_'.$block.'_'.$name.'_video',
-				'label' => $allowed_fields['video'],
-				'name' => $name.'_video',
-				'type' => 'text',
-				'required' => 1,
-				'instructions' => 'This works for Vimeo or Youtube. Just paste in the url to the video you want to show.',
-				'conditional_logic' => $field_conditional_logic,
-				'wrapper' => array (
-					'width' => $params['column_width_video'] ?? $params['column_width'] ?? '',
-					'class' => '',
-					'id' => '',
-				),
-				'default_value' => '',
-				'placeholder' => 'http://',
-				'prepend' => '',
-				'append' => '',
-				'formatting' => 'none',
-				'maxlength' => '',
-			);
+					if ($custom_acf_field && is_array($custom_acf_field)) {
+						$fields[] = $custom_acf_field;
+					}
+					break;
+			}
 		}
 
 		if ($supports_button_styles) {
