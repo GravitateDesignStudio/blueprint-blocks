@@ -2629,6 +2629,9 @@ class GRAV_BLOCKS
 			$field_conditional_logic[0][0]['value'] = $allowed_field_key;
 
 			switch ($allowed_field_key) {
+				case 'none':
+					break;
+
 				case 'url':
 					$fields[] = array (
 						'key' => 'field_'.$block.'_'.$name.'_url',
