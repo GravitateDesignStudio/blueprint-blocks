@@ -2570,7 +2570,11 @@ class GRAV_BLOCKS
 		reset($allowed_fields);
 		$default = key($allowed_fields);
 
-		$field_key_base = 'field_'.$block.'_'.$name.'_'.uniqid();
+		$field_key_base = 'field_'.$block.'_'.$name;
+
+		if (isset($params['key_modifier']) && is_string($params['key_modifier'])) {
+			$field_key_base .= '_'.$params['key_modifier'];
+		}
 
 		$fields[] = array (
 			'key' => $field_key_base.'_type',
