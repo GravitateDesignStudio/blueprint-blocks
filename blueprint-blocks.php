@@ -2570,8 +2570,10 @@ class GRAV_BLOCKS
 		reset($allowed_fields);
 		$default = key($allowed_fields);
 
+		$field_key_base = 'field_'.$block.'_'.$name.'_'.uniqid();
+
 		$fields[] = array (
-			'key' => 'field_'.$block.'_'.$name.'_type',
+			'key' => $field_key_base.'_type',
 			'label' => $label_title.' Type',
 			'name' => $name.'_type',
 			'type' => 'radio',
@@ -2591,7 +2593,7 @@ class GRAV_BLOCKS
 		$field_conditional_logic = array (
 			array (
 				array (
-					'field' => 'field_'.$block.'_'.$name.'_type',
+					'field' => $field_key_base.'_type',
 					'operator' => '!=',
 					'value' => 'none',
 				),
@@ -2604,7 +2606,7 @@ class GRAV_BLOCKS
 
 		if ($show_text) {
 			$fields[] = array (
-				'key' => 'field_'.$block.'_'.$name.'_text',
+				'key' => $field_key_base.'_text',
 				'label' => $label_title.' Text',
 				'name' => $name.'_text',
 				'type' => 'text',
@@ -2634,7 +2636,7 @@ class GRAV_BLOCKS
 
 				case 'url':
 					$fields[] = array (
-						'key' => 'field_'.$block.'_'.$name.'_url',
+						'key' => $field_key_base.'_url',
 						'label' => $allowed_field_label,
 						'name' => $name.'_url',
 						'type' => 'text',
@@ -2656,7 +2658,7 @@ class GRAV_BLOCKS
 
 				case 'page':
 					$fields[] = array (
-						'key' => 'field_'.$block.'_'.$name.'_page',
+						'key' => $field_key_base.'_page',
 						'label' => $allowed_field_label,
 						'name' => $name.'_page',
 						'type' => 'page_link',
@@ -2675,7 +2677,7 @@ class GRAV_BLOCKS
 
 				case 'file':
 					$fields[] = array (
-						'key' => 'field_'.$block.'_'.$name.'_file',
+						'key' => $field_key_base.'_file',
 						'label' => $allowed_field_label,
 						'name' => $name.'_file',
 						'type' => 'file',
@@ -2693,7 +2695,7 @@ class GRAV_BLOCKS
 
 				case 'video':
 					$fields[] = array (
-						'key' => 'field_'.$block.'_'.$name.'_video',
+						'key' => $field_key_base.'_video',
 						'label' => $allowed_field_label,
 						'name' => $name.'_video',
 						'type' => 'text',
@@ -2718,7 +2720,7 @@ class GRAV_BLOCKS
 					$custom_acf_field = apply_filters(
 						'grav_blocks_get_link_fields_' . $allowed_field_key,
 						[
-							'key' => 'field_'.$block.'_'.$name.'_'.$allowed_field_key,
+							'key' => $field_key_base.'_'.$allowed_field_key,
 							'label' => $allowed_field_label,
 							'name' => $name.'_'.$allowed_field_key,
 							'type' => 'text',
@@ -2754,7 +2756,7 @@ class GRAV_BLOCKS
 
 			if (is_array($button_style_options) && $button_style_options) {
 				$fields[] = array (
-					'key' => 'field_'.$block.'_'.$name.'_style',
+					'key' => $field_key_base.'_style',
 					'label' => 'Style',
 					'name' => $name.'_style',
 					'type' => 'select',
@@ -2763,7 +2765,7 @@ class GRAV_BLOCKS
 					'conditional_logic' => array (
 						array (
 							array (
-								'field' => 'field_'.$block.'_'.$name.'_type',
+								'field' => $field_key_base.'_type',
 								'operator' => '!=',
 								'value' => 'none',
 							),
