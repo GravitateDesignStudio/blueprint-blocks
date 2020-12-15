@@ -7,7 +7,7 @@
  */
 class GRAV_BLOCKS_CSS
 {
-	public $class = array();
+	public $class = [];
 
 
 	/**
@@ -20,7 +20,7 @@ class GRAV_BLOCKS_CSS
 		// return $this->class;
 	}
 
-	public function css()
+	public function css(): GRAV_BLOCKS_CSS
 	{
 		return $this;
 	}
@@ -30,204 +30,204 @@ class GRAV_BLOCKS_CSS
 	 *
 	 * @return void
 	 */
-	public function col($small = null, $med = null, $large = null, $xlarge = null)
+	public function col($small = null, $med = null, $large = null, $xlarge = null): GRAV_BLOCKS_CSS
 	{
 		$this->class[] = 'columns';
 
 		if (is_numeric($small)) {
-			$this->class[] = 'small-'.$small;
+			$this->class[] = 'small-' . $small;
 		} else {
 			$this->class[] = 'small-12';
 		}
 
 		if (is_numeric($med)) {
-			$this->class[] = 'medium-'.$med;
+			$this->class[] = 'medium-' . $med;
 		}
 
 		if (is_numeric($large)) {
-			$this->class[] = 'large-'.$large;
+			$this->class[] = 'large-' . $large;
 		}
 
 		if (is_numeric($xlarge)) {
-			$this->class[] = 'xlarge-'.$xlarge;
+			$this->class[] = 'xlarge-' . $xlarge;
 		}
 
 		return $this;
 	}
 
-	public function col_offset($small = null, $med = null, $large = null, $xlarge = null)
+	public function col_offset($small = null, $med = null, $large = null, $xlarge = null): GRAV_BLOCKS_CSS
 	{
 		if (is_numeric($small)) {
-			$this->class[] = 'small-offset-'.$small;
+			$this->class[] = 'small-offset-' . $small;
 		}
 
 		if (is_numeric($med)) {
-			$this->class[] = 'medium-offset-'.$med;
+			$this->class[] = 'medium-offset-' . $med;
 		}
 
 		if (is_numeric($large)) {
-			$this->class[] = 'large-offset-'.$large;
+			$this->class[] = 'large-offset-' . $large;
 		}
 
 		if (is_numeric($xlarge)) {
-			$this->class[] = 'xlarge-offset-'.$xlarge;
+			$this->class[] = 'xlarge-offset-' . $xlarge;
 		}
 
 		return $this;
 	}
 
-	public function col_order($small = null, $med = null, $large = null, $xlarge = null)
+	public function col_order($small = null, $med = null, $large = null, $xlarge = null): GRAV_BLOCKS_CSS
 	{
 		if (is_numeric($small) && $small > 0) {
-			$this->class[] = 'small-order-'.$small;
+			$this->class[] = 'small-order-' . $small;
 		}
 
 		if (is_numeric($med) && $med > 0) {
-			$this->class[] = 'medium-order-'.$med;
+			$this->class[] = 'medium-order-' . $med;
 		}
 
 		if (is_numeric($large) && $large > 0) {
-			$this->class[] = 'large-order-'.$large;
+			$this->class[] = 'large-order-' . $large;
 		}
 
 		if (is_numeric($xlarge) && $xlarge > 0) {
-			$this->class[] = 'xlarge-order-'.$xlarge;
+			$this->class[] = 'xlarge-order-' . $xlarge;
 		}
 
 		return $this;
 	}
 
-	public function col_push($small = null, $med = null, $large = null, $xlarge = null)
+	public function col_push($small = null, $med = null, $large = null, $xlarge = null): GRAV_BLOCKS_CSS
 	{
 		if (is_numeric($small)) {
-			$this->class[] = 'small-push-'.$small;
+			$this->class[] = 'small-push-' . $small;
 		}
 
 		if (is_numeric($med)) {
-			$this->class[] = 'medium-push-'.$med;
+			$this->class[] = 'medium-push-' . $med;
 		}
 
 		if (is_numeric($large)) {
-			$this->class[] = 'large-push-'.$large;
+			$this->class[] = 'large-push-' . $large;
 		}
 
 		if (is_numeric($xlarge)) {
-			$this->class[] = 'xlarge-push-'.$xlarge;
+			$this->class[] = 'xlarge-push-' . $xlarge;
 		}
 
 		return $this;
 	}
 
-	public function col_pull($small = null, $med = null, $large = null, $xlarge = null)
+	public function col_pull($small = null, $med = null, $large = null, $xlarge = null): GRAV_BLOCKS_CSS
 	{
 		if (is_numeric($small)) {
-			$this->class[] = 'small-pull-'.$small;
+			$this->class[] = 'small-pull-' . $small;
 		}
 
 		if (is_numeric($med)) {
-			$this->class[] = 'medium-pull-'.$med;
+			$this->class[] = 'medium-pull-' . $med;
 		}
 
 		if (is_numeric($large)) {
-			$this->class[] = 'large-pull-'.$large;
+			$this->class[] = 'large-pull-' . $large;
 		}
 
 		if (is_numeric($xlarge)) {
-			$this->class[] = 'xlarge-pull-'.$xlarge;
+			$this->class[] = 'xlarge-pull-' . $xlarge;
 		}
 
 		return $this;
 	}
 
-	public function grid($small = 1, $med = 2, $large = 3, $xlarge = 4)
+	public function grid($small = 1, $med = 2, $large = 3, $xlarge = 4): GRAV_BLOCKS_CSS
 	{
 		if ($small && $small <= 6) {
-			$this->class[] = 'small-up-'.$small;
+			$this->class[] = 'small-up-' . $small;
 		}
 
 		if ($med && $med <= 6) {
-			$this->class[] = 'medium-up-'.$med;
+			$this->class[] = 'medium-up-' . $med;
 		}
 
 		if ($large && $large <= 6) {
-			$this->class[] = 'large-up-'.$large;
+			$this->class[] = 'large-up-' . $large;
 		}
 
 		if ($xlarge && $xlarge <= 6) {
-			$this->class[] = 'xlarge-up-'.$xlarge;
+			$this->class[] = 'xlarge-up-' . $xlarge;
 		}
 
 		return $this;
 	}
 
-	public function row()
+	public function row(): GRAV_BLOCKS_CSS
 	{
 		$this->class[] = 'row';
 
 		return $this;
 	}
 
-	public function collapsed()
+	public function collapsed(): GRAV_BLOCKS_CSS
 	{
 		$this->class[] = 'collapsed';
 
 		return $this;
 	}
 
-	public function col_center($small = true, $medium = null, $large = null, $xlarge = null)
+	public function col_center($small = true, $medium = null, $large = null, $xlarge = null): GRAV_BLOCKS_CSS
 	{
-		$sizes = array(
-			array('name' => 'small', 'value' => $small),
-			array('name' => 'medium', 'value' => $medium),
-			array('name' => 'large', 'value' => $large),
-			array('name' => 'xlarge', 'value' => $xlarge)
-		);
+		$sizes = [
+			[ 'name' => 'small', 'value' => $small ],
+			[ 'name' => 'medium', 'value' => $medium ],
+			[ 'name' => 'large', 'value' => $large ],
+			[ 'name' => 'xlarge', 'value' => $xlarge ]
+		];
 
-		foreach ($sizes as $key => $size) {
+		foreach ($sizes as $size) {
 			if ($size['value']) {
 				$this->class[] = 'center-block';
 				$this->class[] = 'mx-auto';
-				$this->class[] = $size['name'].'-centered';
+				$this->class[] = $size['name'] . '-centered';
 			}
 		}
 
 		return $this;
 	}
 
-	public function col_uncenter($small = true, $medium = null, $large = null, $xlarge = null)
+	public function col_uncenter($small = true, $medium = null, $large = null, $xlarge = null): GRAV_BLOCKS_CSS
 	{
-		$sizes = array(
-			array('name' => 'small', 'value' => $small),
-			array('name' => 'medium', 'value' => $medium),
-			array('name' => 'large', 'value' => $large),
-			array('name' => 'xlarge', 'value' => $xlarge)
-		);
+		$sizes = [
+			[ 'name' => 'small', 'value' => $small ],
+			[ 'name' => 'medium', 'value' => $medium ],
+			[ 'name' => 'large', 'value' => $large ],
+			[ 'name' => 'xlarge', 'value' => $xlarge ]
+		];
 
-		foreach ($sizes as $key => $size) {
+		foreach ($sizes as $size) {
 			if ($size['value']) {
-				$this->class[] = $size['name'].'-uncentered';
+				$this->class[] = $size['name'] . '-uncentered';
 			}
 		}
 
 		return $this;
 	}
 
-	public function text_align($align = 'center')
+	public function text_align($align = 'center'): GRAV_BLOCKS_CSS
 	{
-		$this->class[] = 'text-'.$align;
-		$this->class[] = 'text-xs-'.$align;
+		$this->class[] = 'text-' . $align;
+		$this->class[] = 'text-xs-' . $align;
 
 		return $this;
 	}
 
-	public function align($align = 'center')
+	public function align($align = 'center'): GRAV_BLOCKS_CSS
 	{
-		$this->class[] = 'align-'.$align;
+		$this->class[] = 'align-' . $align;
 
 		return $this;
 	}
 
-	public function hide($small = null, $medium = null, $large = null, $xlarge = null)
+	public function hide($small = null, $medium = null, $large = null, $xlarge = null): GRAV_BLOCKS_CSS
 	{
 		if ($small) {
 			$this->class[] = 'hide-for-small-only';
@@ -248,10 +248,10 @@ class GRAV_BLOCKS_CSS
 		return $this;
 	}
 
-	public function add($classes)
+	public function add($classes): GRAV_BLOCKS_CSS
 	{
 		$classes = (!is_array($classes)) ? explode(',', str_replace(' ', '', trim($classes))) : $classes;
-		
+
 		foreach($classes as $class) {
 			$this->class[] = $class;
 		}
@@ -259,7 +259,7 @@ class GRAV_BLOCKS_CSS
 		return $this;
 	}
 
-	public function get()
+	public function get(): string
 	{
 		$blocks_name = GRAV_BLOCKS::$current_block_name;
 		$classes = $this->class;

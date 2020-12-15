@@ -2,7 +2,7 @@
 /*
 Plugin Name: Gravitate Blueprint Blocks
 Description: Create Content Blocks.
-Version: 1.1.2
+Version: 1.2.0
 Plugin URI: http://www.gravitatedesign.com
 Author: Gravitate
 */
@@ -12,6 +12,7 @@ require_once(plugin_dir_path(__FILE__).'blueprint-plugin-settings.php');
 require_once(plugin_dir_path(__FILE__).'blueprint-global-blocks.php');
 require_once(plugin_dir_path(__FILE__).'blueprint-dependency-manager.php');
 require_once(plugin_dir_path(__FILE__).'blueprint-blocks-util.php');
+require_once(plugin_dir_path(__FILE__).'blueprint-blocks-backgrounds.php');
 
 register_activation_hook(__FILE__, array('GRAV_BLOCKS', 'activate'));
 register_deactivation_hook(__FILE__, array('GRAV_BLOCKS', 'deactivate'));
@@ -34,18 +35,20 @@ class GRAV_BLOCKS
 	private static $page = 'admin.php?page=gravitate-blocks';
 	private static $settings = array();
 	private static $option_key = 'gravitate_blocks_settings';
-	private static $posts_to_exclude = array('attachment', 'revision', 'nav_menu_item', 'acf-field-group', 'acf-field');
+	private static $posts_to_exclude = array('attachment', 'revision', 'nav_menu_item', 'acf-field-group', 'acf-field', 'custom_css', 'customize_changeset', 'oembed_cache', 'user_request', 'wp_block');
 	public  static $current_block_name = '';
 	public  static $block_index = 0;
 	public  static $block_wrapped_repeater_index = 0;
 	public  static $plugin_url = '';
 	public  static $plugin_path = '';
+	public  static $background_groups = [];
 	//private static $registered_sections = array(array());
 	private static $cache = array();
 	private static $registered_sections = array();
 
 
-	public static function dump($var){
+	public static function dump($var)
+	{
 		echo '<pre>';
 		var_dump($var);
 		echo '</pre>';
@@ -216,16 +219,15 @@ class GRAV_BLOCKS
 		 *  Include Blocks in Flexible Content
 		 */
 		$layouts = array();
-		foreach(self::get_blocks() as $block => $block_params)
-		{
+
+		foreach (self::get_blocks() as $block => $block_params) {
 			self::$current_block_name = $block;
-			if(!empty($block_params['path']))
-			{
+
+			if (!empty($block_params['path'])) {
 				$block_backgrounds = array ();
 				$block_background_image = array ();
 
-				if(file_exists($block_params['path'].'/block_fields.php'))
-				{
+				if (file_exists($block_params['path'].'/block_fields.php')) {
 					$layouts[$block] = include($block_params['path'].'/block_fields.php');
 				}
 			}
@@ -234,56 +236,43 @@ class GRAV_BLOCKS
 		// Reset Current Block
 		$block = '';
 
-
 		/*
 		* Block Function to build Admin and Set Fields for ACF
 		*/
-		if(function_exists("acf_add_local_field_group") && !empty($layouts))
-		{
+		if (function_exists("acf_add_local_field_group") && !empty($layouts)) {
 			// Filter the Link Options
 			self::filter_layout_links($layouts, '', 'grav_link_fields');
 
 			// Add Default Fields
-			foreach ($layouts as $block_key => $block_layout)
-			{
-				if(!empty($block_layout['sub_fields']) && $block_layout['name'] != 'global-block')
-				{
+			foreach ($layouts as $block_key => $block_layout) {
+				if (!empty($block_layout['sub_fields']) && $block_layout['name'] != 'global-block') {
 					$layouts[$block_key]['sub_fields'] = array_merge(self::get_default_fields($block_layout['name']), $block_layout['sub_fields']);
 				}
 			}
 
 			// Filter the Fields from developers
-			$layouts = apply_filters( 'grav_block_fields', $layouts );
+			$layouts = apply_filters('grav_block_fields', $layouts);
 
 			// Create Tabs
-			if(!empty($layouts))
-			{
-				foreach ($layouts as $block_key => $block_layout)
-				{
+			if (!empty($layouts)) {
+				foreach ($layouts as $block_key => $block_layout) {
 					$tab_fields = array();
 					$new_sub_fields = array();
 					$tab_options_fields = array();
 
 					$add_first_tab = true;
 
-					if(!empty($block_layout['sub_fields']))
-					{
-						foreach ($block_layout['sub_fields'] as $sub_field_key => $sub_field)
-						{
-							if($sub_field_key === 0)
-							{
-								if(!empty($sub_field['type']) && $sub_field['type'] === 'tab')
-								{
+					if (!empty($block_layout['sub_fields'])) {
+						foreach ($block_layout['sub_fields'] as $sub_field_key => $sub_field) {
+							if ($sub_field_key === 0) {
+								if (!empty($sub_field['type']) && $sub_field['type'] === 'tab') {
 									$add_first_tab = false;
 								}
 							}
 
-							if((!empty($sub_field['block_options']) || !empty($sub_field['block_option'])) && $sub_field['type'] !== 'tab')
-							{
+							if ((!empty($sub_field['block_options']) || !empty($sub_field['block_option'])) && $sub_field['type'] !== 'tab') {
 								$tab_options_fields[] = $sub_field;
-							}
-							else
-							{
+							} else {
 								$tab_fields[] = $sub_field;
 							}
 						}
@@ -344,13 +333,11 @@ class GRAV_BLOCKS
 						)
 					) : [];
 
-					if($add_first_tab)
-					{
+					if ($add_first_tab) {
 						$new_sub_fields = array($tab_content);
 					}
 
-					if(!empty($block_layout['grav_blocks_settings']['repeater']))
-					{
+					if (!empty($block_layout['grav_blocks_settings']['repeater'])) {
 						$layouts[$block_key]['display'] = 'block';
 						$background_fields = self::get_background_fields($block_layout['name'], 'Container Background', 'wrapped_repeater_background');
 
@@ -382,7 +369,6 @@ class GRAV_BLOCKS
 					$new_sub_fields = array_merge($new_sub_fields, $guidelines_fields, $tab_fields, array($tab_options), $tab_options_fields);
 
 					$layouts[$block_key]['sub_fields'] = $new_sub_fields;
-
 				}
 			}
 
@@ -413,15 +399,15 @@ class GRAV_BLOCKS
 				'active' => 1,
 				'description' => '',
 			);
+
 			$sections = apply_filters('grav_default_section', $sections);
+
 			acf_add_local_field_group($sections);
 
-			if (isset(self::$settings['option_pages']))
-			{
+			if (isset(self::$settings['option_pages'])) {
 				$option_pages = self::$settings['option_pages'];
 
-				foreach($option_pages as $option_page)
-				{
+				foreach($option_pages as $option_page) {
 					$sections = array (
 						'key' => 'group_options_'.$option_page,
 						'title' => 'Blocks',
@@ -476,10 +462,11 @@ class GRAV_BLOCKS
 		}
 	}
 
+	private static function get_block_background_allowed_video()
+	{
+		$block_background_video_blocks = array('banner');
 
-	private static function get_block_background_allowed_video(){
-		$block_background_video_blocks =  array('banner');
-		return apply_filters( 'grav_blocks_background_video', $block_background_video_blocks);
+		return apply_filters('grav_blocks_background_video', $block_background_video_blocks);
 	}
 
 	private static function get_background_fields($block='', $label='Background', $key='background')
@@ -489,21 +476,21 @@ class GRAV_BLOCKS
 		 */
 		$block_background_colors = array();
 		$block_background_colors['block-bg-none'] = 'None';
-		if(!empty(self::$settings['background_colors']))
-		{
-			foreach (self::$settings['background_colors'] as $color_key => $color_params)
-			{
-				if(!empty($color_params['_repeater_id']))
-				{
+
+		if (!empty(self::$settings['background_colors'])) {
+			foreach (self::$settings['background_colors'] as $color_key => $color_params) {
+				if (!empty($color_params['_repeater_id'])) {
 					$block_background_colors['block-bg-'.$color_params['_repeater_id']] = $color_params['name'];
 				}
 			}
 		}
+
 		$block_background_colors['block-bg-image'] = 'Image';
 
-		if(in_array($block, self::get_block_background_allowed_video($block))){
+		if (in_array($block, self::get_block_background_allowed_video($block))) {
 			$block_background_colors['block-bg-video'] = 'Video';
 		}
+
 		$block_background_colors = apply_filters( 'grav_block_background_colors', $block_background_colors, $block );
 
 		/**
@@ -787,9 +774,9 @@ class GRAV_BLOCKS
 		return array_merge($background_fields, $default_fields);
 	}
 
-	// Style (Keep for Older Versions) #TODO Depricate as this is no longer needed with get_default_fields()
-	public static function get_additional_fields(){
-
+	// Style (Keep for Older Versions) #TODO Deprecate as this is no longer needed with get_default_fields()
+	public static function get_additional_fields()
+	{
 		return array();
 	}
 
@@ -798,12 +785,16 @@ class GRAV_BLOCKS
 		return self::$registered_sections;
 	}
 
-	public static function hide_on_screen(){
+	public static function hide_on_screen()
+	{
 		$hidden = array();
-		if(GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('advanced_options', 'hide_content')){
+
+		if (GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('advanced_options', 'hide_content')) {
 			$hidden[0] = 'the_content';
 		}
+
 		$hidden = apply_filters( 'grav_hide_on_screen', $hidden );
+
 		return $hidden;
 	}
 
@@ -836,15 +827,17 @@ class GRAV_BLOCKS
 	 */
 	public static function prepare_blocks()
 	{
-		if($blocks = self::get_blocks())
-		{
-			foreach ($blocks as $block_name => $block)
-			{
-				$block_functions_file = $block['path'].'/block_functions.php';
-				if(file_exists($block_functions_file))
-				{
-					include_once($block_functions_file);
-				}
+		$blocks = self::get_blocks();
+
+		if (!$blocks || !is_array($blocks)) {
+			return;
+		}
+
+		foreach ($blocks as $block) {
+			$block_functions_file = $block['path'].'/block_functions.php';
+
+			if (file_exists($block_functions_file)) {
+				include_once($block_functions_file);
 			}
 		}
 	}
@@ -856,28 +849,22 @@ class GRAV_BLOCKS
 	 */
 	public static function add_hooks()
 	{
-		if(GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('advanced_options', 'filter_content') && !is_admin())
-		{
+		if (GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('advanced_options', 'filter_content') && !is_admin()) {
 			self::add_hook('filter', 'the_content', 'filter_content', 23);
 		}
 
-		if(!is_admin())
-		{
+		if (!is_admin()) {
 			self::add_hook('action', 'wp_head', 'add_head_css');
-
 		}
 
-		//self::add_hook('action', 'wp', 'prepare_blocks');
+		// self::add_hook('action', 'wp', 'prepare_blocks');
 
-		if(GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('search_options', 'include_in_search') && !is_admin() && is_main_query())
-		{
+		if (GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('search_options', 'include_in_search') && !is_admin() && is_main_query()) {
 			self::add_hook('filter', 'posts_search', 'add_search_filtering');
 		}
 
-		if(!is_admin())
-		{
-			if((!empty($_GET['s']) && GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('search_options', 'include_in_search')) || GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('advanced_options', 'filter_excerpt'))
-			{
+		if (!is_admin()) {
+			if ((!empty($_GET['s']) && GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('search_options', 'include_in_search')) || GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('advanced_options', 'filter_excerpt')) {
 				self::add_hook('filter', 'get_the_excerpt', 'add_excerpt_filtering');
 			}
 		}
@@ -885,8 +872,7 @@ class GRAV_BLOCKS
 		// self::add_hook('action', 'wp_footer', 'add_footer_js', 100);
 		self::add_hook('action', 'wp_enqueue_scripts', 'add_footer_js');
 
-		if(!function_exists('acf_add_local_field_group') && (!isset($_GET['page']) || $_GET['page'] != 'gravitate_blocks'))
-		{
+		if (!function_exists('acf_add_local_field_group') && (!isset($_GET['page']) || $_GET['page'] != 'gravitate_blocks')) {
 			self::add_hook('action', 'admin_notices', 'acf_notice');
 		}
 
@@ -902,12 +888,9 @@ class GRAV_BLOCKS
 	 */
 	public static function add_hook($type='', $hook='', $hook_function='', $param='')
 	{
-		if($type === 'action')
-		{
+		if ($type === 'action') {
 			add_action( $hook , array(__CLASS__, $hook_function));
-		}
-		else
-		{
+		} else {
 			add_filter( $hook , array(__CLASS__, $hook_function), $param);
 		}
 	}
@@ -932,8 +915,8 @@ class GRAV_BLOCKS
 	public static function activate()
 	{
 		$active_settings = get_option(self::$option_key);
-		if(!$active_settings)
-		{
+
+		if (!$active_settings) {
 			$current_settings = array(
 				'post_types' => array_keys(self::get_usable_post_types()),
 				'templates' => '',
@@ -947,10 +930,13 @@ class GRAV_BLOCKS
 				),
 				// 'foundation' => array('f5'),
 			);
+
 			$blocks_groups = self::get_available_block_groups();
-			foreach($blocks_groups as $group_name => $group_info){
+
+			foreach ($blocks_groups as $group_name => $group_info) {
 				$current_settings['blocks_enabled_'.$group_name] = array_keys($group_info);
 			}
+
 			update_option(self::$option_key, $current_settings);
 		}
 	}
@@ -992,6 +978,7 @@ class GRAV_BLOCKS
 	public static function admin_menu()
 	{
 		$icon = file_get_contents(plugin_dir_path( __FILE__ ) . 'grav-blocks/columns/columns_1.svg');
+
 		add_menu_page( 'Gravitate Blocks', 'Blocks', 'manage_options', 'gravitate-blocks', array( __CLASS__, 'admin' ), 'dashicons-gravitate', 9999);
 	}
 
@@ -999,61 +986,53 @@ class GRAV_BLOCKS
 	{
 		$settings_link = '<a href="options-general.php?page=gravitate_blocks">Settings</a>';
 		array_unshift($links, $settings_link);
+
 		return $links;
 	}
 
-	public static function add_excerpt_filtering( $output )
+	public static function add_excerpt_filtering($output)
 	{
-		if(empty($output) && !has_excerpt() && !trim(strip_tags(get_the_content())))
-		{
+		if (empty($output) && !has_excerpt() && !trim(strip_tags(get_the_content()))) {
 			global $wpdb;
 
 			$search_query = \BlueprintBlocks\Util::get_search_query();
 
 			// If is Search, then first check to see if we can find results that matches the search
-			if(is_main_query() && $search_query && \BlueprintBlocks\Util::is_search() && GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('search_options', 'include_in_search'))
-			{
+			if (is_main_query() && $search_query && \BlueprintBlocks\Util::is_search() && GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('search_options', 'include_in_search')) {
 				$results = $wpdb->get_var("SELECT meta_value FROM ".$wpdb->postmeta." WHERE meta_value LIKE '%" . esc_sql($search_query) . "%' AND meta_key NOT LIKE '\_%' AND post_id = ".get_the_ID()." ORDER BY CHAR_LENGTH(meta_value) DESC LIMIT 1");
 			}
 
 			// If no matches are found or if not Search then check for any fields to show data
-			if(empty($results))
-			{
-				if(GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('search_options', 'include_in_search') || !\BlueprintBlocks\Util::is_search() || !is_main_query())
-				{
+			if (empty($results)) {
+				if (GRAV_BLOCKS_PLUGIN_SETTINGS::is_setting_checked('search_options', 'include_in_search') || !\BlueprintBlocks\Util::is_search() || !is_main_query()) {
 					$results = $wpdb->get_var("SELECT meta_value FROM ".$wpdb->postmeta." WHERE meta_key NOT LIKE '\_%' AND post_id = ".get_the_ID()." ORDER BY CHAR_LENGTH(meta_value) DESC LIMIT 1");
 				}
 			}
 
 			// If Results then lets format it
-		    if(!empty($results))
-	    	{
+		    if (!empty($results)) {
 	    		$output = wp_trim_excerpt(strip_shortcodes(strip_tags($results)));
 	    	}
-
 		}
+
 		return $output;
 	}
 
 	public static function add_search_filtering($search)
 	{
-		if (!is_admin() && \BlueprintBlocks\Util::is_search() && is_main_query())
-		{
+		if (!is_admin() && \BlueprintBlocks\Util::is_search() && is_main_query()) {
 			global $wpdb;
 
 			$post_ids = array();
 			$search_query = \BlueprintBlocks\Util::get_search_query();
 
-			if($results = $wpdb->get_results("SELECT * FROM ".$wpdb->postmeta.", ".$wpdb->posts." WHERE meta_value LIKE '%" . esc_sql($search_query) . "%' AND post_id = ID AND post_status = 'publish' GROUP BY post_id"))
-			{
-			    foreach ($results as $result)
-			    {
+			if ($results = $wpdb->get_results("SELECT * FROM ".$wpdb->postmeta.", ".$wpdb->posts." WHERE meta_value LIKE '%" . esc_sql($search_query) . "%' AND post_id = ID AND post_status = 'publish' GROUP BY post_id")) {
+			    foreach ($results as $result) {
 			        $post_ids[] = $result->post_id;
 			    }
 			}
 
-			if(!empty($post_ids))
-			{
+			if (!empty($post_ids)) {
 				$replace = ' OR ('.$wpdb->posts.'.ID IN ('.esc_sql(implode(',',$post_ids)).')) OR ';
 				$search = str_replace(' OR ', $replace, $search);
 			}
@@ -1077,7 +1056,6 @@ class GRAV_BLOCKS
 		// $object = (isset($args['object']) || (isset($args['object']) && is_null($args['object']))) ? $args['object'] : false;
 		$object = (in_array('object', array_keys($args)) ? $args['object'] : false);
 
-
 		$block_only = !empty($args['block']) ? $args['block'] : '';
 		$block_only_id = !empty($args['block_id']) ? $args['block_id'] : '';
 
@@ -1089,58 +1067,64 @@ class GRAV_BLOCKS
 		$handler_file = self::get_path('handler.php');
 
 		// Use Single Block
-		if(is_null($object) && $block_only)
-		{
+		if (is_null($object) && $block_only) {
 			self::$current_block_name = strtolower(str_replace('_', '-', $block_only));
 			self::get_block_format($block_only_variables, $handler_file);
+
 			return;
 		}
 
 		// Use All Blocks
 		$query_target = ($object) ? $object : ( ( ( $query = get_queried_object() ) && !empty($query->term_id ) ) ? $query : '');
 
-		if(isset($query_target->ID))
-		{
+		if (isset($query_target->ID)) {
 			$query_target = $query_target->ID;
 		}
 
 		$viewable_query_target = $query_target;
 
-		if(in_array($viewable_query_target, array('option_page', 'options_page')))
-		{
+		if (in_array($viewable_query_target, array('option_page', 'options_page'))) {
 			$viewable_query_target = $section;
 			$section.= '_grav_blocks';
 			$query_target = 'option';
 		}
 
-		if(self::is_viewable($viewable_query_target))
-		{
-			if($handler_file && get_field($section, $query_target))
-			{
-				while(the_flexible_field($section, $query_target))
-				{
-					self::$current_block_name = strtolower(str_replace('_', '-', get_row_layout()));
+		if (!self::is_viewable($viewable_query_target)) {
+			return;
+		}
 
-					$use_single_block = ((!$block_only_id && $block_only === self::$current_block_name) || ($block_only_id && $block_only_id === get_sub_field('unique_id')));
+		$block_fields = get_field($section, $query_target);
 
-					if(empty($block_only) || $use_single_block)
-					{
-						if(!in_array(self::$current_block_name, $block_excludes) && (empty($block_includes) || in_array(self::$current_block_name, $block_includes)))
-						{
-							self::get_block_format($block_only_variables, $handler_file);
+		$allowable_bg_groups = apply_filters('grav_blocks_allowable_background_groups', []);
 
-							if($use_single_block)
-							{
-								reset_rows( true );
-								return;
-							}
-						}
+		if (!$handler_file || !$block_fields || !is_array($block_fields)) {
+			return;
+		}
+
+		$background_groups = \BlueprintBlocks\Backgrounds::get_background_groups(
+			is_array($block_fields) ? $block_fields : [],
+			$allowable_bg_groups,
+			GRAV_BLOCKS::$block_index
+		);
+
+		while (the_flexible_field($section, $query_target)) {
+			self::$current_block_name = strtolower(str_replace('_', '-', get_row_layout()));
+
+			$use_single_block = ((!$block_only_id && $block_only === self::$current_block_name) || ($block_only_id && $block_only_id === get_sub_field('unique_id')));
+
+			if (empty($block_only) || $use_single_block) {
+				if (!in_array(self::$current_block_name, $block_excludes) && (empty($block_includes) || in_array(self::$current_block_name, $block_includes))) {
+					self::get_block_format($block_only_variables, $handler_file, $background_groups);
+
+					if ($use_single_block) {
+						reset_rows(true);
+						return;
 					}
 				}
-
-				do_action('grav_blocks_display_complete');
 			}
 		}
+
+		do_action('grav_blocks_display_complete');
 	}
 
 
@@ -1286,10 +1270,10 @@ class GRAV_BLOCKS
 		// Add Aria Label
 		$block_attributes['aria-label'] = ucwords(str_replace(array('-','_'), ' ', $block_name));
 
-		// Style (Keep for Older Versions) #TODO Depricate as this can be handled by "grav_blocks_attributes" hook
+		// Style (Keep for Older Versions) #TODO Deprecate as this can be handled by "grav_blocks_attributes" hook
 		$block_attributes['style'] = apply_filters('grav_block_background_style', (isset($block_attributes['style']) ? $block_attributes['style'] : ''));
 
-		// Class (Keep for Older Versions) #TODO Depricate as this can be handled by "grav_blocks_attributes" hook
+		// Class (Keep for Older Versions) #TODO Deprecate as this can be handled by "grav_blocks_attributes" hook
 		$block_attributes['class'] = GRAV_BLOCKS::css()->add($block_attributes['class'])->get();
 		$block_attributes['class'] = explode(' ', $block_attributes['class']);
 
@@ -1317,7 +1301,7 @@ class GRAV_BLOCKS
 	}
 
 
-	private static function get_block_format($block_only_variables, $handler_file)
+	private static function get_block_format($block_only_variables, $handler_file, $background_groups = [])
 	{
 		$block_name = self::$current_block_name;
 
@@ -1347,7 +1331,7 @@ class GRAV_BLOCKS
 						self::$block_index++;
 						the_row();
 
-						self::display_block($block_name, $block_only_variables, $handler_file);
+						self::display_block($block_name, $block_only_variables, $handler_file, $background_groups);
 					}
 					?>
 				</div>
@@ -1360,15 +1344,16 @@ class GRAV_BLOCKS
 				self::$block_index++;
 			}
 
-			self::display_block($block_name, $block_only_variables, $handler_file);
+			self::display_block($block_name, $block_only_variables, $handler_file, $background_groups);
 		}
 	}
 
 
-	private static function display_block($block_name='', $block_variables=array(), $handler_file='')
+	private static function display_block($block_name = '', $block_variables = [], $handler_file = '', $background_groups = [])
 	{
-		if(!$handler_file)
-		{
+		self::$background_groups = $background_groups;
+
+		if (!$handler_file) {
 			$handler_file = self::get_path('handler.php');
 		}
 
@@ -1519,20 +1504,28 @@ class GRAV_BLOCKS
 	 *
 	 * @return void
 	 */
-	public static function get_block_background_video_markup($block, $block_variables = array()){
-		if(in_array($block, self::get_block_background_allowed_video())){
-			if(!empty($block_variables)){ extract($block_variables); }
-			$background = isset($block_background) ? $block_background : get_sub_field('block_background');
-			if($background === 'block-bg-video')
-			{
-				$block_video_type = isset($block_video_type) ? $block_video_type : get_sub_field('block_background_video_type');
-				$block_video_url = isset($block_video_url) ? $block_video_url : get_sub_field('block_background_video_'.$block_video_type);
-				$block_video_poster = isset($block_video_poster) ? $block_video_poster : get_sub_field('block_background_image');
-			}
+	public static function get_block_background_video_markup($block, $block_variables = array())
+	{
+		if (!in_array($block, self::get_block_background_allowed_video())) {
+			return;
+		}
 
-			if(!empty($block_video_url)){?>
-				<video class="block-video-container" src="<?php echo $block_video_url;?>" autoplay loop muted <?php if(!empty($block_video_poster['sizes']['large'])){?>poster="<?php echo $block_video_poster['sizes']['large'];?>" <?php } ?>preload="auto"></video>
-			<?php }
+		if (!empty($block_variables)) {
+			extract($block_variables);
+		}
+
+		$background = isset($block_background) ? $block_background : get_sub_field('block_background');
+
+		if ($background === 'block-bg-video') {
+			$block_video_type = isset($block_video_type) ? $block_video_type : get_sub_field('block_background_video_type');
+			$block_video_url = isset($block_video_url) ? $block_video_url : get_sub_field('block_background_video_'.$block_video_type);
+			$block_video_poster = isset($block_video_poster) ? $block_video_poster : get_sub_field('block_background_image');
+		}
+
+		if (!empty($block_video_url)) {
+			?>
+			<video class="block-video-container" src="<?php echo $block_video_url;?>" autoplay loop muted <?php if(!empty($block_video_poster['sizes']['large'])){?>poster="<?php echo $block_video_poster['sizes']['large'];?>" <?php } ?>preload="auto"></video>
+			<?php
 		}
 	}
 
@@ -1547,19 +1540,16 @@ class GRAV_BLOCKS
 	public static function get_block_settings($block = '', $setting = '')
 	{
 		$block = ($block !== '') ? $block : self::$current_block_name;
+		$path = self::get_path($block);
 
-		if ($path = self::get_path($block))
-		{
-			if (file_exists($path.'/block_fields.php'))
-			{
-				$fields = include($path.'/block_fields.php');
+		if ($path && file_exists($path.'/block_fields.php')) {
+			$fields = include($path.'/block_fields.php');
 
-				$settings = ($setting === '') ?
-					($fields['grav_blocks_settings'] ?? '') :
-					($fields['grav_blocks_settings'][$setting] ?? '');
+			$settings = ($setting === '') ?
+				($fields['grav_blocks_settings'] ?? '') :
+				($fields['grav_blocks_settings'][$setting] ?? '');
 
-				return $settings;
-			}
+			return $settings;
 		}
 
 		// Reset Current Block
@@ -1576,23 +1566,20 @@ class GRAV_BLOCKS
 	public static function get_blocks()
 	{
 		self::get_settings(true);
+
 		$blocks = array();
+		$available_blocks = self::get_available_blocks();
 
-		if($available_blocks = self::get_available_blocks())
-		{
-
+		if ($available_blocks) {
 			$enabled_blocks = array();
 
-			foreach (self::$settings as $setting_key => $setting_value)
-			{
-				if(strpos($setting_key, 'blocks_enabled_') !== false && is_array($setting_value))
-				{
+			foreach (self::$settings as $setting_key => $setting_value) {
+				if (strpos($setting_key, 'blocks_enabled_') !== false && is_array($setting_value)) {
 					$enabled_blocks = array_merge($enabled_blocks, $setting_value);
 				}
 			}
 
 			$blocks = array_intersect_key($available_blocks, array_flip($enabled_blocks));
-
 		}
 
 		return $blocks;
@@ -1609,91 +1596,82 @@ class GRAV_BLOCKS
 	public static function get_available_blocks()
 	{
 		// Return Cache if exists
-		if(isset(self::$cache['filterd_blocks']))
-		{
-			return self::$cache['filterd_blocks'];
+		if (isset(self::$cache['filtered_blocks'])) {
+			return self::$cache['filtered_blocks'];
 		}
-		else
-		{
-			global $block;
 
-			$blocks = array();
-			$plugin_blocks = array();
-			$theme_blocks = array();
+		global $block;
 
-			// Get blocks from the Plugin
-			if($directory = self::get_path())
-			{
-				$plugin_blocks = array_filter(glob($directory.'*'), 'is_dir');
-			}
+		$blocks = array();
+		$plugin_blocks = array();
+		$theme_blocks = array();
 
-			// Get blocks from the Theme
-			if($directory = get_template_directory().'/grav-blocks/')
-			{
-				if(is_dir($directory))
-				{
-					$theme_blocks = array_filter(glob($directory.'*'), 'is_dir');
-				}
-			}
+		// Get blocks from the Plugin
+		$plugin_blocks_dir = self::get_path();
 
-			/* These are just placed to ignore any php warnings when including the fields */
-			$block_backgrounds = '';
-			$block_background_image = '';
-
-			if($plugin_blocks)
-			{
-				foreach($plugin_blocks as $dir)
-				{
-					$block = basename($dir);
-				    if(file_exists($dir.'/block_fields.php'))
-				    {
-				    	$fields = include($dir.'/block_fields.php');
-				    	$label = (!empty($fields['label'])) ? $fields['label'] : $block;
-						$blocks[$block] = array('label' => $label, 'path' => $dir, 'group' => (!empty($fields['grav_blocks_settings']['group']) ? $fields['grav_blocks_settings']['group'] : 'default'));
-					}
-				}
-			}
-
-			if($theme_blocks)
-			{
-				foreach($theme_blocks as $dir)
-				{
-					$block = basename($dir);
-
-				    if(file_exists($dir.'/block_fields.php'))
-				    {
-				    	$fields = include($dir.'/block_fields.php');
-				    	$label = (!empty($fields['label'])) ? $fields['label'] : $block;
-						$blocks[$block] = array('label' => $label, 'path' => $dir, 'group' => (!empty($fields['grav_blocks_settings']['group']) ? $fields['grav_blocks_settings']['group'] : 'theme'));
-					}
-				}
-			}
-
-			// Reset Current Block
-			$block = '';
-
-			// Apply Filters to allow others to filter the blocks used.
-			$filterd_blocks = apply_filters( 'grav_blocks', $blocks );
-
-			self::$cache['filterd_blocks'] = $filterd_blocks;
-
-			return $filterd_blocks;
+		if ($plugin_blocks_dir) {
+			$plugin_blocks = array_filter(glob($plugin_blocks_dir.'*'), 'is_dir');
 		}
+
+		// Get blocks from the Theme
+		$theme_blocks_dir = get_template_directory().'/grav-blocks/';
+
+		if ($theme_blocks_dir && is_dir($theme_blocks_dir)) {
+			$theme_blocks = array_filter(glob($theme_blocks_dir.'*'), 'is_dir');
+		}
+
+		/* These are just placed to ignore any php warnings when including the fields */
+		$block_backgrounds = '';
+		$block_background_image = '';
+
+		if ($plugin_blocks) {
+			foreach ($plugin_blocks as $dir) {
+				$block = basename($dir);
+
+				if (file_exists($dir.'/block_fields.php')) {
+					$fields = include($dir.'/block_fields.php');
+					$label = (!empty($fields['label'])) ? $fields['label'] : $block;
+					$blocks[$block] = array('label' => $label, 'path' => $dir, 'group' => (!empty($fields['grav_blocks_settings']['group']) ? $fields['grav_blocks_settings']['group'] : 'default'));
+				}
+			}
+		}
+
+		if ($theme_blocks) {
+			foreach ($theme_blocks as $dir) {
+				$block = basename($dir);
+
+				if (file_exists($dir.'/block_fields.php')) {
+					$fields = include($dir.'/block_fields.php');
+					$label = (!empty($fields['label'])) ? $fields['label'] : $block;
+					$blocks[$block] = array('label' => $label, 'path' => $dir, 'group' => (!empty($fields['grav_blocks_settings']['group']) ? $fields['grav_blocks_settings']['group'] : 'theme'));
+				}
+			}
+		}
+
+		// Reset Current Block
+		$block = '';
+
+		// Apply Filters to allow others to filter the blocks used.
+		$filtered_blocks = apply_filters('grav_blocks', $blocks);
+
+		self::$cache['filtered_blocks'] = $filtered_blocks;
+
+		return $filtered_blocks;
 	}
 
 	/**
 	 * Returns all the available block groups
-	 *
 	 *
 	 * @return array
 	 */
 	public static function get_available_block_groups()
 	{
 		$block_groups = array();
-		foreach (self::get_available_blocks() as $block => $block_params)
-		{
+
+		foreach (self::get_available_blocks() as $block => $block_params) {
 			$block_groups[str_replace(' ', '_', strtolower($block_params['group']))][$block] = $block_params['label'];
 		}
+
 		return $block_groups;
 	}
 
@@ -1707,42 +1685,25 @@ class GRAV_BLOCKS
 	 */
 	public static function get_path($path='')
 	{
-		if(!$path)
-		{
-			if(is_dir(plugin_dir_path( __FILE__ ).'grav-blocks/'))
-			{
-				return plugin_dir_path( __FILE__ ).'grav-blocks/';
-			}
-			else
-			{
-				// Error
-			}
-		}
-		else
-		{
-			if(is_dir(get_template_directory().'/grav-blocks/'.$path.'/'))
-			{
-				return get_template_directory().'/grav-blocks/'.$path;
-			}
-			else if(file_exists(get_template_directory().'/grav-blocks/'.$path))
-			{
-				return get_template_directory().'/grav-blocks/'.$path;
-			}
-			else if(is_dir(plugin_dir_path( __FILE__ ).'grav-blocks/'.$path.'/'))
-			{
-				return plugin_dir_path( __FILE__ ).'grav-blocks/'.$path;
-			}
-			else if(file_exists(plugin_dir_path( __FILE__ ).'grav-blocks/'.$path))
-			{
-				return plugin_dir_path( __FILE__ ).'grav-blocks/'.$path;
-			}
-			else if(file_exists(get_template_directory().'/grav-blocks/'.str_replace('-', '_', $path)))
-			{
-				return get_template_directory().'/grav-blocks/'.str_replace('-', '_', $path);
-			}
+		if (!$path) {
+			$plugin_path = plugin_dir_path( __FILE__ ).'grav-blocks/';
 
-			return false;
+			return is_dir($plugin_path) ? $plugin_path : false;
 		}
+
+		if (is_dir(get_template_directory().'/grav-blocks/'.$path.'/')) {
+			return get_template_directory().'/grav-blocks/'.$path;
+		} else if (file_exists(get_template_directory().'/grav-blocks/'.$path)) {
+			return get_template_directory().'/grav-blocks/'.$path;
+		} else if (is_dir(plugin_dir_path( __FILE__ ).'grav-blocks/'.$path.'/')) {
+			return plugin_dir_path( __FILE__ ).'grav-blocks/'.$path;
+		} else if (file_exists(plugin_dir_path( __FILE__ ).'grav-blocks/'.$path)) {
+			return plugin_dir_path( __FILE__ ).'grav-blocks/'.$path;
+		} else if (file_exists(get_template_directory().'/grav-blocks/'.str_replace('-', '_', $path))) {
+			return get_template_directory().'/grav-blocks/'.str_replace('-', '_', $path);
+		}
+
+		return false;
 	}
 
 	/**
@@ -1752,12 +1713,9 @@ class GRAV_BLOCKS
 	 */
 	public static function get_real_ip()
     {
-        foreach (array('HTTP_X_FORWARDED_FOR', 'HTTP_X_REAL_IP', 'REMOTE_ADDR') as $server_ip)
-        {
-            if(!empty($_SERVER[$server_ip]) && is_string($_SERVER[$server_ip]))
-            {
-                if($ip = trim(reset(explode(',', $_SERVER[$server_ip]))))
-	            {
+        foreach (array('HTTP_X_FORWARDED_FOR', 'HTTP_X_REAL_IP', 'REMOTE_ADDR') as $server_ip) {
+            if (!empty($_SERVER[$server_ip]) && is_string($_SERVER[$server_ip])) {
+                if ($ip = trim(reset(explode(',', $_SERVER[$server_ip])))) {
 	            	return $ip;
 	            }
             }
@@ -1777,7 +1735,6 @@ class GRAV_BLOCKS
 	{
 		switch ($location)
 		{
-
 			case 'advanced':
 				$advanced_options = array(
 					'filter_content' => 'Gravitate Blocks will be added to the end of your content. <span class="extra-info">( Using "the_content" filter )</span>',
@@ -1935,71 +1892,64 @@ class GRAV_BLOCKS
 
 		// Save Settings if POST
 		$response = GRAV_BLOCKS_PLUGIN_SETTINGS::save_settings();
-		if($response['error'])
-		{
+
+		if ($response['error']) {
 			$error = 'Error saving Settings. Please try again.';
-		}
-		else if($response['success'])
-		{
+		} else if ($response['success']) {
 			$success = 'Settings saved successfully.';
 		}
 
+		add_thickbox();
+
 		?>
-		<?php add_thickbox(); ?>
 		<div class="wrap grav-blocks">
 			<header>
 				<h1><img itemprop="logo" src="//uploads.gravitatedesign.com/2016/03/27080812/grav_logo.png" alt="Gravitate"> Blocks</h1>
 			</header>
 			<main>
-			<h4 class="blocks-version">Version <?php echo self::$version;?></h4>
+				<h4 class="blocks-version">Version <?php echo self::$version;?></h4>
+				<?php
+				if (!function_exists('acf_add_local_field_group'))
+				{
+					self::acf_notice(false);
+				}
+				?>
+				<?php if (!empty($error)) { ?><div class="error"><p><?php echo $error; ?></p></div><?php } ?>
+				<?php if (!empty($success)) {?><div class="updated"><p><?php echo $success; ?></p></div><?php } ?>
+			</main>
+			<br>
+			<div class="gravitate-redirects-page-links">
+				<a href="<?php echo self::$page;?>&section=general" class="<?php echo self::get_current_tab($_GET['section'] ?? '', 'general'); ?>">General</a>
+				<a href="<?php echo self::$page;?>&section=advanced" class="<?php echo self::get_current_tab($_GET['section'] ?? '', 'advanced'); ?>">Advanced</a>
+				<a href="<?php echo self::$page;?>&section=developers" class="<?php echo self::get_current_tab($_GET['section'] ?? '', 'developers'); ?>">Developers</a>
+				<a href="<?php echo self::$page;?>&section=usage" class="<?php echo self::get_current_tab($_GET['section'] ?? '', 'usage'); ?>">Block Usage</a>
+			</div>
+			<br>
+			<br>
+			<?php
 
+			$section = (!empty($_GET['section']) ? $_GET['section'] : 'settings');
 
-			<?php if(!function_exists('acf_add_local_field_group'))
+			switch ($section)
 			{
-				self::acf_notice(false);
+				case 'advanced':
+					self::form('advanced');
+					break;
+
+				case 'developers':
+					self::developers();
+					break;
+
+				case 'usage':
+					self::blocks_usage();
+					break;
+
+				default:
+				case 'settings':
+					self::form();
+					break;
 			}
 			?>
-
-			<?php if(!empty($error)){?><div class="error"><p><?php echo $error; ?></p></div><?php } ?>
-			<?php if(!empty($success)){?><div class="updated"><p><?php echo $success; ?></p></div><?php } ?>
-			</main>
-
-
-		<br>
-		<div class="gravitate-redirects-page-links">
-			<a href="<?php echo self::$page;?>&section=general" class="<?php echo self::get_current_tab($_GET['section'] ?? '', 'general'); ?>">General</a>
-			<a href="<?php echo self::$page;?>&section=advanced" class="<?php echo self::get_current_tab($_GET['section'] ?? '', 'advanced'); ?>">Advanced</a>
-			<a href="<?php echo self::$page;?>&section=developers" class="<?php echo self::get_current_tab($_GET['section'] ?? '', 'developers'); ?>">Developers</a>
-			<a href="<?php echo self::$page;?>&section=usage" class="<?php echo self::get_current_tab($_GET['section'] ?? '', 'usage'); ?>">Block Usage</a>
-		</div>
-
-		<br>
-		<br>
-
-		<?php
-
-		$section = (!empty($_GET['section']) ? $_GET['section'] : 'settings');
-
-		switch($section)
-		{
-			case 'advanced':
-				self::form('advanced');
-			break;
-
-			case 'developers':
-				self::developers();
-			break;
-
-			case 'usage':
-				self::blocks_usage();
-			break;
-
-			default:
-			case 'settings':
-				self::form();
-			break;
-		}
-		?>
 		</div>
 		<?php
 	}
@@ -2139,10 +2089,9 @@ class GRAV_BLOCKS
 	public static function get_queried_object_id()
 	{
 		$post_id = ( ($query = get_queried_object()) && !empty($query->ID) ) ? $query->ID : false;
+
 		return $post_id;
 	}
-
-
 
 	/**
 	 * Check if blocks are viewable on the front end
@@ -2154,55 +2103,49 @@ class GRAV_BLOCKS
 	public static function is_viewable($object=0)
 	{
 		$is_viewable = false;
-		if(!$object)
-		{
+
+		if (!$object) {
 			$object = self::get_queried_object_id();
 		}
 
-		if( $object )
-		{
+		if ($object) {
 			$locations = self::get_locations('viewable');
 
-			if(!empty($locations['post_types']) && is_numeric($object))
-			{
+			if (!empty($locations['post_types']) && is_numeric($object)) {
 				$post_type = get_post_type($object);
 
-				if(!empty($post_type) && in_array($post_type, $locations['post_types']))
-				{
+				if (!empty($post_type) && in_array($post_type, $locations['post_types'])) {
 					$is_viewable = true;
 				}
 			}
 
-			if(!empty($locations['templates']) && is_numeric($object))
-			{
+			if (!empty($locations['templates']) && is_numeric($object)) {
 				$is_default = (get_page_template_slug($object) == '' && in_array('default', $locations['templates']));
 
-				if($is_default || in_array(get_page_template_slug($object), $locations['templates']))
-				{
+				if ($is_default || in_array(get_page_template_slug($object), $locations['templates'])) {
 					$is_viewable = true;
 				}
 			}
 
-			if(!empty($locations['taxonomies']))
-			{
+			if (!empty($locations['taxonomies'])) {
 				$queried_object = get_queried_object();
-				if(!empty($queried_object->taxonomy))
-				{
+
+				if (!empty($queried_object->taxonomy)) {
 					$queried_object = get_taxonomy($queried_object->taxonomy);
-					if(!empty($queried_object->name) && in_array($queried_object->name, $locations['taxonomies']))
-					{
+
+					if (!empty($queried_object->name) && in_array($queried_object->name, $locations['taxonomies'])) {
 						$is_viewable = true;
 					}
 				}
 			}
 
-			if(!empty($locations['option_pages']) && in_array($object, $locations['option_pages']))
-			{
+			if (!empty($locations['option_pages']) && in_array($object, $locations['option_pages'])) {
 				$is_viewable = true;
 			}
-
 		}
+
 		$is_viewable = apply_filters( 'grav_is_viewable', $is_viewable );
+
 		return $is_viewable;
 	}
 
@@ -2215,7 +2158,6 @@ class GRAV_BLOCKS
 	 */
 	public static function filter_content($content)
 	{
-
 		ob_start();
 
 		self::display();
@@ -2224,7 +2166,6 @@ class GRAV_BLOCKS
 		ob_end_clean();
 
 		return $content . $blocks;
-
 	}
 
 	/**
@@ -2238,23 +2179,17 @@ class GRAV_BLOCKS
 	{
 		$pages = array();
 
-		if(!empty($GLOBALS['acf_options_pages']))
-		{
-			if($titles_only)
-			{
-				foreach ($GLOBALS['acf_options_pages'] as $key => $page)
-				{
+		if (!empty($GLOBALS['acf_options_pages'])) {
+			if ($titles_only) {
+				foreach ($GLOBALS['acf_options_pages'] as $key => $page) {
 					$pages[$key] = $page['page_title'];
 				}
-			}
-			else
-			{
+			} else {
 				$pages = $GLOBALS['acf_options_pages'];
 			}
 		}
 
 		return $pages;
-
 	}
 
 	/**
@@ -2268,16 +2203,11 @@ class GRAV_BLOCKS
 	{
 		$taxonomies = array();
 
-		foreach(get_taxonomies(array('public' => true), 'objects') as $taxonomy)
-		{
-			if($taxonomy->name !== 'post_format')
-			{
-				if($titles_only)
-				{
+		foreach (get_taxonomies(array('public' => true), 'objects') as $taxonomy) {
+			if ($taxonomy->name !== 'post_format') {
+				if ($titles_only) {
 					$taxonomies[$taxonomy->name] = $taxonomy->label;
-				}
-				else
-				{
+				} else {
 					$taxonomies[] = $taxonomy;
 				}
 			}
@@ -2295,15 +2225,11 @@ class GRAV_BLOCKS
 	 */
 	public static function get_usable_post_types()
 	{
-
-
 		$posts = get_post_types();
 		$post_types = array();
 
-		foreach($posts as $post_type)
-		{
-			if(!in_array($post_type, self::$posts_to_exclude))
-			{
+		foreach ($posts as $post_type) {
+			if (!in_array($post_type, self::$posts_to_exclude)) {
 				$post_types[$post_type] = self::unsanitize_title($post_type);
 			}
 		}
@@ -2311,7 +2237,6 @@ class GRAV_BLOCKS
 		// TODO add filter here for $post_types
 
 		return $post_types;
-
 	}
 
 	/**
@@ -2323,24 +2248,20 @@ class GRAV_BLOCKS
 	 */
 	public static function get_template_options()
 	{
-
 		// TODO add filter here for $templates_to_exclude
 
 		$templates = get_page_templates();
 		$template_options = array();
 
-		if(!in_array('default', array_map('strtolower', $templates)) && !in_array('page.php', array_map('strtolower', $templates)) && file_exists(get_template_directory().'/page.php'))
-		{
+		if (!in_array('default', array_map('strtolower', $templates)) && !in_array('page.php', array_map('strtolower', $templates)) && file_exists(get_template_directory().'/page.php')) {
 			$templates = array_merge(array('Default' => 'default'), $templates);
 		}
 
-		foreach($templates as $key => $template)
-		{
+		foreach ($templates as $key => $template) {
 			$template_options[$template] = self::unsanitize_title($key);
 		}
 
 		return $template_options;
-
 	}
 
 	/**
@@ -2351,15 +2272,12 @@ class GRAV_BLOCKS
 	 *
 	 * @return
 	 */
-	public static function get_current_tab($current = '' , $section = ''){
-
-		if($current == $section || ($current == '' && $section == 'general'))
-		{
+	public static function get_current_tab($current = '' , $section = '')
+	{
+		if ($current == $section || ($current == '' && $section == 'general')) {
 			return 'active';
 		}
-
 	}
-
 
 	/**
 	 * Converts a URL to a verified Vimeo ID
@@ -2373,54 +2291,51 @@ class GRAV_BLOCKS
 	public static function get_vimeo_id($url)
 	{
 		preg_match('/([0-9]+)/', $url, $matches);
-		if(!empty($matches[1]) && is_numeric($matches[1]))
-		{
+
+		if (!empty($matches[1]) && is_numeric($matches[1])) {
 			return $matches[1];
-		}
-		else if(!$pos && strpos($url, 'http') === false)
-		{
+		} else if (strpos($url, 'http') === false) {
 			return $url;
 		}
+
 		return 0;
 	}
+
 	/**
-	 * onverts a URL to a verified YouTube ID
+	 * Converts a URL to a verified YouTube ID
 	 *
 	 * @param  $url  (string) Url of a defined Youtube Video.
 	 *
-	 * @return (int)
+	 * @return int
 	 * @author GG
-	 *
 	 **/
 	public static function get_youtube_id($url)
 	{
-		if(!$pos = strpos($url, 'youtu.be/'))
-		{
+		if (!$pos = strpos($url, 'youtu.be/')) {
 			// $pos = strpos($url, '/watch?v=');
 			$pos = strpos($url, 'v=');
 		}
-		if($pos)
-		{
+
+		if ($pos) {
 			$split = explode("?", substr($url, ($pos+9)));
 			$split = explode("&", $split[0]);
+
 			return $split[0];
-		}
-		else if($pos = strpos($url, '/embed/'))
-		{
+		} else if ($pos = strpos($url, '/embed/')) {
 			$split = explode("?", substr($url, ($pos+7)));
+
 			return $split[0];
-		}
-		else if($pos = strpos($url, '/v/'))
-		{
+		} else if ($pos = strpos($url, '/v/')) {
 			$split = explode("?", substr($url, ($pos+3)));
+
 			return $split[0];
-		}
-		else if(!$pos && strpos($url, 'http') === false)
-		{
+		} else if (!$pos && strpos($url, 'http') === false) {
 			return $url;
 		}
+
 		return 0;
 	}
+
 	/**
 	 * Converts a URL to a verified YouTube video ID function
 	 *
@@ -2436,27 +2351,23 @@ class GRAV_BLOCKS
 	{
 		$autoplay = (strpos($url, 'autoplay=0') || strpos($url, 'autoplay=false')) ? 0 : 1;
 
-		if (strpos($url, 'vimeo'))
-		{
+		if (strpos($url, 'vimeo')) {
 			$id = self::get_vimeo_id($url);
 
-			if (is_numeric($id))
-			{
+			if (is_numeric($id)) {
 				return 'https://player.vimeo.com/video/'.$id.'?autoplay='.$autoplay;
 			}
 
 			return $url;
 		}
 
-		if ($id = self::get_youtube_id($url))
-		{
+		if ($id = self::get_youtube_id($url)) {
 			return 'https://www.youtube.com/embed/'.$id.'?rel=0&amp;iframe=true&amp;wmode=transparent&amp;autoplay='.$autoplay;
 		}
 
 		$custom_video_url = apply_filters('grav_blocks_video_url', $url);
 
-		if ($custom_video_url)
-		{
+		if ($custom_video_url) {
 			return $custom_video_url;
 		}
 
@@ -2479,7 +2390,6 @@ class GRAV_BLOCKS
 		return $filtered_column_width_options;
 	}
 
-
 	/**
 	 * Converts a single array of link options into multiple fields
 	 *
@@ -2493,10 +2403,8 @@ class GRAV_BLOCKS
 	{
 		$post_types = array();
 
-		foreach(get_post_types(array('public' => true)) as $post_type)
-		{
-			if($count = wp_count_posts($post_type)->publish)
-			{
+		foreach (get_post_types(array('public' => true)) as $post_type) {
+			if ($count = wp_count_posts($post_type)->publish) {
 				if ($count > 0 && $post_type != 'post') {
 					$post_types[$post_type] = $count;
 				}
@@ -2505,8 +2413,7 @@ class GRAV_BLOCKS
 
 		$post_types['post'] = wp_count_posts('post');
 
-		if(!empty($post_types))
-		{
+		if (!empty($post_types)) {
 			asort($post_types);
 			$post_types = array_keys($post_types);
 		}
@@ -2514,8 +2421,7 @@ class GRAV_BLOCKS
 		$params = [];
 		$supports_button_styles = true;
 
-		if(is_array($label))
-		{
+		if (is_array($label)) {
 			$params = $label;
 
 			$arr = $label;
@@ -2528,8 +2434,7 @@ class GRAV_BLOCKS
 			$supports_button_styles = $arr['suppports_button_styles'] ?? $supports_button_styles;
 		}
 
-		if(empty($name))
-		{
+		if(empty($name)) {
 			$name = sanitize_title($label);
 		}
 
@@ -2542,25 +2447,21 @@ class GRAV_BLOCKS
 			'file' => 'File Download',
 			'video' => 'Play Video',
 		);
+
 		$allowed_fields = (!empty($includes)) ? $includes : $allowed_options;
 
 		// Format the Array if it is not formatted correctly
-		if(!empty($conditional_logic) && is_array($conditional_logic))
-		{
+		if (!empty($conditional_logic) && is_array($conditional_logic)) {
 			// Check if it has Wrapping Array
-			if(empty($conditional_logic[0][0]))
-			{
+			if (empty($conditional_logic[0][0])) {
 				$conditional_logic = array($conditional_logic);
 			}
 
 			// If it is still not Wrapping then add another
-			if(empty($conditional_logic[0][0]))
-			{
+			if (empty($conditional_logic[0][0])) {
 				$conditional_logic = array($conditional_logic);
 			}
-		}
-		else
-		{
+		} else {
 			$conditional_logic = array();
 		}
 
@@ -2748,6 +2649,7 @@ class GRAV_BLOCKS
 					if ($custom_acf_field && is_array($custom_acf_field)) {
 						$fields[] = $custom_acf_field;
 					}
+
 					break;
 			}
 		}
@@ -2794,6 +2696,7 @@ class GRAV_BLOCKS
 		}
 
 		$filtered_fields = apply_filters('grav_block_link_fields', $fields);
+
 		return array('grav_link_fields' => $filtered_fields);
 	}
 
@@ -2807,53 +2710,49 @@ class GRAV_BLOCKS
 			'file' => 'File Download',
 			'video' => 'Play Video',
 		);
-		if($type = get_sub_field($field.'_type'))
-		{
-			if($type != 'none')
-			{
+
+		if ($type = get_sub_field($field.'_type')) {
+			if ($type != 'none') {
 				$url = get_sub_field($field.'_'.$type);
-				if(!array_key_exists($type, $allowed_options))
-				{
+
+				if (!array_key_exists($type, $allowed_options)) {
 					$url = get_sub_field($field.'_url');
 				}
-				if($type == 'video')
-				{
+
+				if ($type == 'video') {
 					$url = self::get_video_url($url);
 				}
+
 				return esc_url($url);
 			}
 		}
+
 		return '';
 	}
 
 	public static function get_link_html($field, $class='')
 	{
 		$url = ($type_url = self::get_link_url($field)) ? $type_url : '#';
-		if($text = get_sub_field($field.'_text'))
-		{
+
+		if ($text = get_sub_field($field.'_text')) {
 			?>
-				<a class="block-link-<?php echo esc_attr(get_sub_field($field.'_type'));?><?php echo ($class ? ' '.$class : '');?>" href="<?php echo esc_url($url);?>"><?php echo esc_html($text);?></a>
+			<a class="block-link-<?php echo esc_attr(get_sub_field($field.'_type'));?><?php echo ($class ? ' '.$class : '');?>" href="<?php echo esc_url($url);?>"><?php echo esc_html($text);?></a>
 			<?php
 		}
 	}
 
 	public static function filter_layout_links(&$item, $key='', $lookup='')
 	{
-	    if(!empty($item) && is_array($item))
-	    {
-	        foreach ($item as $k => $v)
-	        {
-	            if(is_array($v) && isset($v[$lookup]))
-	            {
+	    if (!empty($item) && is_array($item)) {
+	        foreach ($item as $k => $v) {
+	            if (is_array($v) && isset($v[$lookup])) {
 	                array_splice($item, array_search($k, array_keys($item)), 1, $v[$lookup]);
 	            }
-	        }
+			}
+
 	        array_walk($item, array(__CLASS__, __METHOD__), $lookup);
 	    }
 	}
-
-
-
 
 	/**
 	* Get size information for all currently-registered image sizes.
@@ -2885,7 +2784,6 @@ class GRAV_BLOCKS
 		return $sizes;
 	}
 
-
 	private static function get_prefered_image_size_src($image, $size='')
 	{
 		if (!empty($image['sizes'][$size])) {
@@ -2906,7 +2804,6 @@ class GRAV_BLOCKS
 
 		return '';
 	}
-
 
 	public static function image_sources($image = 'featured', $return_as_array = false)
 	{
@@ -2951,7 +2848,6 @@ class GRAV_BLOCKS
 
 		return trim(urldecode(http_build_query($sources, '', ' ')));
 	}
-
 
 	public static function image_background($image = 'featured', $fallback_size = 'large')
 	{
@@ -3124,20 +3020,15 @@ class GRAV_BLOCKS
 		$gravity_forms = array();
 
 		// Return Cache if exists
-		if(isset(self::$cache['gravity_forms']))
-		{
+		if (isset(self::$cache['gravity_forms'])) {
 			return self::$cache['gravity_forms'];
 		}
-		else
-		{
-			if(class_exists('GFAPI') && method_exists('GFAPI', 'get_forms'))
-			{
-				self::$cache['gravity_forms'] = array();
 
-				foreach(GFAPI::get_forms() as $gform)
-				{
-					$gravity_forms[] = $gform;
-				}
+		if (class_exists('GFAPI') && method_exists('GFAPI', 'get_forms')) {
+			self::$cache['gravity_forms'] = array();
+
+			foreach(GFAPI::get_forms() as $gform) {
+				$gravity_forms[] = $gform;
 			}
 		}
 
@@ -3146,20 +3037,18 @@ class GRAV_BLOCKS
 		return $gravity_forms;
 	}
 
-
-
-
 	public static function get_radio_num_conditionals($field = '', $num = 0, $max = 4)
 	{
 		$conditional_array = array();
-		if($num){
-			for( $i = $max; $i >= $num; $i-- ) {
+
+		if ($num) {
+			for ($i = $max; $i >= $num; $i--) {
 				$conditional_array[] = array (
 					array (
 						'field' => $field,
 						'operator' => '==',
 						'value' => $i,
-					),
+					)
 				);
 			}
 		}
@@ -3170,44 +3059,44 @@ class GRAV_BLOCKS
 	public static function get_blocks_usage( $data=array() ) {
 		// Do something with the $request
 		$response = '';
-		if ( $grav_blocks = self::get_available_blocks() )
-		{
 
-			if($data['name']){
+		if ($grav_blocks = self::get_available_blocks()) {
+			if (isset($data['name']) && $data['name']) {
 				$chosen_blocks[$data['name']] = $grav_blocks[$data['name']];
 			} else {
 				$chosen_blocks = $grav_blocks;
 			}
-			foreach ( $chosen_blocks as $block_name => $block )
-			{
+
+			foreach ($chosen_blocks as $block_name => $block) {
 				$response .= '<div class="grav-blocks-row">';
-				$posts = get_posts(
-					array(
-						'numberposts' => -1,
-						'post_type' => get_post_types(),
-						'meta_query' => array(
-							array(
-								'key' => 'grav_blocks',
-								'value' => $block_name,
-								'compare' => 'LIKE'
-							),
+
+				$posts = get_posts(array(
+					'numberposts' => -1,
+					'post_type' => get_post_types(),
+					'meta_query' => array(
+						array(
+							'key' => 'grav_blocks',
+							'value' => $block_name,
+							'compare' => 'LIKE'
 						),
-					)
-				);
+					),
+				));
+
 				$response .= '<div class="grav-blocks-column"><h4>' . $block['label'] . ' (' . count($posts) . ')</h4></div>';
-				if ( count($posts) > 0 )
-				{
+
+				if (count($posts) > 0) {
 					$response .= '<div class="grav-blocks-column"><ul class="permalink block ' . $block_name . '">';
-					foreach ( $posts as $post )
-					{
+
+					foreach ($posts as $post) {
 						// debug($post, true);
 						$response .= '<li><a class="permalink" target="_blank" href="' . get_the_permalink( $post->ID ) . '">' . get_the_title( $post->ID ) . '</a> (<a class="edit" href="' . admin_url() . 'post.php?post=' . $post->ID . '&action=edit" target="_blank">edit</a>)</li>';
 					}
+
 					$response .= '</ul></div>';
 				}
+
 				$response .= '</div>';
 			}
-
 		}
 
 		return $response;

@@ -8,10 +8,11 @@ $side_content = isset($side_content) ? $side_content : get_sub_field('side_conte
 $accordion_col = ($add_side_content) ? 8 : 10;
 $accordion_col = ($add_side_content && $format != 'tabs-left') ? $accordion_col : 12;
 
-if ($add_side_content) {
-	$side_content_placement = get_sub_field('side_content_placement');
+$content_classes = '';
+$accordion_classes = '';
 
-	if ($side_content_placement == 'right') {
+if ($add_side_content) {
+	if (get_sub_field('side_content_placement') === 'right') {
 		$content_classes = 'small-order-2';
 		$accordion_classes = 'small-order-1';
 	}

@@ -16,6 +16,26 @@ $block_attributes
 $block_container_attributes
 */
 
+BlueprintBlocks\Backgrounds::open_group_container(GRAV_BLOCKS::$background_groups, GRAV_BLOCKS::$block_index);
+
+// check if we're inside an active background group and remove the background css
+// classes from the block container
+if (BlueprintBlocks\Backgrounds::is_active_group()) {
+	$active_group_bg_name = BlueprintBlocks\Backgrounds::get_active_group_bg_name();
+
+	// remove the background class name from the block container attributes array
+	$block_attributes['class'] = array_filter($block_attributes['class'], function ($css_class) use ($active_group_bg_name) {
+		return $css_class !== $active_group_bg_name;
+	});
+
+	// remove the background class name from the block container attributes string
+	$block_container_attributes = str_replace([
+		' ' . $active_group_bg_name,
+		$active_group_bg_name . ' ',
+		'"' . $active_group_bg_name . '"'
+	], '', $block_container_attributes);
+}
+
 if ($block_name == 'global-block') {
 	GRAV_BLOCKS::get_block($block_name, $block_variables, $block_attributes);
 } else {
@@ -27,3 +47,5 @@ if ($block_name == 'global-block') {
 	</section>
 	<?php
 }
+
+BlueprintBlocks\Backgrounds::close_group_container(GRAV_BLOCKS::$background_groups, GRAV_BLOCKS::$block_index);
