@@ -1,18 +1,12 @@
 <?php
-/*
-* Gravitate Plugin Settings File
-* Version: 1.0.0
-*
-*/
-
 if (function_exists('add_action')) {
-	add_action( 'admin_enqueue_scripts', array('GRAV_BLOCKS_PLUGIN_SETTINGS', 'add_sortable') );
+	add_action('admin_enqueue_scripts', ['GRAV_BLOCKS_PLUGIN_SETTINGS', 'add_sortable']);
 }
 
 class GRAV_BLOCKS_PLUGIN_SETTINGS
 {
 	private static $option_key = '';
-	private static $settings = array();
+	private static $settings = [];
 
 	/**
 	 * Constructor for the class.
@@ -28,7 +22,7 @@ class GRAV_BLOCKS_PLUGIN_SETTINGS
 
 	public static function add_sortable()
 	{
-		wp_enqueue_script( 'jquery-ui-sortable' );
+		wp_enqueue_script('jquery-ui-sortable');
 	}
 
 	/**
@@ -42,37 +36,36 @@ class GRAV_BLOCKS_PLUGIN_SETTINGS
 	{
 		self::get_settings();
 
+		if (empty(self::$settings)) {
+			return $fields;
+		}
+
 		// Update Values in Form
-		if(!empty(self::$settings))
-		{
-			foreach (self::$settings as $key => $value)
-			{
-				if(isset($fields[$key]))
-				{
-					if($fields[$key]['type'] == 'repeater' && is_array($value))
-					{
-						$rep_original_fields = $fields[$key]['fields'];
+		foreach (self::$settings as $key => $value) {
+			if (!isset($fields[$key])) {
+				continue;
+			}
 
-						$rep_original_fields['_repeater_id'] = array('type' => 'repeater_id');
+			if ($fields[$key]['type'] == 'repeater' && is_array($value)) {
+				$rep_original_fields = $fields[$key]['fields'];
 
-						foreach ($value as $rep_i => $rep_values)
-						{
-							$fields[$key]['fields'][$rep_i] = $rep_original_fields;
+				$rep_original_fields['_repeater_id'] = ['type' => 'repeater_id'];
 
-							foreach ($rep_original_fields as $rep_key => $rep_value)
-							{
-								if(isset($rep_values[$rep_key]))
-								{
-									$fields[$key]['fields'][$rep_i][$rep_key]['value'] = $rep_values[$rep_key];
-								}
+				foreach ($value as $rep_i => $rep_values) {
+					$fields[$key]['fields'][$rep_i] = $rep_original_fields;
+
+					if (is_array($rep_original_fields)) {
+						$rep_keys = array_keys($rep_original_fields);
+
+						foreach ($rep_keys as $rep_key) {
+							if (isset($rep_values[$rep_key])) {
+								$fields[$key]['fields'][$rep_i][$rep_key]['value'] = $rep_values[$rep_key];
 							}
 						}
 					}
-					else
-					{
-						$fields[$key]['value'] = $value;
-					}
 				}
+			} else {
+				$fields[$key]['value'] = $value;
 			}
 		}
 
@@ -82,16 +75,16 @@ class GRAV_BLOCKS_PLUGIN_SETTINGS
 	/**
 	 * Returns the Settings from the Database
 	 *
-	 * @param string $force - Forces a database call incase it was stored.
+	 * @param string $force - Forces a database call in case it was stored.
 	 *
 	 * @return array
 	 */
-	public static function get_settings($force=false)
+	public static function get_settings($force = false)
 	{
-		if(empty(self::$settings) || $force)
-		{
-			self::$settings = get_option(self::$option_key);
+		if (empty(self::$settings) || $force) {
+			self::$settings = get_option(self::$option_key, []);
 		}
+
 		return self::$settings;
 	}
 
@@ -103,12 +96,18 @@ class GRAV_BLOCKS_PLUGIN_SETTINGS
 	 *
 	 * @return boolean
 	 */
-	public static function is_setting_checked($setting_type = '', $setting = ''){
+	public static function is_setting_checked($setting_type = '', $setting = '')
+	{
 		self::get_settings(true);
-		if(isset(self::$settings[$setting_type]) && is_array(self::$settings[$setting_type]) && in_array($setting, self::$settings[$setting_type]))
-		{
+
+		if (
+			isset(self::$settings[$setting_type]) &&
+			is_array(self::$settings[$setting_type]) &&
+			in_array($setting, self::$settings[$setting_type])
+		) {
 			return true;
 		}
+
 		return false;
 	}
 
@@ -140,40 +139,39 @@ class GRAV_BLOCKS_PLUGIN_SETTINGS
 	 */
 	public static function save_settings()
 	{
-		if(!empty($_POST['save_grav_settings']) && !empty($_POST['settings']) && check_admin_referer(self::$option_key))
+		if (
+			!empty($_POST['save_grav_settings']) &&
+			!empty($_POST['settings']) &&
+			check_admin_referer(self::$option_key)
+		)
 		{
 			$_POST['settings']['updated_at'] = time();
 
 			$settings = $_POST['settings'];
 
-			foreach ($settings as $setting => $value)
-			{
-				if(isset($value[0]) && is_array($value[0])) // If is Repeater
-				{
+			foreach ($settings as $setting => $value) {
+				// If is Repeater
+				if (isset($value[0]) && is_array($value[0])) {
 					unset($settings[$setting][0]);
 					//sort($settings[$setting]);
 				}
 			}
 
-			if(!empty(self::$settings))
-			{
+			if (!empty(self::$settings)) {
 				$settings = array_merge(self::$settings, $settings);
 			}
 
 			$settings['grav_settings_last_updated'] = time();
 
-			if(update_option( self::$option_key, $settings))
-			{
+			if (update_option(self::$option_key, $settings)) {
 				self::get_settings(true);
-				return array('error' => null, 'success' => true);
-			}
-			else
-			{
-				array('error' => true, 'success' => null);
+				return ['error' => null, 'success' => true];
+			} else {
+				['error' => true, 'success' => null];
 			}
 		}
 
-		return array('error' => null, 'success' => null);
+		return ['error' => null, 'success' => null];
 	}
 
 	/**
@@ -185,223 +183,218 @@ class GRAV_BLOCKS_PLUGIN_SETTINGS
 	 */
 	public static function get_form($fields)
 	{
-
 		$fields = self::format_fields($fields);
 
 		?>
+		<style>
+			/******* Set Default Styling ******/
+			.grav-plugin-settings-form .repeater-item {
+				border: 1px solid #bbb;
+			}
+			.grav-plugin-settings-form .repeater-item td {
+				background-color: rgba(255,255,255,0.6);
+				border-bottom: 1px solid #bbb;
+			}
+			.repeater-placeholder {
+				display: none;
+			}
+			.grav-plugin-settings-field-colorpicker .wp-picker-container {
+				min-width: 250px;
+			}
+			.wp-picker-holder {
+				position: absolute;
+				z-index: 1;
+			}
+			.repeater-item.ui-sortable-helper {
+				left: 0 !important;
+			}
+			.repeater-table .ui-sortable {
+				position: relative !important;
+				border: 2px solid #ddd;
+			}
+			.ui-sortable-placeholder {
+				height: 97px;
+			}
+			.repeater-table td.handle {
+				position: relative;
+				cursor: pointer;
+			}
+			.repeater-table td.handle:before, .repeater-table td.handle:after {
+				content:'';
+				width: 10px;
+				height: 2px;
+				background-color: #bbb;
+				top: 48%;
+				left: 12px;
+				display: block;
+				border-radius: 3px;
+				position: absolute;
+			}
+			.repeater-table td.handle:after {
+				top: 52%;
+			}
+		</style>
 
-			<style>
-				/******* Set Default Styling ******/
-				.grav-plugin-settings-form .repeater-item {
-					border: 1px solid #bbb;
-				}
-				.grav-plugin-settings-form .repeater-item td {
-					background-color: rgba(255,255,255,0.6);
-					border-bottom: 1px solid #bbb;
-				}
-				.repeater-placeholder {
-					display: none;
-				}
-				.grav-plugin-settings-field-colorpicker .wp-picker-container {
-					min-width: 250px;
-				}
-				.wp-picker-holder {
-					position: absolute;
-					z-index: 1;
-				}
-				.repeater-item.ui-sortable-helper {
-					left: 0 !important;
-				}
-				.repeater-table .ui-sortable {
-					position: relative !important;
-					border: 2px solid #ddd;
-				}
-				.ui-sortable-placeholder {
-					height: 97px;
-				}
-				.repeater-table td.handle {
-					position: relative;
-					cursor: pointer;
-				}
-				.repeater-table td.handle:before, .repeater-table td.handle:after {
-					content:'';
-					width: 10px;
-					height: 2px;
-					background-color: #bbb;
-					top: 48%;
-					left: 12px;
-					display: block;
-					border-radius: 3px;
-					position: absolute;
-				}
-				.repeater-table td.handle:after {
-					top: 52%;
-				}
-			</style>
+		<form method="post" class="grav-plugin-settings-form">
+			<input type="hidden" name="save_grav_settings" value="1">
+			<?php wp_nonce_field(self::$option_key); ?>
+			<table class="form-table">
+			<?php
+			foreach ($fields as $meta_key => $field)
+			{
+				?>
+				<tr class="grav-plugin-settings-<?php echo $meta_key;?> grav-plugin-settings-type-<?php echo $field['type'];?>">
+					<th><label for="<?php echo $meta_key;?>"><?php echo $field['label'];?></label></th>
+					<td>
+					<?php
+					if($field['type'] != 'repeater')
+					{
+						self::settings_field($meta_key, $field);
+					}
+					else // If Repeater
+					{
+						?>
+							<table class="form-table repeater-table">
+							<?php
+							if (!empty($field['fields']))
+							{
+								$repeater_num = 0;
+								$added_placeholder = 0;
 
-			<form method="post" class="grav-plugin-settings-form">
-				<input type="hidden" name="save_grav_settings" value="1">
-				<?php wp_nonce_field(self::$option_key); ?>
-				<table class="form-table">
-				<?php
-				foreach($fields as $meta_key => $field)
-				{
-					?>
-					<tr class="grav-plugin-settings-<?php echo $meta_key;?> grav-plugin-settings-type-<?php echo $field['type'];?>">
-						<th><label for="<?php echo $meta_key;?>"><?php echo $field['label'];?></label></th>
-						<td>
-						<?php
-						if($field['type'] != 'repeater')
-						{
-							self::settings_field($meta_key, $field);
-						}
-						else // If Repeater
-						{
-							?>
-								<table class="form-table repeater-table">
-								<?php
-								if(!empty($field['fields']))
+								foreach ($field['fields'] as $rep_i => $rep_fields)
 								{
-									$repeater_num = 0;
-									$added_placeholder = 0;
-
-									foreach ($field['fields'] as $rep_i => $rep_fields)
+									/* Create Placeholer */
+									if (!is_numeric($rep_i))
 									{
-										/* Create Placeholer */
-										if(!is_numeric($rep_i))
+										if ($added_placeholder)
 										{
-											if($added_placeholder)
-											{
-												continue;
-											}
-
-											$rep_fields = $field['fields'];
-											foreach ($rep_fields as $placeholder_key => $placeholder_vlue)
-											{
-												if(is_numeric($placeholder_key))
-												{
-													unset($rep_fields[$placeholder_key]);
-												}
-											}
-											$added_placeholder = 1;
+											continue;
 										}
 
-										?>
-										<tr class="repeater-item<?php echo (!is_numeric($rep_i) ? ' repeater-placeholder' : '');?>" style="z-index:<?php echo (is_numeric($rep_i) ? $rep_i : 0);?>;">
-											<td class="handle"><input type="hidden" name="settings[<?php echo $meta_key;?>][<?php echo $repeater_num;?>][_repeater_id]" value="<?php echo (isset($rep_fields['_repeater_id']['value']) ? $rep_fields['_repeater_id']['value'] : (!is_numeric($rep_i) ? '_repeater_id' : '').(is_numeric($rep_i) ? $rep_i : 0));?>"></td>
-											<?php
-
-											foreach ($rep_fields as $rep_key => $rep_field)
+										$rep_fields = $field['fields'];
+										foreach ($rep_fields as $placeholder_key => $placeholder_vlue)
+										{
+											if (is_numeric($placeholder_key))
 											{
-												if($rep_field['type'] != 'repeater_id')
-												{
-													?>
-													<td class="grav-plugin-settings-field grav-plugin-settings-field-<?php echo $rep_field['type'];?>">
-														<?php self::settings_field($rep_key, $rep_field, $meta_key, $repeater_num); ?>
-													</td>
-													<?php
-												}
+												unset($rep_fields[$placeholder_key]);
 											}
-											$rep_i++;
-											?>
-											<td>
-												<button class="repeater-remove button" type="input">X</button>
-											</td>
-										</tr>
-										<?php
-
-										$repeater_num++;
+										}
+										$added_placeholder = 1;
 									}
 
-								}
-								?>
-								<tfoot>
-									<tr>
-										<td colspan="10"><button class="repeater-add button" style="float:right;" type="input">Add</button></td>
+									?>
+									<tr class="repeater-item<?php echo (!is_numeric($rep_i) ? ' repeater-placeholder' : '');?>" style="z-index:<?php echo (is_numeric($rep_i) ? $rep_i : 0);?>;">
+										<td class="handle"><input type="hidden" name="settings[<?php echo $meta_key;?>][<?php echo $repeater_num;?>][_repeater_id]" value="<?php echo (isset($rep_fields['_repeater_id']['value']) ? $rep_fields['_repeater_id']['value'] : (!is_numeric($rep_i) ? '_repeater_id' : '').(is_numeric($rep_i) ? $rep_i : 0));?>"></td>
+										<?php
+
+										foreach ($rep_fields as $rep_key => $rep_field)
+										{
+											if ($rep_field['type'] != 'repeater_id')
+											{
+												?>
+												<td class="grav-plugin-settings-field grav-plugin-settings-field-<?php echo $rep_field['type'];?>">
+													<?php self::settings_field($rep_key, $rep_field, $meta_key, $repeater_num); ?>
+												</td>
+												<?php
+											}
+										}
+
+										$rep_i++;
+										?>
+										<td>
+											<button class="repeater-remove button" type="input">X</button>
+										</td>
 									</tr>
-								</tfoot>
-							</table>
-							<?php
-						}
-						?>
-						</td>
-					</tr>
-					<?php
-				}
-				?>
-				</table>
-				<p><input type="submit" value="Save Settings" class="button button-primary" id="submit" name="submit"></p>
-			</form>
+									<?php
 
-			<script>
+									$repeater_num++;
+								}
 
-			jQuery(function($)
-			{
+							}
+							?>
+							<tfoot>
+								<tr>
+									<td colspan="10"><button class="repeater-add button" style="float:right;" type="input">Add</button></td>
+								</tr>
+							</tfoot>
+						</table>
+						<?php
+					}
+					?>
+					</td>
+				</tr>
+				<?php
+			}
+			?>
+			</table>
+			<p><input type="submit" value="Save Settings" class="button button-primary" id="submit" name="submit"></p>
+		</form>
 
-				var c = {};
+		<script>
 
-				// Return a helper with preserved width of cells
-				var fixHelper = function(e, ui) {
-					ui.children().each(function() {
-						$(this).width($(this).width());
-						$('.ui-sortable-placeholder').css('height', $('.ui-sortable-helper').height());
-						console.log('helping: '+ $('.ui-sortable-helper').height());
-					});
-					return ui;
-				};
+		jQuery(function($) {
+			var c = {};
 
-				$(".repeater-table tbody").sortable({
-					helper: fixHelper,
-					containment: "document",
-					cursor: "move",
-					handle: ".handle",
-					opacity: 0.8
+			// Return a helper with preserved width of cells
+			var fixHelper = function(e, ui) {
+				ui.children().each(function() {
+					$(this).width($(this).width());
+					$('.ui-sortable-placeholder').css('height', $('.ui-sortable-helper').height());
+					console.log('helping: '+ $('.ui-sortable-helper').height());
 				});
+				return ui;
+			};
 
-				$('.repeater-add').on('click', function(e)
-				{
-					e.preventDefault();
-					var clone = $(this).closest('.repeater-table').find('.repeater-placeholder').clone();
-					var total = $(this).closest('.repeater-table').find('.repeater-item').length;
-					clone.removeClass('repeater-placeholder');
-					clone.html(clone.html().split('[0]').join('['+total+']'));
-					clone.html(clone.html().split('_repeater_id0').join((Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000)));
-					clone.css('z-index', total);
-					clone.find('input[type="text"], textarea').val('');
-					clone.find('input[type="checkbox"]').removeAttr('checked');
-					clone.find('select option').removeAttr('selected');
-					clone.find('.grav-blocks-colorpicker').wpColorPicker();
-
-					clone.appendTo('.repeater-table');
-
-					addRemoveListeners();
-					return false;
-				});
-
-				function addRemoveListeners()
-				{
-					$('.repeater-remove').off('click');
-					$('.repeater-remove').on('click', function(e)
-					{
-						e.preventDefault();
-						if($(this).closest('.repeater-table').find('.repeater-item').length > 1)
-						{
-							$(this).closest('.repeater-item').remove();
-						}
-						else
-						{
-							alert('You need to keep at least one Item');
-						}
-						return false;
-					});
-				}
-
-				addRemoveListeners();
-				$('.repeater-item:not(.repeater-placeholder) .grav-blocks-colorpicker').wpColorPicker();
-
+			$('.repeater-table tbody').sortable({
+				helper: fixHelper,
+				containment: 'document',
+				cursor: 'move',
+				handle: '.handle',
+				opacity: 0.8
 			});
 
-			</script>
+			$('.repeater-add').on('click', function (e) {
+				e.preventDefault();
+
+				var clone = $(this).closest('.repeater-table').find('.repeater-placeholder').clone();
+				var total = $(this).closest('.repeater-table').find('.repeater-item').length;
+
+				clone.removeClass('repeater-placeholder');
+				clone.html(clone.html().split('[0]').join('['+total+']'));
+				clone.html(clone.html().split('_repeater_id0').join((Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000)));
+				clone.css('z-index', total);
+				clone.find('input[type="text"], textarea').val('');
+				clone.find('input[type="checkbox"]').removeAttr('checked');
+				clone.find('select option').removeAttr('selected');
+				clone.find('.grav-blocks-colorpicker').wpColorPicker();
+
+				clone.appendTo('.repeater-table');
+
+				addRemoveListeners();
+
+				return false;
+			});
+
+			function addRemoveListeners() {
+				$('.repeater-remove').off('click');
+				$('.repeater-remove').on('click', function(e) {
+					e.preventDefault();
+
+					if ($(this).closest('.repeater-table').find('.repeater-item').length > 1) {
+						$(this).closest('.repeater-item').remove();
+					} else {
+						alert('You need to keep at least one item');
+					}
+
+					return false;
+				});
+			}
+
+			addRemoveListeners();
+
+			$('.repeater-item:not(.repeater-placeholder) .grav-blocks-colorpicker').wpColorPicker();
+		});
+		</script>
 		<?php
 
 	}
@@ -416,17 +409,18 @@ class GRAV_BLOCKS_PLUGIN_SETTINGS
 	 *
 	 * @return type
 	 */
-	public static function settings_field($meta_key, $field, $repeater_key='', $rep_i=0)
+	public static function settings_field($meta_key, $field, $repeater_key = '', $rep_i = 0)
 	{
-		$deprecated = array();
+		$deprecated = [];
 
 		?>
 		<span class="settings-field-wrapper">
 		<?php
-		
+
 		$settings_attribute = 'settings['.$meta_key.']';
 
-		if ($repeater_key && !empty($field['label'])) {
+		if ($repeater_key && !empty($field['label']))
+		{
 			$settings_attribute = 'settings['.$repeater_key.']['.$rep_i.']['.$meta_key.']';
 
 			?>
@@ -462,11 +456,12 @@ class GRAV_BLOCKS_PLUGIN_SETTINGS
 					<option value="">- Select -</option>
 					<?php
 				}
+
 				foreach($field['options'] as $option_value => $options)
 				{
 					$options_label = (is_array($options)) ? $options['label'] : $options;
 					$real_value = ($option_value !== $options_label && !is_numeric($option_value) ? $option_value : $options_label);
-					
+
 					?>
 					<option<?php echo ($real_value !== $options_label ? ' value="'.$real_value.'"' : '');?> <?php selected( ($real_value !== $options_label ? $real_value : $options_label), esc_attr( (isset($field['value']) ? $field['value'] : '') ));?>><?php echo $options_label;?></option>
 					<?php
