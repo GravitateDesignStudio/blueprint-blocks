@@ -2,7 +2,7 @@
 /*
 Plugin Name: Gravitate Blueprint Blocks
 Description: Create Content Blocks.
-Version: 1.2.0
+Version: 1.2.1
 Plugin URI: http://www.gravitatedesign.com
 Author: Gravitate
 */
@@ -31,7 +31,7 @@ add_filter('plugin_action_links_'.plugin_basename(__FILE__), array('GRAV_BLOCKS'
  */
 class GRAV_BLOCKS
 {
-	private static $version = '1.1.0';
+	private static $version = '1.2.1';
 	private static $page = 'admin.php?page=gravitate-blocks';
 	private static $settings = array();
 	private static $option_key = 'gravitate_blocks_settings';
@@ -908,36 +908,62 @@ class GRAV_BLOCKS
 	}
 
 	/**
+	 * Returns the default settings array
+	 *
+	 * @return array<string, mixed>
+	 */
+	public static function get_default_settings(): array
+	{
+		$current_settings = [
+			'post_types' => array_keys(self::get_usable_post_types()),
+			'templates' => '',
+			'advanced_options' => ['filter_content'],
+			// 'css_options' => ['enqueue_css', 'use_foundation', 'use_default'],
+			'search_options' => ['include_in_search'],
+			'background_colors' => [
+				['name' => 'White', 'value' => '#ffffff'],
+				['name' => 'Light Gray', 'value' => '#eeeeee'],
+				['name' => 'Dark Gray', 'value' => '#555555']
+			],
+			// 'foundation' => array['f5'],
+		];
+
+		$blocks_groups = self::get_available_block_groups();
+
+		foreach ($blocks_groups as $group_name => $group_info) {
+			$current_settings['blocks_enabled_' . $group_name] = array_keys($group_info);
+		}
+
+		return $current_settings;
+	}
+
+	/**
 	 * Runs on WP Plugin Activation
 	 *
 	 * @return void
 	 */
-	public static function activate()
+	public static function activate($network_wide)
 	{
-		$active_settings = get_option(self::$option_key);
+		if ($network_wide) {
+			$blog_ids = get_sites(['fields' => 'ids']);
 
-		if (!$active_settings) {
-			$current_settings = array(
-				'post_types' => array_keys(self::get_usable_post_types()),
-				'templates' => '',
-				'advanced_options' => array('filter_content'),
-				// 'css_options' => array('enqueue_css', 'use_foundation', 'use_default'),
-				'search_options' => array('include_in_search'),
-				'background_colors' => array(
-					array('name' => 'White', 'value' => '#ffffff'),
-					array('name' => 'Light Gray', 'value' => '#eeeeee'),
-					array('name' => 'Dark Gray', 'value' => '#555555')
-				),
-				// 'foundation' => array('f5'),
-			);
+			foreach ($blog_ids as $blog_id) {
+				switch_to_blog($blog_id);
 
-			$blocks_groups = self::get_available_block_groups();
+				$active_settings = get_option(self::$option_key);
 
-			foreach ($blocks_groups as $group_name => $group_info) {
-				$current_settings['blocks_enabled_'.$group_name] = array_keys($group_info);
+				if (!$active_settings) {
+					update_option(self::$option_key, self::get_default_settings());
+				}
+
+				restore_current_blog();
 			}
+		} else {
+			$active_settings = get_option(self::$option_key);
 
-			update_option(self::$option_key, $current_settings);
+			if (!$active_settings) {
+				update_option(self::$option_key, self::get_default_settings());
+			}
 		}
 	}
 
