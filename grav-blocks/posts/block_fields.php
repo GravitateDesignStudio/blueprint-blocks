@@ -1,9 +1,14 @@
 <?php
 
+global $wpdb;
+
 $authors = array();
-foreach (get_users() as $user)
-{
-   $authors[$user->ID] = $user->display_name;
+
+$q = "SELECT `ID`, `display_name` FROM `{$wpdb->users}` ORDER BY `display_name` ASC";
+$raw_users = $wpdb->get_results($q);
+
+foreach ($raw_users as $raw_user) {
+    $authors[$raw_user->ID] = $raw_user->display_name;
 }
 
 $taxonomies = array();

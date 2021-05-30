@@ -2,7 +2,7 @@
 /*
 Plugin Name: Gravitate Blueprint Blocks
 Description: Create Content Blocks.
-Version: 1.2.1
+Version: 1.2.2
 Plugin URI: http://www.gravitatedesign.com
 Author: Gravitate
 */
