@@ -2,7 +2,7 @@
 /*
 Plugin Name: Gravitate Blueprint Blocks
 Description: Create Content Blocks.
-Version: 1.2.2
+Version: 1.2.3
 Plugin URI: http://www.gravitatedesign.com
 Author: Gravitate
 */
@@ -2745,7 +2745,9 @@ class GRAV_BLOCKS
 					$url = get_sub_field($field.'_url');
 				}
 
-				if ($type == 'video') {
+				$process_video_url = apply_filters('grav_blocks_process_video_url', true, $url);
+
+				if ($type == 'video' && $process_video_url) {
 					$url = self::get_video_url($url);
 				}
 
