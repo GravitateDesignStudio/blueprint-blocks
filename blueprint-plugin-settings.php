@@ -82,7 +82,11 @@ class GRAV_BLOCKS_PLUGIN_SETTINGS
 	public static function get_settings($force = false)
 	{
 		if (empty(self::$settings) || $force) {
-			self::$settings = get_option(self::$option_key, []);
+			self::$settings = apply_filters(
+				'grav_blocks_plugin_settings',
+				get_option(self::$option_key, []),
+				self::$option_key
+			);
 		}
 
 		return self::$settings;
