@@ -1850,7 +1850,7 @@ class GRAV_BLOCKS
 			break;
 		}
 
-		return $fields;
+		return apply_filters('grav_blocks_settings_fields', $fields, $location);
 	}
 
 
