@@ -2457,7 +2457,7 @@ class GRAV_BLOCKS
 			$show_text = isset($arr['show_text']) ? $arr['show_text'] : true;
 			$post_types = isset($arr['post_types']) ? $arr['post_types'] : $post_types;
 			$conditional_logic = isset($arr['conditional_logic']) ? $arr['conditional_logic'] : array();
-			$supports_button_styles = $arr['suppports_button_styles'] ?? $supports_button_styles;
+			$supports_button_styles = $arr['supports_button_styles'] ?? $supports_button_styles;
 		}
 
 		if(empty($name)) {
