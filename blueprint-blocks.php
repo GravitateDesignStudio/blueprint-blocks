@@ -2,7 +2,7 @@
 /*
 Plugin Name: Gravitate Blueprint Blocks
 Description: Create Content Blocks.
-Version: 1.2.3
+Version: 1.2.4
 Plugin URI: http://www.gravitatedesign.com
 Author: Gravitate
 */
@@ -31,7 +31,7 @@ add_filter('plugin_action_links_'.plugin_basename(__FILE__), array('GRAV_BLOCKS'
  */
 class GRAV_BLOCKS
 {
-	private static $version = '1.2.1';
+	private static $version = '1.2.4';
 	private static $page = 'admin.php?page=gravitate-blocks';
 	private static $settings = array();
 	private static $option_key = 'gravitate_blocks_settings';
