@@ -1304,7 +1304,7 @@ class GRAV_BLOCKS
 		$block_attributes['class'] = explode(' ', $block_attributes['class']);
 
 		// Allow filtering all attributes - remove empty values, but leave 0
-		$block_attributes = apply_filters('grav_blocks_container_attributes', $block_attributes, $block_name);
+		$block_attributes = apply_filters('grav_blocks_container_attributes', $block_attributes, $block_name, $block_variables);
 		$block_attributes = array_filter($block_attributes, function($value) {
     		return ($value !== null && $value !== false && $value !== '');
 		});
