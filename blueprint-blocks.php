@@ -2,7 +2,7 @@
 /*
 Plugin Name: Gravitate Blueprint Blocks
 Description: Create Content Blocks.
-Version: 1.2.4
+Version: 1.2.5
 Plugin URI: http://www.gravitatedesign.com
 Author: Gravitate
 */
@@ -31,7 +31,7 @@ add_filter('plugin_action_links_'.plugin_basename(__FILE__), array('GRAV_BLOCKS'
  */
 class GRAV_BLOCKS
 {
-	private static $version = '1.2.4';
+	private static $version = '1.2.5';
 	private static $page = 'admin.php?page=gravitate-blocks';
 	private static $settings = array();
 	private static $option_key = 'gravitate_blocks_settings';
@@ -210,7 +210,13 @@ class GRAV_BLOCKS
 		 * Register Google Maps API key with ACF
 		 */
 		add_filter('acf/fields/google_map/api', function($api) {
-			$api['key'] = GRAV_BLOCKS_PLUGIN_SETTINGS::get_setting_value('google_maps_api_key');
+			$key = GRAV_BLOCKS_PLUGIN_SETTINGS::get_setting_value('google_maps_api_key');
+
+			if (!is_string($key) || !trim($key)) {
+				return $api;
+			}
+
+			$api['key'] = trim($key);
 
 			return $api;
 		});
