@@ -694,6 +694,14 @@ class GRAV_BLOCKS
 				'block_options' => 1
 			),
 			array (
+				'key' => 'field_block_default_'.$block.'_admin_title',
+				'label' => 'Block Title',
+				'name' => 'layout_title',
+				'type' => 'text',
+				'required' => 0,
+				'block_options' => 1
+			),
+			array (
 				'key' => 'field_block_default_'.$block.'_custom_class',
 				'label' => 'Custom CSS Classes',
 				'name' => 'block_option_custom_class',
