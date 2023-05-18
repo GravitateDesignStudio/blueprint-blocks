@@ -1,10 +1,11 @@
 <?php
 /*
-Plugin Name: Gravitate Blueprint Blocks
-Description: Create Content Blocks.
+Plugin Name: Gravitate Base
+Description: Base Plugin for Gravitate Blocks
 Version: 1.2.5
-Plugin URI: http://www.gravitatedesign.com
+Plugin URI: http://www.gravitatedesign.com/base
 Author: Gravitate
+Author URI: http://www.gravitatedesign.com/dev
 */
 
 require_once(plugin_dir_path(__FILE__).'blueprint-blocks-css.php');
