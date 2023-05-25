@@ -9,13 +9,15 @@ $center = get_sub_field('center') ? 'text-center' : '';
 if (!$heading) return;
 ?>
 
-<div class="block-inner">
-	<h2 class="<?= $center ?> <?= $heading_element ?>">
-		<?= $heading ?>
-	</h2>
-	<?php if ($subheading) : ?>
-		<h3 class="subheading <?= $center ?> <?= $subheading_element ?>">
-			<?= $subheading ?>
-		</h3>
-	<?php endif ?>
+<div class="block-inner row">
+	<div class="column">
+		<h2 class="<?= $center ?> <?= $heading_element ?>">
+			<?= $heading ?>
+		</h2>
+		<?php if ($subheading) : ?>
+			<h3 class="subheading <?= $center ?> <?= $subheading_element ?>">
+				<?= $subheading ?>
+			</h3>
+		<?php endif ?>
+	</div>
 </div>
