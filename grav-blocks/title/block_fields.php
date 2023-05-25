@@ -25,7 +25,7 @@ $block_fields = array(
 	array (
 		'key' => 'field_'.$block.'_heading_element',
 		'label' => 'Heading Size',
-		'name' => $block.'_heading',
+		'name' => 'heading_element',
 		'type' => 'button_group',
 		'instructions' => 'Select a heading element for the title. There should only be 1 H1 per page.',
 		'wrapper' => array (
@@ -50,7 +50,7 @@ $block_fields = array(
 	array (
 		'key' => 'field_'.$block.'_subheading_element',
 		'label' => 'Sub Title Size',
-		'name' => $block.'_heading',
+		'name' => 'subheading_element',
 		'type' => 'button_group',
 		'instructions' => 'Select a heading element for the subtitle. It should be smaller than the title.',
 		'required' => 0,
