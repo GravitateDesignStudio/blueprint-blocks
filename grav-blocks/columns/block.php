@@ -39,4 +39,3 @@ $column_attributes = [
 		</div>
 	<?php endforeach ?>
 </div>
-</div>
