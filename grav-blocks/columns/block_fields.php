@@ -2,7 +2,7 @@
 
 /*
 *
-* Gravitate Content Block
+* Column Block
 *
 * Available Variables:
 * $block 					= Name of Block Folder
@@ -13,67 +13,68 @@
 *
 */
 
-$content_column_choices = array();
+// Fonts come from a custom Fontello font. The font is loade from the base-blocks plugin.
+$content_column_choices = array(
+    1 => '<i class="grav-icon icon-1-col-narrow"></i>',
+    2 => '<i class="grav-icon icon-2-col"></i>',
+    213 => '<i class="grav-icon icon-sidebar-left"></i>',
+    231 => '<i class="grav-icon icon-sidebar-right"></i>',
+    3 => '<i class="grav-icon icon-3-col"></i>',
+    4 => '<i class="grav-icon icon-4-col"></i>'
+);
 $block_fields = array();
 $max_columns = apply_filters('grav_blocks_content_columns_max', 4);
 
-for ($i = 1; $i <= $max_columns; $i++) {
-	$content_column_choices[$i] = $i;
-}
-
 $block_fields[] = array (
     'key' => 'field_'.$block.'_num_columns',
-    'label' => 'Number of Columns',
+    'label' => 'Columns Selector',
     'name' => 'num_columns',
-    'type' => 'radio',
-    'instructions' => '',
-    'required' => 0,
-    'conditional_logic' => 0,
-    'wrapper' => array (
-        'width' => '50',
-        'class' => '',
-        'id' => '',
-    ),
+    'type' => 'button_group',
     'choices' => $content_column_choices,
-    'other_choice' => 0,
-    'save_other_choice' => 0,
-    'default_value' => 1,
-    'layout' => 'horizontal',
-	// 'block_options' => 1
 );
 
-$block_fields[] = array (
-    'key' => 'field_'.$block.'_format',
-    'label' => 'Format',
-    'name' => 'format',
-    'type' => 'radio',
-    'instructions' => '',
-    'required' => 0,
-    'conditional_logic' => array (
-        array (
-            array (
-                'field' => 'field_'.$block.'_num_columns',
-                'operator' => '==',
-                'value' => 2,
-            ),
+$conditional_2 = array(
+    array(
+        array(
+            'field' => 'field_'.$block.'_num_columns',
+            'operator' => '!=',
+            'value' => 1,
+        ),
+    )
+);
+
+$conditional_3 = array (
+    array(
+        array(
+            'field' => 'field_'.$block.'_num_columns',
+            'operator' => '==',
+            'value' => 3,
         ),
     ),
-    'wrapper' => array (
-        'width' => '50',
-        'class' => '',
-        'id' => '',
+    array(
+        array(
+            'field' => 'field_'.$block.'_num_columns',
+            'operator' => '==',
+            'value' => 4,
+        ),
     ),
-    'choices' => array (
-        '' => 'Default',
-		'format-sidebar-left' => 'Sidebar Left',
-		'format-sidebar-right' => 'Sidebar Right'
-    ),
-    'other_choice' => 0,
-    'save_other_choice' => 0,
-    'default_value' => '',
-    'layout' => 'horizontal',
-	// 'block_options' => 1
 );
+
+$conditional_4 = 
+    array(
+        array(
+            'field' => 'field_'.$block.'_num_columns',
+            'operator' => '==',
+            'value' => 4,
+        ),
+    );
+
+$conditional = [
+    1 => [],
+    2 => $conditional_2,
+    3 => $conditional_3,
+    4 => $conditional_4,
+];
 
 for ($i = 1; $i <= $max_columns; $i++) {
 	$block_fields[] = array (
@@ -81,15 +82,7 @@ for ($i = 1; $i <= $max_columns; $i++) {
 	    'label' => 'Column '.$i,
 	    'name' => 'column_'.$i,
 	    'type' => 'wysiwyg',
-	    'instructions' => '',
-	    'required' => 0,
-	    'conditional_logic' => GRAV_BLOCKS::get_radio_num_conditionals('field_'.$block.'_num_columns', $i, $max_columns),
-	    'wrapper' => array (
-	        'width' => '',
-	        'class' => '',
-	        'id' => '',
-	    ),
-	    'default_value' => '',
+	    'conditional_logic' => $conditional[$i],
 	    'tabs' => 'all',         // all | visual | text
 	    'toolbar' => 'full',     // full | basic
 	    'media_upload' => 1,

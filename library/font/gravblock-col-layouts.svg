@@ -1,0 +1,22 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg">
+<metadata>Copyright (C) 2023 by original authors @ fontello.com</metadata>
+<defs>
+<font id="gravblock-col-layouts" horiz-adv-x="1000" >
+<font-face font-family="gravblock-col-layouts" font-weight="400" font-stretch="normal" units-per-em="1000" ascent="850" descent="-150" />
+<missing-glyph horiz-adv-x="1000" />
+<glyph glyph-name="2-col" unicode="&#x32;" d="M0 850h471v-1000h-471z m529 0v-1000h471v1000z" horiz-adv-x="1000" />
+
+<glyph glyph-name="3-col" unicode="&#x33;" d="M353-150v1000h294v-1000z m-353 0h294v1000h-294z m706 0v1000h294v-1000z" horiz-adv-x="1000" />
+
+<glyph glyph-name="4-col" unicode="&#x34;" d="M265-150v1000h206v-1000z m-265 0h206v1000h-206z m529 0v1000h206v-1000z m265 0h206v1000h-206z" horiz-adv-x="1000" />
+
+<glyph glyph-name="1-col-narrow" unicode="&#x121;" d="M0-150h118v1000h-118z m882 0v1000h118v-1000z m-705 1000h647v-1000h-647z" horiz-adv-x="1000" />
+
+<glyph glyph-name="sidebar-right" unicode="&#xe805;" d="M706-150v1000h294v-1000z m-706 1000h647v-1000h-647z" horiz-adv-x="1000" />
+
+<glyph glyph-name="sidebar-left" unicode="&#xe806;" d="M0-150v1000h294v-1000z m353 1000h647v-1000h-647z" horiz-adv-x="1000" />
+</font>
+</defs>
+</svg>

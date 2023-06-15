@@ -2054,6 +2054,9 @@ class GRAV_BLOCKS
 	public static function enqueue_admin_files($hook)
 	{
 		wp_enqueue_style('grav_blocks_admin_css', plugin_dir_url(__FILE__) . 'library/css/master.min.css', true, '1.0.0');
+
+		wp_enqueue_style('layout-icons', plugin_dir_url(__FILE__).'library/css/admin/gravblock-col-layouts.css', [], null);
+
 		wp_enqueue_script('grav_blocks_controls_js', plugin_dir_url(__FILE__) . 'library/js/block-admin.js', array('jquery'), true, true);
 
 		wp_enqueue_style('grav_blocks_icons_css', 'https://i.icomoon.io/public/790bec4572/GravitateBlocks/style.css', true, '1.1.0');
