@@ -18,44 +18,23 @@ $block_fields = array(
 	    'label' => 'Format',
 	    'name' => 'format',
 	    'type' => 'radio',
-	    'instructions' => '',
-	    'required' => 0,
-	    'conditional_logic' => 0,
-	    'wrapper' => array (
-	        'width' => '',
-	        'class' => '',
-	        'id' => '',
-	    ),
 	    'choices' => array (
 	        'accordion' => 'Accordion',
 			'tabs-top' => 'Tabs (top)',
 			'tabs-left' => 'Tabs (left)'
 	    ),
-	    'other_choice' => 0,
-	    'save_other_choice' => 0,
 	    'default_value' => 'accordion',
 	    'layout' => 'horizontal',
-		'block_options' => 1
 	),
 	array (
 	   'key' => 'field_'.$block.'_add_side_content',
 	   'label' => 'Add Side Content',
 	   'name' => 'add_side_content',
 	   'type' => 'true_false',
-	   'instructions' => '',
-	   'required' => 0,
-	   'conditional_logic' => 0,
-	   'wrapper' => array (
-	       'width' => '',
-	       'class' => '',
-	       'id' => '',
-	   ),
-	   'message' => '',
 	   'ui' => 1,
 	   'ui_on_text' => 'Yes',
 	   'ui_off_text' => 'No',
 	   'default_value' => 0,
-	   'block_options' => 1
 	),
 	array (
 	    'key' => 'field_'.$block.'_side_content_placement',
