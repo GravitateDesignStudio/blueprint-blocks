@@ -1,8 +1,7 @@
 <?php
-
 /*
 *
-* Gravitate Content Block
+* Title Block
 *
 * Available Variables:
 * $block 					= Name of Block Folder
@@ -19,26 +18,53 @@ $block_fields = array(
 		'label' => 'Title',
 		'name' => 'title',
 		'type' => 'text',
-		'column_width' => '',
-		'default_value' => '',
-		'placeholder' => '',
-		'prepend' => '',
-		'append' => '',
-		'formatting' => 'none',
-		'maxlength' => '',
+		'wrapper' => array (
+			'width' => '60',
+		),
+	),
+	array (
+		'key' => 'field_'.$block.'_heading_element',
+		'label' => 'Heading Size',
+		'name' => 'heading_element',
+		'type' => 'button_group',
+		'instructions' => 'Select a heading element for the title. There should only be 1 H1 per page.',
+		'wrapper' => array (
+			'width' => '40',
+		),
+		'choices' => array (
+			'h2' => 'H2',
+			'h3' => 'H3',
+			'h4' => 'H4',
+		),
+		'default_value' => 'h2',
 	),
 	array (
 		'key' => 'field_'.$block.'_2',
 		'label' => 'Sub Title',
 		'name' => 'sub-title',
 		'type' => 'text',
-		'column_width' => '',
-		'default_value' => '',
-		'placeholder' => '',
-		'prepend' => '',
-		'append' => '',
-		'formatting' => 'none',
-		'maxlength' => '',
+		'wrapper' => array (
+			'width' => '60',
+		),
+	),
+	array (
+		'key' => 'field_'.$block.'_subheading_element',
+		'label' => 'Sub Title Size',
+		'name' => 'subheading_element',
+		'type' => 'button_group',
+		'instructions' => 'Select a heading element for the subtitle. It should be smaller than the title.',
+		'required' => 0,
+		'conditional_logic' => 0,  //  acf_condtional
+		'wrapper' => array (
+			'width' => '40',
+		),
+		'choices' => array (
+			'h3' => 'H3',
+			'h4' => 'H4',
+			'h5' => 'H5',
+			'h6' => 'H6'
+		),
+		'default_value' => 'h3',
 	),
 	array (
 		'key' => 'field_'.$block.'_3',
@@ -47,7 +73,7 @@ $block_fields = array(
 		'type' => 'true_false',
 		'message' => '',
 		'default_value' => 1,
-		'block_options' => 1
+		'ui' => true
 	),
 );
 

@@ -1,10 +1,11 @@
 <?php
 /*
-Plugin Name: Gravitate Blueprint Blocks
-Description: Create Content Blocks.
+Plugin Name: Gravitate Base
+Description: Base Plugin for Gravitate Blocks
 Version: 1.2.5
-Plugin URI: http://www.gravitatedesign.com
+Plugin URI: http://www.gravitatedesign.com/base
 Author: Gravitate
+Author URI: http://www.gravitatedesign.com/dev
 */
 
 require_once(plugin_dir_path(__FILE__).'blueprint-blocks-css.php');
@@ -13,6 +14,7 @@ require_once(plugin_dir_path(__FILE__).'blueprint-global-blocks.php');
 require_once(plugin_dir_path(__FILE__).'blueprint-dependency-manager.php');
 require_once(plugin_dir_path(__FILE__).'blueprint-blocks-util.php');
 require_once(plugin_dir_path(__FILE__).'blueprint-blocks-backgrounds.php');
+require_once(plugin_dir_path(__FILE__).'library/includes/utils.php');
 
 register_activation_hook(__FILE__, array('GRAV_BLOCKS', 'activate'));
 register_deactivation_hook(__FILE__, array('GRAV_BLOCKS', 'deactivate'));
@@ -690,6 +692,14 @@ class GRAV_BLOCKS
 				'append' => '',
 				'formatting' => 'none', 		// none | html
 				'maxlength' => '',
+				'block_options' => 1
+			),
+			array (
+				'key' => 'field_block_default_'.$block.'_admin_title',
+				'label' => 'Block Title',
+				'name' => 'layout_title',
+				'type' => 'text',
+				'required' => 0,
 				'block_options' => 1
 			),
 			array (
@@ -2045,6 +2055,9 @@ class GRAV_BLOCKS
 	public static function enqueue_admin_files($hook)
 	{
 		wp_enqueue_style('grav_blocks_admin_css', plugin_dir_url(__FILE__) . 'library/css/master.min.css', true, '1.0.0');
+
+		wp_enqueue_style('layout-icons', plugin_dir_url(__FILE__).'library/css/admin/gravblock-col-layouts.css', [], null);
+
 		wp_enqueue_script('grav_blocks_controls_js', plugin_dir_url(__FILE__) . 'library/js/block-admin.js', array('jquery'), true, true);
 
 		wp_enqueue_style('grav_blocks_icons_css', 'https://i.icomoon.io/public/790bec4572/GravitateBlocks/style.css', true, '1.1.0');

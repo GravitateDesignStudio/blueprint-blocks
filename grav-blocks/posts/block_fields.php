@@ -1,24 +1,13 @@
 <?php
 
-global $wpdb;
+$authors = get_users( array(
+    'role__in' => array( 'author', 'editor', 'administrator' ),
+) );
 
-$authors = array();
+$author_options = array();
 
-$q = "SELECT `ID`, `display_name` FROM `{$wpdb->users}` ORDER BY `display_name` ASC";
-$raw_users = $wpdb->get_results($q);
-
-foreach ($raw_users as $raw_user) {
-    $authors[$raw_user->ID] = $raw_user->display_name;
-}
-
-$taxonomies = array();
-
-foreach(get_taxonomies(array('public' => true)) as $taxonomy)
-{
-	foreach(get_terms($taxonomy, array('hide_empty' => false)) as $term)
-	{
-		$taxonomies[$taxonomy.'::'.$term->term_id] = ucwords(str_replace(array('_','-'), ' ', $taxonomy)).' - '.ucwords($term->name).' ('.$term->count.')';
-	}
+foreach ( $authors as $author ) {
+    $author_options[ $author->ID ] = $author->display_name;
 }
 
 $block_fields = array(
@@ -27,53 +16,26 @@ $block_fields = array(
 		'label' => 'Title',
 		'name' => 'title',
 		'type' => 'text',
-		'column_width' => '',
-		'default_value' => '',
-		'placeholder' => '',
-		'prepend' => '',
-		'append' => '',
-		'formatting' => 'none',
-		'maxlength' => '',
 	),
     array (
         'key' => 'field_'.$block.'_filter',
         'label' => 'Filter by',
         'name' => 'filter',
         'type' => 'select',
-        'instructions' => '',
-        'required' => 0,
-        'conditional_logic' => 0,
-        'wrapper' => array (
-            'width' => '',
-            'class' => '',
-            'id' => '',
-        ),
         'choices' => array (
             'tags' => 'Closest Match (by Related Tags and Categories)',
-            'post_type' => 'Most Recent from Post Type',
-            'taxonomy' => 'Most Recent from Category',
-            'author' => 'Most Recent from Author',
+            'post_type' => 'Most Recent by Post Type',
+            'taxonomy' => 'Most Recent by Category',
+            'author' => 'Most Recent by Author',
+            'featured' => 'Featured Posts',
             'custom' => 'Custom',
         ),
-        'default_value' => array (
-
-        ),
-        'allow_null' => 0,
-        'multiple' => 0,         // allows for multi-select
-        'ui' => 0,               // creates a more stylized UI
-        'ajax' => 0,
-        'placeholder' => '',
-        'disabled' => 0,
-        'readonly' => 0,
-        'block_options' => 1
     ),
     array (
         'key' => 'field_'.$block.'_by_post_type',
         'label' => 'Choose Post Type',
         'name' => 'post_type',
         'type' => 'select',
-        'instructions' => '',
-        'required' => 0,
         'conditional_logic' => array (
             array (
                 array (
@@ -83,30 +45,13 @@ $block_fields = array(
                 ),
             ),
         ),
-        'wrapper' => array (
-            'width' => '',
-            'class' => '',
-            'id' => '',
-        ),
         'choices' => get_post_types(array('public' => true)),
-        'default_value' => array (
-        ),
-        'allow_null' => 0,
-        'multiple' => 0,         // allows for multi-select
-        'ui' => 0,               // creates a more stylized UI
-        'ajax' => 0,
-        'placeholder' => '',
-        'disabled' => 0,
-        'readonly' => 0,
-        'block_options' => 1
     ),
-	array (
+    array (
         'key' => 'field_'.$block.'_by_taxonomy',
-        'label' => 'Choose Taxonomy',
+        'label' => 'Choose Taxonomy type',
         'name' => 'taxonomy',
         'type' => 'select',
-        'instructions' => '',
-        'required' => 0,
         'conditional_logic' => array (
             array (
                 array (
@@ -116,30 +61,57 @@ $block_fields = array(
                 ),
             ),
         ),
+        'choices' => [
+            'category' => 'Category',
+            'post_tag' => 'Tag',
+        ],
         'wrapper' => array (
-            'width' => '',
-            'class' => '',
-            'id' => '',
+            'width' => '50',
         ),
-        'choices' => $taxonomies,
-        'default_value' => array (
+    ),
+	array (
+        'key' => 'field_'.$block.'_by_category',
+        'label' => 'Choose Category',
+        'name' => 'category',
+        'type' => 'select',
+        'conditional_logic' => array (
+            array (
+                array (
+                    'field' => 'field_'.$block.'_by_taxonomy',
+                    'operator' => '==',
+                    'value' => 'category',
+                ),
+            ),
         ),
-        'allow_null' => 0,
-        'multiple' => 0,         // allows for multi-select
-        'ui' => 0,               // creates a more stylized UI
-        'ajax' => 0,
-        'placeholder' => '',
-        'disabled' => 0,
-        'readonly' => 0,
-        'block_options' => 1
+        'choices' => get_term_options('category'),
+        'wrapper' => array (
+            'width' => '50',
+        ),
+    ),
+    array (
+        'key' => 'field_'.$block.'_by_tag',
+        'label' => 'Choose Tag',
+        'name' => 'post_tag',
+        'type' => 'select',
+        'conditional_logic' => array (
+            array (
+                array (
+                    'field' => 'field_'.$block.'_by_taxonomy',
+                    'operator' => '==',
+                    'value' => 'post_tag',
+                ),
+            ),
+        ),
+        'choices' => get_term_options('post_tag'),
+        'wrapper' => array (
+            'width' => '50',
+        ),
     ),
 	array (
         'key' => 'field_'.$block.'_by_author',
         'label' => 'Choose Author',
         'name' => 'author',
         'type' => 'select',
-        'instructions' => '',
-        'required' => 0,
         'conditional_logic' => array (
             array (
                 array (
@@ -149,30 +121,13 @@ $block_fields = array(
                 ),
             ),
         ),
-        'wrapper' => array (
-            'width' => '',
-            'class' => '',
-            'id' => '',
-        ),
-        'choices' => $authors,
-        'default_value' => array (
-        ),
-        'allow_null' => 0,
-        'multiple' => 0,         // allows for multi-select
-        'ui' => 0,               // creates a more stylized UI
-        'ajax' => 0,
-        'placeholder' => '',
-        'disabled' => 0,
-        'readonly' => 0,
-        'block_options' => 1
+        'choices' => $author_options,
     ),
 	array (
 	    'key' => 'field_'.$block.'_custom',
 	    'label' => 'Choose Custom',
 	    'name' => 'custom',
 	    'type' => 'relationship',
-	    'instructions' => '',
-	    'required' => 0,
 		'conditional_logic' => array (
             array (
                 array (
@@ -182,23 +137,11 @@ $block_fields = array(
                 ),
             ),
         ),
-	    'wrapper' => array (
-	        'width' => '',
-	        'class' => '',
-	        'id' => '',
-	    ),
-	    'post_type' => array (
-	    ),
-	    'taxonomy' => array (
-	    ),
 	    'filters' => array (
 	        0 => 'search',
 	        1 => 'post_type',
 	        2 => 'taxonomy',
 	    ),
-	    'elements' => '',
-	    'min' => '',
-	    'max' => '',
 	    'return_format' => 'id',     // object | id
 	),
 	array (
@@ -207,7 +150,6 @@ $block_fields = array(
 	    'name' => 'limit',
 	    'type' => 'number',
 	    'instructions' => '0 = Unlimited',
-	    'required' => 0,
 		'conditional_logic' => array (
             array (
                 array (
@@ -217,21 +159,8 @@ $block_fields = array(
                 ),
             ),
         ),
-	    'wrapper' => array (
-	        'width' => '',
-	        'class' => '',
-	        'id' => '',
-	    ),
 	    'default_value' => '3',
-	    'placeholder' => '',
-	    'prepend' => '',
-	    'append' => '',
-	    'min' => '',
-	    'max' => '',
 	    'step' => '1',
-	    'readonly' => 0,
-	    'disabled' => 0,
-        'block_options' => 1
 	),
 	GRAV_BLOCKS::get_link_fields(array('name' => 'view_more_link'))
 );
