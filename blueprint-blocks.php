@@ -14,6 +14,7 @@ require_once(plugin_dir_path(__FILE__).'blueprint-global-blocks.php');
 require_once(plugin_dir_path(__FILE__).'blueprint-dependency-manager.php');
 require_once(plugin_dir_path(__FILE__).'blueprint-blocks-util.php');
 require_once(plugin_dir_path(__FILE__).'blueprint-blocks-backgrounds.php');
+require_once(plugin_dir_path(__FILE__).'library/includes/utils.php');
 
 register_activation_hook(__FILE__, array('GRAV_BLOCKS', 'activate'));
 register_deactivation_hook(__FILE__, array('GRAV_BLOCKS', 'deactivate'));
